@@ -19,7 +19,7 @@ export default defineConfig({
 		},
 		proxy: {
 			'/api': {
-				target: 'https://auapi.npotau.ru/admin',
+				target: 'https://https://empapi.hayecke.org',
 				changeOrigin: true,
 				rewrite: (path) => path.replace(/^\/api/, ''),
 			},
