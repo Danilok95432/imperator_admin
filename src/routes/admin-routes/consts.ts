@@ -111,4 +111,9 @@ export enum AdminRoute {
 	OrgIncome = 'income',
 	OrgReqRefund = 'req-refund',
 	OrgRefund = 'refund',
+	Catalog = 'catalog',
+	CatalogTypes = 'types',
+	CatalogMakers = 'makers',
+	CatalogGoods = 'goods',
+	CatalogCategories = 'categories',
 }

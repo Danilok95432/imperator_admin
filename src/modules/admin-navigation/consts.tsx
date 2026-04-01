@@ -1,44 +1,33 @@
 import { type NavigationItem } from 'src/types/navigation'
 import { AdminSupportIconSvg } from 'src/UI/icons/adminSupportIconSVG'
-import { AdminEventsIconSvg } from 'src/UI/icons/adminEventsIconSVG'
 import { AdminSettingsIconSvg } from 'src/UI/icons/adminSettingsIconSVG'
 // import { AdminAboutIconSvg } from 'src/UI/icons/adminFederationIconSVG'
 import { AdminPartnersIconSvg } from 'src/UI/icons/adminPartnersIconSvg'
 import { AdminQuestionsIcon } from 'src/UI/icons/adminQuestionsIcon'
 import { AdminOrgIconSVG } from 'src/UI/icons/adminOrgIncoSVG'
 import { AdminGuestsIconSVG } from 'src/UI/icons/adminGuestsIconSVG'
-import { AdminNewsIconSvg } from 'src/UI/icons/adminNewsIconSVG'
+import { AdminStatisticIconSVG } from 'src/UI/icons/adminStatisticIconSVG'
 
 export const adminMenuItems: NavigationItem[] = [
 	{
-		title: 'Организатор',
+		title: 'Каталог',
+		icon: <AdminPartnersIconSvg />,
+		link: 'catalog/types',
+	},
+	{
+		title: 'Торговля',
 		icon: <AdminOrgIconSVG />,
-		link: 'org/award/info',
+		link: 'trading',
 	},
 	{
-		title: 'О премии',
-		icon: <AdminPartnersIconSvg />,
-		link: 'about',
-	},
-	{
-		title: 'Новости',
-		icon: <AdminNewsIconSvg />,
-		link: 'news/news-list',
-	},
-	{
-		title: 'Конкурс',
-		icon: <AdminEventsIconSvg />,
-		link: 'contests/contests-list',
-	},
-	{
-		title: 'Гости',
+		title: 'Покупатели',
 		icon: <AdminGuestsIconSVG />,
-		link: 'guests',
+		link: 'cusotmers',
 	},
 	{
-		title: 'Партнеры',
-		icon: <AdminPartnersIconSvg />,
-		link: 'partners',
+		title: 'Маркетинг',
+		icon: <AdminStatisticIconSVG />,
+		link: 'marketing',
 	},
 	{
 		title: 'Частые вопросы',

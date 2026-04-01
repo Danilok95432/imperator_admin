@@ -120,11 +120,38 @@ import { AdminCommunityTraditions } from 'src/pages/community-layout/pages/admin
 import { TraditionHistory } from 'src/pages/tradition-element-layout/pages/tradition-history/tradition-history'
 import { TraditionInfo } from 'src/pages/tradition-element-layout/pages/tradition-info/tradition-info'
 import { TraditionElementLayout } from 'src/pages/tradition-element-layout/tradition-element-layout'
+import { AdminCatalogLayout } from 'src/pages/admin-catalog/admin-catalog-layout'
+import { TypesPage } from 'src/pages/admin-catalog/layout/types-page/types-page'
+import { TypesList } from 'src/pages/admin-catalog/layout/types-page/components/list/types-list'
+import { MakersPage } from 'src/pages/admin-catalog/layout/makers-page/makers-page'
+import { MakersList } from 'src/pages/admin-catalog/layout/makers-page/components/list/makers-list'
+import { CategoriesPage } from 'src/pages/admin-catalog/layout/categories-page/categories-page'
+import { CategoriesList } from 'src/pages/admin-catalog/layout/categories-page/components/list/categories-list'
+import { GoodsPage } from 'src/pages/admin-catalog/layout/goods-page/goods-page'
+import { GoodsList } from 'src/pages/admin-catalog/layout/goods-page/components/list/goods-list'
 
 export const AdminRoutes: FC = () => {
 	return (
 		<Routes>
 			<Route path='/' element={<AdminLayout />}>
+				<Route path={AdminRoute.Catalog} element={<AdminCatalogLayout />}>
+					<Route path={AdminRoute.CatalogTypes} element={<TypesPage />}>
+						<Route index element={<TypesList />} />
+						<Route path=':id' element={<OneNews />} />
+					</Route>
+					<Route path={AdminRoute.CatalogMakers} element={<MakersPage />}>
+						<Route index element={<MakersList />} />
+						<Route path=':id' element={<OneVideo />} />
+					</Route>
+					<Route path={AdminRoute.CatalogCategories} element={<CategoriesPage />}>
+						<Route index element={<CategoriesList />} />
+						<Route path=':id' element={<OneVideo />} />
+					</Route>
+					<Route path={AdminRoute.CatalogGoods} element={<GoodsPage />}>
+						<Route index element={<GoodsList />} />
+						<Route path=':id' element={<OneVideo />} />
+					</Route>
+				</Route>
 				<Route path={AdminRoute.AdminNews} element={<AdminNewsLayout />}>
 					<Route path={AdminRoute.AdminNewsList} element={<NewsLayout />}>
 						<Route index element={<NewsList />} />
