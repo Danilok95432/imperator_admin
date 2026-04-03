@@ -1,4 +1,4 @@
-import { type OneTypeInputs, oneTypeSchema } from './schema'
+import { type OneMakerInputs, oneMakerSchema } from './schema'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
@@ -14,28 +14,28 @@ import { AdminControllers } from 'src/components/admin-controllers/admin-control
 import { AdminRoute } from 'src/routes/admin-routes/consts'
 
 import styles from './index.module.scss'
-import { useGetTypeInfoQuery } from 'src/store/catalog/catalog.api'
+import { useGetMakerInfoQuery } from 'src/store/catalog/catalog.api'
 import { MainSection } from './components/main-section/main-section'
 import { SeoSection } from 'src/modules/seo-section/seo-section'
 import adminStyles from 'src/routes/admin-layout/index.module.scss'
 import classNames from 'classnames'
 
-export const OneType = () => {
+export const OneMaker = () => {
 	const { id = '0' } = useParams()
 
-	const { data } = useGetTypeInfoQuery(id)
-	// const [saveNewsInfo] = useSaveTypeInfoMutation()
+	const { data } = useGetMakerInfoQuery(id)
+	// const [saveNewsInfo] = useSaveMakerInfoMutation()
 	const [, setAction] = useState<'apply' | 'save'>('apply')
 
-	const methods = useForm<OneTypeInputs>({
+	const methods = useForm<OneMakerInputs>({
 		mode: 'onBlur',
-		resolver: yupResolver(oneTypeSchema),
+		resolver: yupResolver(oneMakerSchema),
 		defaultValues: {
 			hidden: false,
 		},
 	})
 	const { isSent } = useIsSent(methods.control)
-	const onSubmit: SubmitHandler<OneTypeInputs> = async (data) => {
+	const onSubmit: SubmitHandler<OneMakerInputs> = async (data) => {
 		console.log(data)
 	}
 
@@ -48,18 +48,18 @@ export const OneType = () => {
 	return (
 		<>
 			<Link
-				to={`/${AdminRoute.Catalog}/${AdminRoute.CatalogTypes}`}
+				to={`/${AdminRoute.Catalog}/${AdminRoute.CatalogMakers}`}
 				className={classNames(adminStyles.adminReturnLink, styles.linkBack)}
 			>
 				Возврат к списку
 			</Link>
-			<h4 className={styles.titleNewsForm}>Тип товара: Кофе в зернах</h4>
+			<h4 className={styles.titleNewsForm}>Производитель: Вьетнамское всё</h4>
 			<Container className={styles.cont}>
 				<FormProvider {...methods}>
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
 						<div className={styles.oneNewsContent}>
 							<div className={styles.oneNewsContentLeft}>
-								<MainSection parentsOption={data?.parent} />
+								<MainSection />
 								<SeoSection />
 							</div>
 							<div className={styles.oneNewsContentRight}>
@@ -84,7 +84,7 @@ export const OneType = () => {
 						</div>
 						<AdminControllers
 							variant='4'
-							outLink={`/${AdminRoute.Catalog}/${AdminRoute.CatalogTypes}`}
+							outLink={`/${AdminRoute.Catalog}/${AdminRoute.CatalogMakers}`}
 							isSent={isSent}
 							actionHandler={setAction}
 						/>
@@ -92,7 +92,7 @@ export const OneType = () => {
 				</FormProvider>
 			</Container>
 			<Link
-				to={`/${AdminRoute.Catalog}/${AdminRoute.CatalogTypes}`}
+				to={`/${AdminRoute.Catalog}/${AdminRoute.CatalogMakers}`}
 				className={classNames(adminStyles.adminReturnLink, styles.linkBack)}
 			>
 				Возврат к списку

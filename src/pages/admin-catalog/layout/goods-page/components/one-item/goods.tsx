@@ -1,4 +1,4 @@
-import { type OneTypeInputs, oneTypeSchema } from './schema'
+import { type OneGoodsInputs, oneGoodsSchema } from './schema'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
@@ -14,28 +14,30 @@ import { AdminControllers } from 'src/components/admin-controllers/admin-control
 import { AdminRoute } from 'src/routes/admin-routes/consts'
 
 import styles from './index.module.scss'
-import { useGetTypeInfoQuery } from 'src/store/catalog/catalog.api'
-import { MainSection } from './components/main-section/main-section'
-import { SeoSection } from 'src/modules/seo-section/seo-section'
+import { useGetCategoryInfoQuery } from 'src/store/catalog/catalog.api'
 import adminStyles from 'src/routes/admin-layout/index.module.scss'
 import classNames from 'classnames'
+import { MainSection } from './components/main-section/main-section'
+import { ReqSection } from './components/req-section/req-section'
+import { AdditionalSection } from './components/additional-section/additional-section'
+import { MediaSection } from './components/media-section/media-section'
 
-export const OneType = () => {
+export const OneGoods = () => {
 	const { id = '0' } = useParams()
 
-	const { data } = useGetTypeInfoQuery(id)
-	// const [saveNewsInfo] = useSaveTypeInfoMutation()
+	const { data } = useGetCategoryInfoQuery(id)
+	// const [saveNewsInfo] = useSaveCategoryInfoMutation()
 	const [, setAction] = useState<'apply' | 'save'>('apply')
 
-	const methods = useForm<OneTypeInputs>({
+	const methods = useForm<OneGoodsInputs>({
 		mode: 'onBlur',
-		resolver: yupResolver(oneTypeSchema),
+		resolver: yupResolver(oneGoodsSchema),
 		defaultValues: {
 			hidden: false,
 		},
 	})
 	const { isSent } = useIsSent(methods.control)
-	const onSubmit: SubmitHandler<OneTypeInputs> = async (data) => {
+	const onSubmit: SubmitHandler<OneGoodsInputs> = async (data) => {
 		console.log(data)
 	}
 
@@ -48,19 +50,21 @@ export const OneType = () => {
 	return (
 		<>
 			<Link
-				to={`/${AdminRoute.Catalog}/${AdminRoute.CatalogTypes}`}
+				to={`/${AdminRoute.Catalog}/${AdminRoute.CatalogCategories}`}
 				className={classNames(adminStyles.adminReturnLink, styles.linkBack)}
 			>
 				Возврат к списку
 			</Link>
-			<h4 className={styles.titleNewsForm}>Тип товара: Кофе в зернах</h4>
+			<h4 className={styles.titleNewsForm}>Товар: </h4>
 			<Container className={styles.cont}>
 				<FormProvider {...methods}>
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
 						<div className={styles.oneNewsContent}>
 							<div className={styles.oneNewsContentLeft}>
-								<MainSection parentsOption={data?.parent} />
-								<SeoSection />
+								<MainSection />
+								<ReqSection />
+								<AdditionalSection />
+								<MediaSection />
 							</div>
 							<div className={styles.oneNewsContentRight}>
 								<SwitchedRadioBtns
@@ -80,11 +84,25 @@ export const OneType = () => {
 										</>
 									}
 								/>
+								<SwitchedRadioBtns
+									name='hit'
+									label='Хит'
+									$variant='switcher'
+									contentRadio1={<>Да</>}
+									contentRadio2={<>Нет</>}
+								/>
+								<SwitchedRadioBtns
+									name='closed'
+									label='Снято с производства'
+									$variant='switcher'
+									contentRadio1={<>Да</>}
+									contentRadio2={<>Нет</>}
+								/>
 							</div>
 						</div>
 						<AdminControllers
 							variant='4'
-							outLink={`/${AdminRoute.Catalog}/${AdminRoute.CatalogTypes}`}
+							outLink={`/${AdminRoute.Catalog}/${AdminRoute.CatalogGoods}`}
 							isSent={isSent}
 							actionHandler={setAction}
 						/>
@@ -92,7 +110,7 @@ export const OneType = () => {
 				</FormProvider>
 			</Container>
 			<Link
-				to={`/${AdminRoute.Catalog}/${AdminRoute.CatalogTypes}`}
+				to={`/${AdminRoute.Catalog}/${AdminRoute.CatalogGoods}`}
 				className={classNames(adminStyles.adminReturnLink, styles.linkBack)}
 			>
 				Возврат к списку

@@ -17,7 +17,7 @@ export const adminMenuItems: NavigationItem[] = [
 	{
 		title: 'Торговля',
 		icon: <AdminOrgIconSVG />,
-		link: 'trading',
+		link: 'trading/orders',
 	},
 	{
 		title: 'Покупатели',

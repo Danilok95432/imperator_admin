@@ -1,4 +1,4 @@
-import { type OneTypeInputs, oneTypeSchema } from './schema'
+import { type OneOrderInputs, oneOrderSchema } from './schema'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
@@ -14,28 +14,26 @@ import { AdminControllers } from 'src/components/admin-controllers/admin-control
 import { AdminRoute } from 'src/routes/admin-routes/consts'
 
 import styles from './index.module.scss'
-import { useGetTypeInfoQuery } from 'src/store/catalog/catalog.api'
 import { MainSection } from './components/main-section/main-section'
-import { SeoSection } from 'src/modules/seo-section/seo-section'
 import adminStyles from 'src/routes/admin-layout/index.module.scss'
 import classNames from 'classnames'
+import { useGetOrderInfoQuery } from 'src/store/trading/trading.api'
+import { type GoodsCart } from 'src/types/trading'
+import { CustomTable } from 'src/components/custom-table/custom-table'
 
-export const OneType = () => {
+export const OneOrder = () => {
 	const { id = '0' } = useParams()
 
-	const { data } = useGetTypeInfoQuery(id)
+	const { data } = useGetOrderInfoQuery(id)
 	// const [saveNewsInfo] = useSaveTypeInfoMutation()
 	const [, setAction] = useState<'apply' | 'save'>('apply')
 
-	const methods = useForm<OneTypeInputs>({
+	const methods = useForm<OneOrderInputs>({
 		mode: 'onBlur',
-		resolver: yupResolver(oneTypeSchema),
-		defaultValues: {
-			hidden: false,
-		},
+		resolver: yupResolver(oneOrderSchema),
 	})
 	const { isSent } = useIsSent(methods.control)
-	const onSubmit: SubmitHandler<OneTypeInputs> = async (data) => {
+	const onSubmit: SubmitHandler<OneOrderInputs> = async (data) => {
 		console.log(data)
 	}
 
@@ -45,22 +43,52 @@ export const OneType = () => {
 		}
 	}, [data])
 
+	const tableTitles = [
+		'№',
+		'Категория',
+		'Производитель',
+		'Название товара',
+		'Цена товара',
+		'Количество',
+		'Сумма',
+	]
+	const formatObjectsTableData = (ordersData: GoodsCart[]) => {
+		return ordersData.map((orderEl) => {
+			return {
+				rowId: orderEl.id,
+				cells: [
+					<p key='0'>{orderEl.id}</p>,
+					<p key='1'>{orderEl.category}</p>,
+					<p key='2'>{orderEl.maker}</p>,
+					<p key='3'>{orderEl.name}</p>,
+					<p key='4'>{orderEl.price}</p>,
+					<p key='5'>{orderEl.amount}</p>,
+					<p key='6'>{orderEl.sum}</p>,
+				],
+			}
+		})
+	}
+
 	return (
 		<>
 			<Link
-				to={`/${AdminRoute.Catalog}/${AdminRoute.CatalogTypes}`}
+				to={`/${AdminRoute.Trading}/${AdminRoute.TradingOrder}`}
 				className={classNames(adminStyles.adminReturnLink, styles.linkBack)}
 			>
-				Возврат к списку
+				Возврат к списку заказов
 			</Link>
-			<h4 className={styles.titleNewsForm}>Тип товара: Кофе в зернах</h4>
+			<h4 className={styles.titleNewsForm}>Заказ</h4>
 			<Container className={styles.cont}>
 				<FormProvider {...methods}>
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
 						<div className={styles.oneNewsContent}>
 							<div className={styles.oneNewsContentLeft}>
-								<MainSection parentsOption={data?.parent} />
-								<SeoSection />
+								<MainSection deliverOption={data?.deliver} statusOption={data?.status} />
+								<CustomTable
+									className={styles.ordersTable}
+									rowData={formatObjectsTableData(data?.goods ?? [])}
+									colTitles={tableTitles}
+								/>
 							</div>
 							<div className={styles.oneNewsContentRight}>
 								<SwitchedRadioBtns
@@ -84,7 +112,7 @@ export const OneType = () => {
 						</div>
 						<AdminControllers
 							variant='4'
-							outLink={`/${AdminRoute.Catalog}/${AdminRoute.CatalogTypes}`}
+							outLink={`/${AdminRoute.Trading}/${AdminRoute.TradingOrder}`}
 							isSent={isSent}
 							actionHandler={setAction}
 						/>
@@ -92,10 +120,10 @@ export const OneType = () => {
 				</FormProvider>
 			</Container>
 			<Link
-				to={`/${AdminRoute.Catalog}/${AdminRoute.CatalogTypes}`}
+				to={`/${AdminRoute.Trading}/${AdminRoute.TradingOrder}`}
 				className={classNames(adminStyles.adminReturnLink, styles.linkBack)}
 			>
-				Возврат к списку
+				Возврат к списку заказов
 			</Link>
 		</>
 	)

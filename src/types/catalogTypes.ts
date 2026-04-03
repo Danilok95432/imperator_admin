@@ -20,7 +20,7 @@ export type TypeNewIdResponse = {
 
 export type TypeInfoResponse = {
 	title: string
-	description: string
+	descriptionSeo: string
 	keywords: string
 	urlTitle: string
 	url: string
@@ -129,4 +129,7 @@ export type GoodsInfoResponse = {
 	full: string
 	mainphoto: ImageItemWithText[]
 	documents: ShortDocument[]
+	hidden: boolean
+	hit: boolean
+	closed: boolean
 }

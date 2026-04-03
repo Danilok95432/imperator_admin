@@ -51,7 +51,7 @@ const variantStyles = {
 		background: #f2f2f2;
 		border-radius: 3px;
 		padding: 3px;
-		width: 100%;
+		width: max-content;
 		._active {
 			color: #000000;
 			background: #ffffff;

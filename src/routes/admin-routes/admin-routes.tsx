@@ -129,6 +129,18 @@ import { CategoriesPage } from 'src/pages/admin-catalog/layout/categories-page/c
 import { CategoriesList } from 'src/pages/admin-catalog/layout/categories-page/components/list/categories-list'
 import { GoodsPage } from 'src/pages/admin-catalog/layout/goods-page/goods-page'
 import { GoodsList } from 'src/pages/admin-catalog/layout/goods-page/components/list/goods-list'
+import { AdminTradingLayout } from 'src/pages/admin-trading/admin-trading-layout'
+import { OrdersPage } from 'src/pages/admin-trading/layout/orders-page/order-page'
+import { OrdersList } from 'src/pages/admin-trading/layout/orders-page/components/list/orders-list'
+import { RefundsPage } from 'src/pages/admin-trading/layout/refunds-page/refunds-page'
+import { RefundsList } from 'src/pages/admin-trading/layout/refunds-page/components/list/refunds-list'
+import { SalesPage } from 'src/pages/admin-trading/layout/sales-page/sales-page'
+import { SalesList } from 'src/pages/admin-trading/layout/sales-page/components/list/sales-list'
+import { OneType } from 'src/pages/admin-catalog/layout/types-page/components/one-item/type'
+import { OneMaker } from 'src/pages/admin-catalog/layout/makers-page/components/one-item/maker'
+import { OneCategory } from 'src/pages/admin-catalog/layout/categories-page/components/one-item/category'
+import { OneGoods } from 'src/pages/admin-catalog/layout/goods-page/components/one-item/goods'
+import { OneOrder } from 'src/pages/admin-trading/layout/orders-page/components/one-item/order'
 
 export const AdminRoutes: FC = () => {
 	return (
@@ -137,21 +149,36 @@ export const AdminRoutes: FC = () => {
 				<Route path={AdminRoute.Catalog} element={<AdminCatalogLayout />}>
 					<Route path={AdminRoute.CatalogTypes} element={<TypesPage />}>
 						<Route index element={<TypesList />} />
-						<Route path=':id' element={<OneNews />} />
+						<Route path=':id' element={<OneType />} />
 					</Route>
 					<Route path={AdminRoute.CatalogMakers} element={<MakersPage />}>
 						<Route index element={<MakersList />} />
-						<Route path=':id' element={<OneVideo />} />
+						<Route path=':id' element={<OneMaker />} />
 					</Route>
 					<Route path={AdminRoute.CatalogCategories} element={<CategoriesPage />}>
 						<Route index element={<CategoriesList />} />
-						<Route path=':id' element={<OneVideo />} />
+						<Route path=':id' element={<OneCategory />} />
 					</Route>
 					<Route path={AdminRoute.CatalogGoods} element={<GoodsPage />}>
 						<Route index element={<GoodsList />} />
+						<Route path=':id' element={<OneGoods />} />
+					</Route>
+				</Route>
+				<Route path={AdminRoute.Trading} element={<AdminTradingLayout />}>
+					<Route path={AdminRoute.TradingOrder} element={<OrdersPage />}>
+						<Route index element={<OrdersList />} />
+						<Route path=':id' element={<OneOrder />} />
+					</Route>
+					<Route path={AdminRoute.TradingRefund} element={<RefundsPage />}>
+						<Route index element={<RefundsList />} />
+						<Route path=':id' element={<OneVideo />} />
+					</Route>
+					<Route path={AdminRoute.TradingSale} element={<SalesPage />}>
+						<Route index element={<SalesList />} />
 						<Route path=':id' element={<OneVideo />} />
 					</Route>
 				</Route>
+
 				<Route path={AdminRoute.AdminNews} element={<AdminNewsLayout />}>
 					<Route path={AdminRoute.AdminNewsList} element={<NewsLayout />}>
 						<Route index element={<NewsList />} />
