@@ -22,12 +22,12 @@ export const adminMenuItems: NavigationItem[] = [
 	{
 		title: 'Покупатели',
 		icon: <AdminGuestsIconSVG />,
-		link: 'cusotmers',
+		link: 'customers/all',
 	},
 	{
 		title: 'Маркетинг',
 		icon: <AdminStatisticIconSVG />,
-		link: 'marketing',
+		link: 'marketing/ad',
 	},
 	{
 		title: 'Частые вопросы',

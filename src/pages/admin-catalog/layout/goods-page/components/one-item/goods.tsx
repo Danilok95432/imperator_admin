@@ -85,6 +85,13 @@ export const OneGoods = () => {
 									}
 								/>
 								<SwitchedRadioBtns
+									name='slider'
+									label='Главный слайдер'
+									$variant='switcher'
+									contentRadio1={<>Да</>}
+									contentRadio2={<>Нет</>}
+								/>
+								<SwitchedRadioBtns
 									name='hit'
 									label='Хит'
 									$variant='switcher'

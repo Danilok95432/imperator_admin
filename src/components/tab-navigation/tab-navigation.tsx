@@ -102,7 +102,9 @@ export const TabNavigation: FC<TabNavigationProps> = ({ navItems, variant = 'mai
 	return (
 		<ul className={variant === 'main' ? styles.tabNavList : styles.subtabList}>
 			{navItems?.map((navEl) => (
-				<li key={navEl.title}>
+				<li key={navEl.title} className={styles.navItem}>
+					{navEl.icon && <span className={styles.icon}>{navEl.icon}</span>}
+
 					<NavLink
 						className={({ isActive }) => {
 							return location.pathname.includes('/event/')

@@ -59,7 +59,7 @@ export const OneType = () => {
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
 						<div className={styles.oneNewsContent}>
 							<div className={styles.oneNewsContentLeft}>
-								<MainSection parentsOption={data?.parent} />
+								<MainSection />
 								<SeoSection />
 							</div>
 							<div className={styles.oneNewsContentRight}>

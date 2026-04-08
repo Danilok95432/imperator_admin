@@ -23,6 +23,7 @@ export type OneGoodsInputs = {
 	documents?: ShortDocument[]
 	hidden?: boolean
 	hit?: boolean
+	slider?: boolean
 	closed?: boolean
 }
 

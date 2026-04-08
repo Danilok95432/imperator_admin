@@ -80,6 +80,23 @@ export const OneCategory = () => {
 										</>
 									}
 								/>
+								<SwitchedRadioBtns
+									name='showBtn'
+									label='Показать на главной'
+									$variant='switcher'
+									contentRadio1={
+										<>
+											<SwitchedShowSvg />
+											Показать
+										</>
+									}
+									contentRadio2={
+										<>
+											<SwitchedHiddenSvg />
+											Спрятать
+										</>
+									}
+								/>
 							</div>
 						</div>
 						<AdminControllers

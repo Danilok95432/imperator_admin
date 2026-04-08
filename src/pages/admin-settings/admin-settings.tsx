@@ -14,7 +14,9 @@ import { MainBlocksSection } from 'src/pages/admin-settings/components/main-bloc
 import styles from './index.module.scss'
 import { useIsSent } from 'src/hooks/sent-mark/sent-mark'
 import { useNavigate } from 'react-router-dom'
-import { CustomDisclaimer } from 'src/components/custom-disclaimer/custom-disclaimer'
+import { ContactsSection } from './components/contacts-section/contacts-section'
+import { InfoSection } from './components/info-section/info-section'
+import { SettingsSection } from './components/settings-section/settings-section'
 
 export const AdminSettings: FC = () => {
 	const methods = useForm<SettingsInputs>({
@@ -42,18 +44,8 @@ export const AdminSettings: FC = () => {
 			<AdminContent
 				className={styles.settingsContent}
 				$backgroundColor='#ffffff'
-				link='#'
-				$padding='25px 30px 60px 40px'
+				$padding='25px 30px 60px 30px'
 			>
-				{/* <PromoTable /> */}
-				<CustomDisclaimer className={styles.disc}>
-					<p>
-						Внимание! В этом разделе настраивается посадочная страница актуального события. Ваш
-						тарифный план предусматривает только один лэндинг одного события в момент времени. Для
-						того, чтобы получить возможность публиковать информацию сразу о нескольких событиях,
-						свяжитесь с нашим комерчепским отделом.
-					</p>
-				</CustomDisclaimer>
 				<FormProvider {...methods}>
 					<form
 						className={styles.mainBlocksForm}
@@ -61,6 +53,9 @@ export const AdminSettings: FC = () => {
 						noValidate
 					>
 						<MainBlocksSection />
+						<ContactsSection />
+						<InfoSection />
+						<SettingsSection />
 						<AdminControllers
 							outLink={AdminRoute.AdminHome}
 							isSent={isSent}

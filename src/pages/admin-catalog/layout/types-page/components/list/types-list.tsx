@@ -38,17 +38,16 @@ export const TypesList: FC = () => {
 		return newIdResponse.id
 	}
 
-	const tableTitles = ['Категория', 'Тип товара', 'Тип создан', 'Активен', '']
+	const tableTitles = ['Тип товара', 'Тип создан', 'Активен', '']
 	const formatObjectsTableData = (TypesData: TypesElement[]) => {
 		return TypesData.map((TypeEl) => {
 			return {
 				rowId: TypeEl.id,
 				cells: [
-					<p key='0'>{TypeEl.category}</p>,
-					<p key='1'>{TypeEl.type}</p>,
-					<p key='2'>{TypeEl.date}</p>,
+					<p key='0'>{TypeEl.type}</p>,
+					<p key='1'>{TypeEl.date}</p>,
 					<MainCheckBox
-						key='3'
+						key='2'
 						checked={TypeEl.active}
 						disabled={true}
 						svgNode={<CheckMarkSvg />}
@@ -58,7 +57,7 @@ export const TypesList: FC = () => {
 						id={TypeEl.id}
 						className={styles.rowActionButton}
 						removeHandler={rowDeleteHandler}
-						key='4'
+						key='3'
 					/>,
 				],
 			}

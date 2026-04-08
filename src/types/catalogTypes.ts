@@ -88,6 +88,7 @@ export type CategoryInfoResponse = {
 	urlTitle: string
 	url: string
 	hidden: boolean
+	parent: SelOption[]
 }
 
 export type GoodsElement = {

@@ -141,6 +141,18 @@ import { OneMaker } from 'src/pages/admin-catalog/layout/makers-page/components/
 import { OneCategory } from 'src/pages/admin-catalog/layout/categories-page/components/one-item/category'
 import { OneGoods } from 'src/pages/admin-catalog/layout/goods-page/components/one-item/goods'
 import { OneOrder } from 'src/pages/admin-trading/layout/orders-page/components/one-item/order'
+import { AdminCustomersLayout } from 'src/pages/admin-customers/admin-customers-layout'
+import { AllCustomersPage } from 'src/pages/admin-customers/layout/all-customers/all-customers-page'
+import { AllCustomersList } from 'src/pages/admin-customers/layout/all-customers/list/all-customers-list'
+import { OneCustomer } from 'src/pages/admin-customers/layout/all-customers/one-item/customer'
+import { RegularCustomersPage } from 'src/pages/admin-customers/layout/regular-customers/regular-customers-page'
+import { VIPCustomersPage } from 'src/pages/admin-customers/layout/vip-customers/vip-customers-page'
+import { AdminMarketingLayout } from 'src/pages/admin-marketing/admin-marketing-layout'
+import { MainInfoPartPage } from 'src/pages/admin-marketing/layout/main-info-part/main-info-part-page'
+import { MainInfoList } from 'src/pages/admin-marketing/layout/main-info-part/list/main-info-list'
+import { OneInfoItem } from 'src/pages/admin-marketing/layout/main-info-part/one-item/info-item'
+import { AdMainPage } from 'src/pages/admin-marketing/layout/ad-main/ad-main-page'
+import { DistributionPage } from 'src/pages/admin-marketing/layout/distribution/distribution-page'
 
 export const AdminRoutes: FC = () => {
 	return (
@@ -176,6 +188,28 @@ export const AdminRoutes: FC = () => {
 					<Route path={AdminRoute.TradingSale} element={<SalesPage />}>
 						<Route index element={<SalesList />} />
 						<Route path=':id' element={<OneVideo />} />
+					</Route>
+				</Route>
+				<Route path={AdminRoute.Customers} element={<AdminCustomersLayout />}>
+					<Route path={AdminRoute.AllCustomers} element={<AllCustomersPage />}>
+						<Route index element={<AllCustomersList />} />
+						<Route path=':id' element={<OneCustomer />} />
+					</Route>
+					<Route path={AdminRoute.RegularCustomers} element={<RegularCustomersPage />}>
+						<Route index element={<AllCustomersList />} />
+						<Route path=':id' element={<OneCustomer />} />
+					</Route>
+					<Route path={AdminRoute.VIPCustomers} element={<VIPCustomersPage />}>
+						<Route index element={<AllCustomersList />} />
+						<Route path=':id' element={<OneCustomer />} />
+					</Route>
+				</Route>
+				<Route path={AdminRoute.Marketing} element={<AdminMarketingLayout />}>
+					<Route path={AdminRoute.MarketingAd} element={<AdMainPage />} />
+					<Route path={AdminRoute.MarketingDistribution} element={<DistributionPage />} />
+					<Route path={AdminRoute.MarketingInfo} element={<MainInfoPartPage />}>
+						<Route index element={<MainInfoList />} />
+						<Route path=':id' element={<OneInfoItem />} />
 					</Route>
 				</Route>
 

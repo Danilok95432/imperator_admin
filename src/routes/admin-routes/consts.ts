@@ -120,4 +120,12 @@ export enum AdminRoute {
 	TradingOrder = 'orders',
 	TradingSale = 'sale',
 	TradingRefund = 'refunds',
+	Customers = 'customers',
+	AllCustomers = 'all',
+	RegularCustomers = 'regular',
+	VIPCustomers = 'vip',
+	Marketing = 'marketing',
+	MarketingAd = 'ad',
+	MarketingDistribution = 'distribution',
+	MarketingInfo = 'main-info',
 }
