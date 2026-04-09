@@ -13,9 +13,12 @@ import {
 } from 'src/store/catalog/catalog.api'
 import { MainCheckBox } from 'src/UI/MainCheckBox/MainCheckBox'
 import { CheckMarkSvg } from 'src/UI/icons/checkMarkSVG'
+import { Loader } from 'src/components/loader/loader'
+import { AddSubCategorySVG } from 'src/UI/icons/addSubCategorySVG'
+import { TrashIconSvg } from 'src/UI/icons/trashIconSVG'
 
 export const CategoriesList: FC = () => {
-	const { data: categoryInfoData } = useGetAllCategoriesQuery(null)
+	const { data: categoryInfoData, isLoading } = useGetAllCategoriesQuery(null)
 	const { refetch: getNewId } = useGetNewIdCategoryQuery(null)
 	const [deleteTypeById] = useDeleteCategoryByIdMutation()
 
@@ -35,15 +38,21 @@ export const CategoriesList: FC = () => {
 					<p key='0'>{categoryEl.title}</p>,
 					<MainCheckBox
 						key='1'
-						checked={categoryEl.active}
+						checked={categoryEl.hidden}
 						disabled={true}
 						svgNode={<CheckMarkSvg />}
 						className={styles.checkBoxWrapperNews}
 					/>,
 					<RowController
 						id={categoryEl.id}
+						variant='custom'
+						resolveHandler={() => console.log('Добавлена подкатегория')}
+						resBtnIcon={<AddSubCategorySVG />}
+						resBtnText='Добавить подкатегорию'
+						reqBtnIcon={<TrashIconSvg />}
+						reqBtnText='Удалить'
+						rejectHandler={rowDeleteHandler}
 						className={styles.rowActionButton}
-						removeHandler={rowDeleteHandler}
 						key='2'
 					/>,
 				],
@@ -56,27 +65,26 @@ export const CategoriesList: FC = () => {
 	}
 
 	const rowClickHandler = (id: string) => {
-		navigate(`/categories/${id}`)
+		navigate(`/catalog/categories/${id}`)
 	}
 
 	const handleAddTypeClick = async () => {
 		const newId = await addMaker()
-		navigate(`/categories/${newId}`)
+		navigate(`/catalog/categories/${newId}`)
 	}
 
-	// if (isLoading || !TypesInfoData?.types) return <Loader />
-
+	if (isLoading || !categoryInfoData?.contents) return <Loader />
 	return (
 		<div>
 			<h3>Категории</h3>
 			<CustomTable
 				className={styles.categoriesTable}
-				rowData={formatObjectsTableData(categoryInfoData?.categories ?? [])}
+				rowData={formatObjectsTableData(categoryInfoData?.contents ?? [])}
 				colTitles={tableTitles}
 				rowClickHandler={rowClickHandler}
 			/>
 			<TableFooter
-				totalElements={categoryInfoData?.categories.length}
+				totalElements={categoryInfoData?.contents.length}
 				addClickHandler={handleAddTypeClick}
 				addText='Добавить категорию'
 			/>

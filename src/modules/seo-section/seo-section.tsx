@@ -8,25 +8,25 @@ export const SeoSection = () => {
 		<AdminSection className={styles.seoSection} isBlock={false}>
 			<h5 className={styles.seoSectionTitle}>SEO (продвижение сайта)</h5>
 			<ControlledInput
-				name='titleSeo'
+				name='seo_title'
 				label='Заголок (title)'
 				placeholder='Заголовок'
 				margin='0 0 20px 0'
 			/>
 			<ControlledInput
-				name='descriptionSeo'
+				name='seo_description'
 				label='Описание (description)'
 				placeholder='Описание'
 				margin='0 0 20px 0'
 			/>
 			<ControlledInput
-				name='keywords'
+				name='seo_keywords'
 				label='Ключевые слова (keywords)'
 				placeholder='Ключевые слова'
 				margin='0 0 20px 0'
 			/>
 			<ControlledInput
-				name='urlTitle'
+				name='seo_virtual'
 				label='Виртуальный заголовок латиницей без пробелов'
 				placeholder='Виртуальный заголовок'
 				margin='0 0 20px 0'

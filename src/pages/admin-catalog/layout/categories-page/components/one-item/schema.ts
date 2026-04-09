@@ -4,19 +4,18 @@ import * as yup from 'yup'
 
 export type OneCategoryInputs = {
 	title: string
+	use_main?: boolean
+	main_button?: string
 	short?: string
 	full?: string
-	mainphoto?: ImageItemWithText[]
-	photo?: ImageItemWithText[]
-	parent: SelOption[] | string
-	titleSeo?: string
-	descriptionSeo?: string
-	keywords?: string
-	urlTitle?: string
+	img?: ImageItemWithText[]
+	seo_title?: string
+	seo_description?: string
+	seo_keywords?: string
+	seo_virtual?: string
 	url?: string
 	hidden?: boolean
-	showBtn?: boolean
-	textBtn?: string
+	parent: SelOption[] | string
 }
 
 export const oneCategorySchema = yup.object().shape({

@@ -153,6 +153,10 @@ import { MainInfoList } from 'src/pages/admin-marketing/layout/main-info-part/li
 import { OneInfoItem } from 'src/pages/admin-marketing/layout/main-info-part/one-item/info-item'
 import { AdMainPage } from 'src/pages/admin-marketing/layout/ad-main/ad-main-page'
 import { DistributionPage } from 'src/pages/admin-marketing/layout/distribution/distribution-page'
+import { AdList } from 'src/pages/admin-marketing/layout/ad-main/list/ad-list'
+import { PromoItem } from 'src/pages/admin-marketing/layout/ad-main/promo-item/promo-item'
+import { AdItem } from 'src/pages/admin-marketing/layout/ad-main/ad-item/ad-item'
+import { RewardItem } from 'src/pages/admin-marketing/layout/ad-main/reward-item/reward-item'
 
 export const AdminRoutes: FC = () => {
 	return (
@@ -205,7 +209,21 @@ export const AdminRoutes: FC = () => {
 					</Route>
 				</Route>
 				<Route path={AdminRoute.Marketing} element={<AdminMarketingLayout />}>
-					<Route path={AdminRoute.MarketingAd} element={<AdMainPage />} />
+					<Route path={AdminRoute.MarketingAd} element={<AdMainPage />}>
+						<Route index element={<AdList />} />
+						<Route
+							path={`/${AdminRoute.Marketing}/${AdminRoute.MarketingAd}/${AdminRoute.AdPromo}`}
+							element={<PromoItem />}
+						/>
+						<Route
+							path={`/${AdminRoute.Marketing}/${AdminRoute.MarketingAd}/${AdminRoute.AdReklama}`}
+							element={<AdItem />}
+						/>
+						<Route
+							path={`/${AdminRoute.Marketing}/${AdminRoute.MarketingAd}/${AdminRoute.AdReward}`}
+							element={<RewardItem />}
+						/>
+					</Route>
 					<Route path={AdminRoute.MarketingDistribution} element={<DistributionPage />} />
 					<Route path={AdminRoute.MarketingInfo} element={<MainInfoPartPage />}>
 						<Route index element={<MainInfoList />} />

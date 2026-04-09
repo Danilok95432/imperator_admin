@@ -1,6 +1,6 @@
 import { type OneTypeInputs, oneTypeSchema } from './schema'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -14,18 +14,20 @@ import { AdminControllers } from 'src/components/admin-controllers/admin-control
 import { AdminRoute } from 'src/routes/admin-routes/consts'
 
 import styles from './index.module.scss'
-import { useGetTypeInfoQuery } from 'src/store/catalog/catalog.api'
+import { useGetTypeInfoQuery, useSaveTypeInfoMutation } from 'src/store/catalog/catalog.api'
 import { MainSection } from './components/main-section/main-section'
 import { SeoSection } from 'src/modules/seo-section/seo-section'
 import adminStyles from 'src/routes/admin-layout/index.module.scss'
 import classNames from 'classnames'
+import { booleanToNumberString } from 'src/helpers/utils'
 
 export const OneType = () => {
 	const { id = '0' } = useParams()
 
 	const { data } = useGetTypeInfoQuery(id)
-	// const [saveNewsInfo] = useSaveTypeInfoMutation()
-	const [, setAction] = useState<'apply' | 'save'>('apply')
+	const [saveTypeInfo] = useSaveTypeInfoMutation()
+	const [action, setAction] = useState<'apply' | 'save'>('apply')
+	const navigate = useNavigate()
 
 	const methods = useForm<OneTypeInputs>({
 		mode: 'onBlur',
@@ -34,9 +36,23 @@ export const OneType = () => {
 			hidden: false,
 		},
 	})
-	const { isSent } = useIsSent(methods.control)
+	const { isSent, markAsSent } = useIsSent(methods.control)
 	const onSubmit: SubmitHandler<OneTypeInputs> = async (data) => {
-		console.log(data)
+		const formData = new FormData()
+		formData.append('id', id)
+		formData.append('title', data.title)
+		formData.append('seo_title', data.seo_title ?? '')
+		formData.append('seo_description', data.seo_description ?? '')
+		formData.append('seo_keywords', data.seo_keywords ?? '')
+		formData.append('seo_virtual', data.seo_virtual ?? '')
+		formData.append('hidden', booleanToNumberString(data.hidden))
+		const res = await saveTypeInfo(formData)
+		if (res) {
+			markAsSent(true)
+			if (action === 'save') {
+				navigate(`/${AdminRoute.Catalog}/${AdminRoute.CatalogTypes}`)
+			}
+		}
 	}
 
 	useEffect(() => {
@@ -53,7 +69,7 @@ export const OneType = () => {
 			>
 				Возврат к списку
 			</Link>
-			<h4 className={styles.titleNewsForm}>Тип товара: Кофе в зернах</h4>
+			<h4 className={styles.titleNewsForm}>Тип товара: {data?.title}</h4>
 			<Container className={styles.cont}>
 				<FormProvider {...methods}>
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>

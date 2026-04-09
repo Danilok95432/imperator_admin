@@ -75,10 +75,10 @@ export type SaleInfoResponse = {
 	urlMaker: string
 	description: string
 	mainphoto: ImageItemWithText[]
-	titleSeo: string
-	descriptionSeo: string
-	keywords: string
-	urlTitle: string
+	seo_title: string
+	seo_description: string
+	seo_keywords: string
+	seo_virtual: string
 	url: string
 	hidden: boolean
 }

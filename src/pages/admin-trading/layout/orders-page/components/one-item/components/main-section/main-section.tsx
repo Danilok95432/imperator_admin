@@ -6,6 +6,8 @@ import { ControlledInput } from 'src/components/controlled-input/controlled-inpu
 import styles from './index.module.scss'
 import { ControlledSelect } from 'src/components/controlled-select/controlled-select'
 import { ControlledDateInput } from 'src/components/controlled-date-input/controlled-date-input'
+import adminStyles from 'src/routes/admin-layout/index.module.scss'
+import classNames from 'classnames'
 
 type MainSectionProps = {
 	deliverOption?: SelOption[]
@@ -45,7 +47,15 @@ export const MainSection: FC<MainSectionProps> = ({ deliverOption, statusOption 
 				height='54px'
 			/>
 			<ControlledInput name='time' label='Время доставки' margin='0 0 20px 0' />
-			<ControlledDateInput name='date' />
+			<ControlledDateInput
+				className={classNames(adminStyles.adminDateTimeInput, adminStyles.adminDateTimeInputFull)}
+				label='Дата и время заказа'
+				name='date'
+				placeholder='гггг-мм-дд чч:мм'
+				showTimeSelect
+				dateFormat='yyyy-MM-dd HH:mm'
+				timeFormat='HH:mm'
+			/>
 			<ControlledInput name='price' label='Стоимость товаров' margin='0 0 20px 0' />
 			<ControlledInput name='priceDeliver' label='Стоимость доставки' margin='0 0 20px 0' />
 			<ControlledInput name='totalSum' label='Общая стоимость' margin='0 0 20px 0' />

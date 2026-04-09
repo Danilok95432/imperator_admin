@@ -1,6 +1,6 @@
 import { type OneCategoryInputs, oneCategorySchema } from './schema'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -14,18 +14,20 @@ import { AdminControllers } from 'src/components/admin-controllers/admin-control
 import { AdminRoute } from 'src/routes/admin-routes/consts'
 
 import styles from './index.module.scss'
-import { useGetCategoryInfoQuery } from 'src/store/catalog/catalog.api'
+import { useGetCategoryInfoQuery, useSaveCategoryInfoMutation } from 'src/store/catalog/catalog.api'
 import { MainSection } from './components/main-section/main-section'
 import { SeoSection } from 'src/modules/seo-section/seo-section'
 import adminStyles from 'src/routes/admin-layout/index.module.scss'
 import classNames from 'classnames'
+import { booleanToNumberString } from 'src/helpers/utils'
 
 export const OneCategory = () => {
 	const { id = '0' } = useParams()
 
 	const { data } = useGetCategoryInfoQuery(id)
-	// const [saveNewsInfo] = useSaveCategoryInfoMutation()
-	const [, setAction] = useState<'apply' | 'save'>('apply')
+	const [saveCategoryInfo] = useSaveCategoryInfoMutation()
+	const [action, setAction] = useState<'apply' | 'save'>('apply')
+	const navigate = useNavigate()
 
 	const methods = useForm<OneCategoryInputs>({
 		mode: 'onBlur',
@@ -34,9 +36,31 @@ export const OneCategory = () => {
 			hidden: false,
 		},
 	})
-	const { isSent } = useIsSent(methods.control)
+	const { isSent, markAsSent } = useIsSent(methods.control)
 	const onSubmit: SubmitHandler<OneCategoryInputs> = async (data) => {
-		console.log(data)
+		const formData = new FormData()
+		formData.append('id', id)
+		formData.append('title', data.title)
+		formData.append('main_button', data.main_button ?? '')
+		formData.append('short', data.short ?? '')
+		formData.append('full', data.full ?? '')
+		formData.append(
+			'parent',
+			typeof data.parent === 'string' ? data.parent : data.parent ? data.parent[0].value : '0',
+		)
+		formData.append('seo_title', data.seo_title ?? '')
+		formData.append('seo_description', data.seo_description ?? '')
+		formData.append('seo_keywords', data.seo_keywords ?? '')
+		formData.append('seo_virtual', data.seo_virtual ?? '')
+		formData.append('hidden', booleanToNumberString(data.hidden))
+		formData.append('use_main', booleanToNumberString(data.use_main))
+		const res = await saveCategoryInfo(formData)
+		if (res) {
+			markAsSent(true)
+			if (action === 'save') {
+				navigate(`/${AdminRoute.Catalog}/${AdminRoute.CatalogCategories}`)
+			}
+		}
 	}
 
 	useEffect(() => {
@@ -53,7 +77,7 @@ export const OneCategory = () => {
 			>
 				Возврат к списку
 			</Link>
-			<h4 className={styles.titleNewsForm}>Категория: Черный чай</h4>
+			<h4 className={styles.titleNewsForm}>Категория: {data?.title}</h4>
 			<Container className={styles.cont}>
 				<FormProvider {...methods}>
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
@@ -81,7 +105,7 @@ export const OneCategory = () => {
 									}
 								/>
 								<SwitchedRadioBtns
-									name='showBtn'
+									name='use_main'
 									label='Показать на главной'
 									$variant='switcher'
 									contentRadio1={

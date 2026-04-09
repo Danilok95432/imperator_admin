@@ -18,9 +18,11 @@ type RowControllerProps = {
 	reqBtnText?: string
 	resBtnIcon?: ReactNode
 	reqBtnIcon?: ReactNode
+	noHide?: boolean
 }
 
 export const RowController: FC<RowControllerProps> = ({
+	noHide,
 	textOfHidden,
 	className,
 	variant = 'main',
@@ -62,7 +64,7 @@ export const RowController: FC<RowControllerProps> = ({
 					{resBtnIcon && (
 						<button className={styles.resBtn} onClick={(e) => handleResolve(e, id)} type='button'>
 							{resBtnIcon}
-							{resBtnText ?? 'Скрыть'}
+							<p>{resBtnText ?? 'Скрыть'}</p>
 						</button>
 					)}
 					{reqBtnIcon && (
@@ -82,15 +84,17 @@ export const RowController: FC<RowControllerProps> = ({
 				<RowControllerIconSvg />
 			</button>
 			<div className={cn(styles.rowControllers, 'row-controllers')}>
-				<button className={styles.hideBtn} onClick={(e) => handleClickHide(e, id)} type='button'>
-					{textOfHidden ?? 'Скрыть'}
-				</button>
+				{!noHide && (
+					<button className={styles.hideBtn} onClick={(e) => handleClickHide(e, id)} type='button'>
+						<p>{textOfHidden ?? 'Скрыть'}</p>
+					</button>
+				)}
 				<button
 					className={styles.removeBtn}
 					onClick={(e) => handleClickRemove(e, id)}
 					type='button'
 				>
-					Удалить
+					<p>Удалить</p>
 				</button>
 			</div>
 		</div>

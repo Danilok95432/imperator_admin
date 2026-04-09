@@ -7,7 +7,6 @@ export const AdMainPage = () => {
 			<Helmet>
 				<title>Реклама на главной</title>
 			</Helmet>
-			<h2 style={{ margin: '0 0 0 28px' }}>Реклама на главной</h2>
 			<Outlet />
 		</>
 	)

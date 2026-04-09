@@ -4,6 +4,9 @@ import { baseQueryWithReauth } from 'src/helpers/base-query'
 
 import { ReducerPath } from 'src/helpers/consts'
 import {
+	type AdPromoInfoResponse,
+	type AdReklamaInfoResponse,
+	type AdRewardInfoResponse,
 	type PageInfoInfoResponse,
 	type PageInfoNewIdResponse,
 	type PageInfoResponse,
@@ -11,7 +14,7 @@ import {
 
 export const marketingApi = createApi({
 	reducerPath: ReducerPath.Marketing,
-	tagTypes: ['Marketing', 'MainInfo'],
+	tagTypes: ['Marketing', 'MainInfo', 'Reward', 'Ad', 'Promo'],
 	baseQuery: baseQueryWithReauth,
 	endpoints: (build) => ({
 		getAllPagesInfo: build.query<PageInfoResponse, { pageName?: string }>({
@@ -54,6 +57,48 @@ export const marketingApi = createApi({
 			}),
 			invalidatesTags: ['MainInfo'],
 		}),
+		getAdPromoInfo: build.query<AdPromoInfoResponse, null>({
+			query: () => ({
+				url: `promo/edit`,
+			}),
+			providesTags: ['Promo'],
+		}),
+		saveAdPromoInfo: build.mutation<string, FieldValues>({
+			query: (FormData) => ({
+				url: `promo/save`,
+				method: 'POST',
+				body: FormData,
+			}),
+			invalidatesTags: ['Promo'],
+		}),
+		getAdReklamaInfo: build.query<AdReklamaInfoResponse, null>({
+			query: () => ({
+				url: `ad/edit`,
+			}),
+			providesTags: ['Ad'],
+		}),
+		saveAdReklamaInfo: build.mutation<string, FieldValues>({
+			query: (FormData) => ({
+				url: `ad/save`,
+				method: 'POST',
+				body: FormData,
+			}),
+			invalidatesTags: ['Ad'],
+		}),
+		getAdRewardInfo: build.query<AdRewardInfoResponse, null>({
+			query: () => ({
+				url: `reward/edit`,
+			}),
+			providesTags: ['Reward'],
+		}),
+		saveAdRewardInfo: build.mutation<string, FieldValues>({
+			query: (FormData) => ({
+				url: `reward/save`,
+				method: 'POST',
+				body: FormData,
+			}),
+			invalidatesTags: ['Reward'],
+		}),
 	}),
 })
 
@@ -63,4 +108,10 @@ export const {
 	useGetNewIdPageInfoQuery,
 	useGetPageInfoInfoQuery,
 	useSavePageInfoInfoMutation,
+	useGetAdPromoInfoQuery,
+	useGetAdReklamaInfoQuery,
+	useGetAdRewardInfoQuery,
+	useSaveAdPromoInfoMutation,
+	useSaveAdReklamaInfoMutation,
+	useSaveAdRewardInfoMutation,
 } = marketingApi

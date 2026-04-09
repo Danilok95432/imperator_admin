@@ -35,7 +35,7 @@ export const catalogApi = createApi({
 	endpoints: (build) => ({
 		getAllTypes: build.query<TypeResponse, { category?: string; title?: string; date?: string }>({
 			query: ({ category, title, date }) => ({
-				url: 'types/list',
+				url: 'catalog_types/list',
 				params: {
 					category,
 					title,
@@ -46,13 +46,13 @@ export const catalogApi = createApi({
 		}),
 		getNewIdType: build.query<TypeNewIdResponse, null>({
 			query: () => ({
-				url: `types/getnew`,
+				url: `catalog_types/getnew`,
 			}),
 			providesTags: ['Types'],
 		}),
 		deleteTypeById: build.mutation<null, string>({
 			query: (typeId) => ({
-				url: `types/delete`,
+				url: `catalog_types/delete`,
 				method: 'DELETE',
 				body: { id: typeId },
 			}),
@@ -60,7 +60,7 @@ export const catalogApi = createApi({
 		}),
 		getTypeInfo: build.query<TypeInfoResponse, string>({
 			query: (id) => ({
-				url: `types/edit`,
+				url: `catalog_types/edit`,
 				params: {
 					id,
 				},
@@ -69,7 +69,7 @@ export const catalogApi = createApi({
 		}),
 		saveTypeInfo: build.mutation<string, FieldValues>({
 			query: (FormData) => ({
-				url: `types/save`,
+				url: `catalog_types/save`,
 				method: 'POST',
 				body: FormData,
 			}),
@@ -80,7 +80,7 @@ export const catalogApi = createApi({
 			{ title?: string; country?: string; urlMaker?: string; types?: string }
 		>({
 			query: ({ title, country, urlMaker, types }) => ({
-				url: 'makers/list',
+				url: 'brands/list',
 				params: {
 					title,
 					country,
@@ -92,13 +92,13 @@ export const catalogApi = createApi({
 		}),
 		getNewIdMaker: build.query<MakerNewIdResponse, null>({
 			query: () => ({
-				url: `makers/getnew`,
+				url: `brands/getnew`,
 			}),
 			providesTags: ['Makers'],
 		}),
 		deleteMakerById: build.mutation<null, string>({
 			query: (makerId) => ({
-				url: `makers/delete`,
+				url: `brands/delete`,
 				method: 'DELETE',
 				body: { id: makerId },
 			}),
@@ -106,7 +106,7 @@ export const catalogApi = createApi({
 		}),
 		getMakerInfo: build.query<MakerInfoResponse, string>({
 			query: (id) => ({
-				url: `makers/edit`,
+				url: `brands/edit`,
 				params: {
 					id,
 				},
@@ -115,7 +115,7 @@ export const catalogApi = createApi({
 		}),
 		saveMakerInfo: build.mutation<string, FieldValues>({
 			query: (FormData) => ({
-				url: `makers/save`,
+				url: `brands/save`,
 				method: 'POST',
 				body: FormData,
 			}),
@@ -123,19 +123,19 @@ export const catalogApi = createApi({
 		}),
 		getAllCategories: build.query<CategoryResponse, null>({
 			query: () => ({
-				url: 'caregories/list',
+				url: 'catalog_content/list',
 			}),
 			providesTags: ['Categories'],
 		}),
 		getNewIdCategory: build.query<CategoryNewIdResponse, null>({
 			query: () => ({
-				url: `caregories/getnew`,
+				url: `catalog_content/getnew`,
 			}),
 			providesTags: ['Categories'],
 		}),
 		deleteCategoryById: build.mutation<null, string>({
 			query: (categoryId) => ({
-				url: `caregories/delete`,
+				url: `catalog_content/delete`,
 				method: 'DELETE',
 				body: { id: categoryId },
 			}),
@@ -143,7 +143,7 @@ export const catalogApi = createApi({
 		}),
 		getCategoryInfo: build.query<CategoryInfoResponse, string>({
 			query: (id) => ({
-				url: `caregories/edit`,
+				url: `catalog_content/edit`,
 				params: {
 					id,
 				},
@@ -152,7 +152,7 @@ export const catalogApi = createApi({
 		}),
 		saveCategoryInfo: build.mutation<string, FieldValues>({
 			query: (FormData) => ({
-				url: `caregories/save`,
+				url: `catalog_content/save`,
 				method: 'POST',
 				body: FormData,
 			}),

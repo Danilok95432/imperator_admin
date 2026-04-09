@@ -23,7 +23,7 @@ export const MainSection: FC<MainSectionProps> = ({ parentsOption }) => {
 				margin='0 0 20px 0'
 			/>
 			<ControlledInput
-				name='textBtn'
+				name='main_button'
 				label='Текст для кнопки на главной (стандартный если не указать)'
 				margin='0 0 20px 0'
 			/>
@@ -43,23 +43,23 @@ export const MainSection: FC<MainSectionProps> = ({ parentsOption }) => {
 			/>
 			<ReactDropzone
 				label='Изображение (305x286)'
-				name='mainphoto'
+				name='img'
 				prompt='PNG, JPG, JPEG. 1000 х1000px, не более 3 Мб'
 				accept={{ 'image/png': ['.png'], 'image/jpeg': ['.jpeg'] }}
 				margin='20px 0 20px 0'
 				previewVariant='sm-img'
-				imgtype='category'
+				imgtype='catalog'
 				fileImages={[]}
 				className={styles.img}
 			/>
 			<ReactDropzone
 				label='Картинка внутри раздела (485x285)'
-				name='photo'
+				name='img'
 				prompt='PNG, JPG, JPEG. 1000 х1000px, не более 3 Мб'
 				accept={{ 'image/png': ['.png'], 'image/jpeg': ['.jpeg'] }}
 				margin='20px 0 20px 0'
 				previewVariant='sm-img'
-				imgtype='category'
+				imgtype='catalog'
 				fileImages={[]}
 				className={styles.img}
 			/>

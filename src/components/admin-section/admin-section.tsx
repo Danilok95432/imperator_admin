@@ -44,7 +44,6 @@ export const AdminSection: FC<AdminSectionProps> = ({
 }) => {
 	const { watch } = useFormContext()
 	const isChecked = sectionName ? watch(sectionName) : true
-
 	if (fullSection) {
 		return (
 			<section className={cn(styles.fullAdminSection, { [styles._noBlock]: !isBlock }, className)}>
@@ -62,6 +61,7 @@ export const AdminSection: FC<AdminSectionProps> = ({
 									className={cn(
 										styles.singleTitle,
 										{ [styles.noBorderBottom]: noBorder },
+										{ [styles.titleWithNoBorder]: noBorder },
 										titleStyleClass,
 									)}
 								>
@@ -108,6 +108,7 @@ export const AdminSection: FC<AdminSectionProps> = ({
 								className={cn(
 									styles.singleTitle,
 									{ [styles.noBorderBottom]: noBorder },
+									{ [styles.titleWithNoBorder]: noBorder },
 									titleStyleClass,
 								)}
 							>

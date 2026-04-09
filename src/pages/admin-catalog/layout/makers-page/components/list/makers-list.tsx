@@ -19,11 +19,12 @@ import {
 import { MainCheckBox } from 'src/UI/MainCheckBox/MainCheckBox'
 import { CheckMarkSvg } from 'src/UI/icons/checkMarkSVG'
 import { MakerElementsFiltrationInputs } from './consts'
+import { Loader } from 'src/components/loader/loader'
 
 export const MakersList: FC = () => {
 	const filterValues = useAppSelector(getFiltrationValues)
 
-	const { data: makersInfoData } = useGetAllMakersQuery({
+	const { data: makersInfoData, isLoading } = useGetAllMakersQuery({
 		title: filterValues.title,
 		country: filterValues.country,
 		urlMaker: filterValues.urlMaker,
@@ -47,10 +48,10 @@ export const MakersList: FC = () => {
 				cells: [
 					<p key='0'>{makerEl.title}</p>,
 					<p key='1'>{makerEl.country}</p>,
-					<p key='2'>{makerEl.urlMaker}</p>,
+					<p key='2'>{makerEl.brand_link}</p>,
 					<MainCheckBox
 						key='3'
-						checked={makerEl.active}
+						checked={makerEl.hidden}
 						disabled={true}
 						svgNode={<CheckMarkSvg />}
 						className={styles.checkBoxWrapperNews}
@@ -59,6 +60,7 @@ export const MakersList: FC = () => {
 						id={makerEl.id}
 						className={styles.rowActionButton}
 						removeHandler={rowDeleteHandler}
+						noHide
 						key='4'
 					/>,
 				],
@@ -71,15 +73,15 @@ export const MakersList: FC = () => {
 	}
 
 	const rowClickHandler = (id: string) => {
-		navigate(`/makers/${id}`)
+		navigate(`/catalog/makers/${id}`)
 	}
 
 	const handleAddTypeClick = async () => {
 		const newId = await addMaker()
-		navigate(`/makers/${newId}`)
+		navigate(`/catalog/makers/${newId}`)
 	}
 
-	// if (isLoading || !TypesInfoData?.types) return <Loader />
+	if (isLoading || !makersInfoData?.brands) return <Loader />
 
 	return (
 		<div>
@@ -89,12 +91,12 @@ export const MakersList: FC = () => {
 			</GridRow>
 			<CustomTable
 				className={styles.makersTable}
-				rowData={formatObjectsTableData(makersInfoData?.makers ?? [])}
+				rowData={formatObjectsTableData(makersInfoData?.brands ?? [])}
 				colTitles={tableTitles}
 				rowClickHandler={rowClickHandler}
 			/>
 			<TableFooter
-				totalElements={makersInfoData?.makers.length}
+				totalElements={makersInfoData?.brands.length}
 				addClickHandler={handleAddTypeClick}
 				addText='Добавить производителя'
 			/>

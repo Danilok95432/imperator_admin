@@ -19,11 +19,13 @@ import {
 } from 'src/store/catalog/catalog.api'
 import { MainCheckBox } from 'src/UI/MainCheckBox/MainCheckBox'
 import { CheckMarkSvg } from 'src/UI/icons/checkMarkSVG'
+import { Loader } from 'src/components/loader/loader'
+import { formatDateTimeTicket } from 'src/helpers/utils'
 
 export const TypesList: FC = () => {
 	const filterValues = useAppSelector(getFiltrationValues)
 
-	const { data: TypesInfoData } = useGetAllTypesQuery({
+	const { data: TypesInfoData, isLoading } = useGetAllTypesQuery({
 		title: filterValues.title,
 		category: filterValues.category,
 		date: filterValues.date,
@@ -44,11 +46,11 @@ export const TypesList: FC = () => {
 			return {
 				rowId: TypeEl.id,
 				cells: [
-					<p key='0'>{TypeEl.type}</p>,
-					<p key='1'>{TypeEl.date}</p>,
+					<p key='0'>{TypeEl.title}</p>,
+					<p key='1'>{formatDateTimeTicket(TypeEl.createdate)}</p>,
 					<MainCheckBox
 						key='2'
-						checked={TypeEl.active}
+						checked={TypeEl.hidden}
 						disabled={true}
 						svgNode={<CheckMarkSvg />}
 						className={styles.checkBoxWrapperNews}
@@ -69,15 +71,15 @@ export const TypesList: FC = () => {
 	}
 
 	const rowClickHandler = (id: string) => {
-		navigate(`/types/${id}`)
+		navigate(`/catalog/types/${id}`)
 	}
 
 	const handleAddTypeClick = async () => {
 		const newId = await addType()
-		navigate(`/types/${newId}`)
+		navigate(`/catalog/types/${newId}`)
 	}
 
-	// if (isLoading || !TypesInfoData?.types) return <Loader />
+	if (isLoading || !TypesInfoData?.types) return <Loader />
 
 	return (
 		<div>

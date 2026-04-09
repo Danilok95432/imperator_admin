@@ -126,6 +126,9 @@ export enum AdminRoute {
 	VIPCustomers = 'vip',
 	Marketing = 'marketing',
 	MarketingAd = 'ad',
+	AdPromo = 'ad-promo',
+	AdReklama = 'ad-block',
+	AdReward = 'ad-reward',
 	MarketingDistribution = 'distribution',
 	MarketingInfo = 'main-info',
 }

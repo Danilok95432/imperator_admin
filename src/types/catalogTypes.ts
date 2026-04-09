@@ -5,9 +5,9 @@ import { type MultiSelOption, type SelOption } from './select'
 export type TypesElement = {
 	id: string
 	category: string
-	type: string
-	date: string
-	active: boolean
+	title: string
+	createdate: string
+	hidden: boolean
 }
 
 export type TypeResponse = {
@@ -20,12 +20,11 @@ export type TypeNewIdResponse = {
 
 export type TypeInfoResponse = {
 	title: string
-	descriptionSeo: string
-	keywords: string
-	urlTitle: string
+	seo_title: string
+	seo_description: string
+	seo_keywords: string
+	seo_virtual: string
 	url: string
-	parent: SelOption[]
-	titleSeo: string
 	hidden: boolean
 }
 
@@ -33,12 +32,12 @@ export type MakersElement = {
 	id: string
 	title: string
 	country: string
-	urlMaker: string
-	active: boolean
+	brand_link: string
+	hidden: boolean
 }
 
 export type MakerResponse = {
-	makers: MakersElement[]
+	brands: MakersElement[]
 }
 
 export type MakerNewIdResponse = {
@@ -48,28 +47,30 @@ export type MakerNewIdResponse = {
 export type MakerInfoResponse = {
 	title: string
 	country: string
-	urlMaker: string
-	description: string
+	brand_link: string
+	brand_text: string
 	mainphoto: ImageItemWithText[]
-	titleSeo: string
-	descriptionSeo: string
-	keywords: string
-	urlTitle: string
+	seo_title: string
+	seo_description: string
+	seo_keywords: string
+	seo_virtual: string
 	url: string
 	hidden: boolean
 }
 
-export type SubCategoryItem = { title: string; active: boolean; id: string }
+export type SubCategoryItem = { title: string; hidden: boolean; id: string }
 
 export type CategoriesElement = {
 	id: string
 	title: string
-	subCategories: SubCategoryItem[]
-	active: boolean
+	subcats: SubCategoryItem[]
+	use_main: boolean
+	main_button: string
+	hidden: boolean
 }
 
 export type CategoryResponse = {
-	categories: CategoriesElement[]
+	contents: CategoriesElement[]
 }
 
 export type CategoryNewIdResponse = {
@@ -78,14 +79,15 @@ export type CategoryNewIdResponse = {
 
 export type CategoryInfoResponse = {
 	title: string
+	use_main: boolean
+	main_button: string
 	short: string
 	full: string
-	mainphoto: ImageItemWithText[]
-	photo: ImageItemWithText[]
-	titleSeo: string
-	descriptionSeo: string
-	keywords: string
-	urlTitle: string
+	img: ImageItemWithText[]
+	seo_title: string
+	seo_description: string
+	seo_keywords: string
+	seo_virtual: string
 	url: string
 	hidden: boolean
 	parent: SelOption[]
