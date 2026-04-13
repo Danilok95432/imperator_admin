@@ -1,4 +1,4 @@
-import { type ShortDocument } from './document'
+import { type FileItem } from './files'
 import { type ImageItemWithText } from './photos'
 import { type MultiSelOption, type SelOption } from './select'
 
@@ -104,10 +104,17 @@ export type GoodsElement = {
 	priceSite: string
 	hit: boolean
 	hidden: boolean
+
+	brand: string
+	catalog: string
+	item_price: string
+	item_price_discount: string
+	item_types: string
+	use_best: boolean
 }
 
 export type GoodsResponse = {
-	goods: GoodsElement[]
+	items: GoodsElement[]
 }
 
 export type GoodsNewIdResponse = {
@@ -115,24 +122,30 @@ export type GoodsNewIdResponse = {
 }
 
 export type GoodsInfoResponse = {
-	section: SelOption[]
+	id: string
 	title: string
-	types: MultiSelOption[]
-	maker: SelOption[]
-	weight: string
-	width: string
-	height: string
-	length: string
-	content: string
-	pack: string
-	availability: string
-	price: string
-	priceSale: string
+	artikul: string
+	catalogs: MultiSelOption[]
+	brands: SelOption[]
+	item_weight: string
+	item_width: string
+	item_length: string
+	item_height: string
+	item_desc: string
+	pakage: string
+	nal: string
+	item_price: string
+	item_price_discount: string
 	short: string
 	full: string
-	mainphoto: ImageItemWithText[]
-	documents: ShortDocument[]
 	hidden: boolean
-	hit: boolean
-	closed: boolean
+	use_mainslider: boolean
+	use_best: boolean
+	use_old: boolean
+	seo_title: string
+	seo_description: string
+	seo_keywords: string
+	seo_virtual: string
+	img: ImageItemWithText[]
+	documents: FileItem[]
 }

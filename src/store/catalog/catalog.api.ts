@@ -159,8 +159,8 @@ export const catalogApi = createApi({
 			invalidatesTags: ['Categories', 'CategoryInfo'],
 		}),
 		getAllGoods: build.query<GoodsResponse, { title?: string }>({
-			query: (title) => ({
-				url: 'goods/list',
+			query: ({ title }) => ({
+				url: 'catalog_items/list',
 				params: {
 					title,
 				},
@@ -169,13 +169,13 @@ export const catalogApi = createApi({
 		}),
 		getNewIdGoods: build.query<GoodsNewIdResponse, null>({
 			query: () => ({
-				url: `goods/getnew`,
+				url: `catalog_items/getnew`,
 			}),
 			providesTags: ['Goods'],
 		}),
 		deleteGoodsById: build.mutation<null, string>({
 			query: (goodsId) => ({
-				url: `goods/delete`,
+				url: `catalog_items/delete`,
 				method: 'DELETE',
 				body: { id: goodsId },
 			}),
@@ -183,7 +183,7 @@ export const catalogApi = createApi({
 		}),
 		getGoodsInfo: build.query<GoodsInfoResponse, string>({
 			query: (id) => ({
-				url: `goods/edit`,
+				url: `catalog_items/edit`,
 				params: {
 					id,
 				},
@@ -192,7 +192,7 @@ export const catalogApi = createApi({
 		}),
 		saveGoodsInfo: build.mutation<string, FieldValues>({
 			query: (FormData) => ({
-				url: `goods/save`,
+				url: `catalog_items/save`,
 				method: 'POST',
 				body: FormData,
 			}),

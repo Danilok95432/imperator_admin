@@ -1,54 +1,63 @@
-import { type ShortDocument } from 'src/types/document'
+import { type FileItem } from 'src/types/files'
 import { type ImageItemWithText } from 'src/types/photos'
 import { type SelOption, type MultiSelOption } from 'src/types/select'
 import * as yup from 'yup'
 
 export type OneGoodsInputs = {
-	section: SelOption[] | string
 	title: string
+	artikul: string
+	catalogs: SelOption[] | string
+	brands: SelOption[] | string
 	types?: MultiSelOption[] | string
-	maker: SelOption[] | string
-	weight: string
-	width: string
-	height: string
-	length: string
-	content?: string
-	pack?: string
-	availability?: string
-	price?: string
-	priceSale?: string
+	item_weight: string
+	item_width: string
+	item_length: string
+	item_height: string
+	item_desc?: string
+	pakage?: string
+	nal?: string
+	item_price?: string
+	item_price_discount?: string
 	short?: string
 	full?: string
-	mainphoto?: ImageItemWithText[]
-	documents?: ShortDocument[]
 	hidden?: boolean
-	hit?: boolean
-	slider?: boolean
-	closed?: boolean
+	use_mainslider?: boolean
+	use_best?: boolean
+	use_old?: boolean
+	seo_title?: string
+	seo_description?: string
+	seo_keywords?: string
+	seo_virtual?: string
+	img?: ImageItemWithText[]
+	documents?: FileItem[]
 }
 
 export const oneGoodsSchema = yup.object().shape({
 	title: yup
 		.string()
-		.required('Наименование обязательно')
+		.required('Обязательный параметр')
 		.max(200, 'Наименование не может превышать 200 символов'),
-	weight: yup
+	artikul: yup
 		.string()
-		.required('Наименование обязательно')
+		.required('Обязательный параметр')
 		.max(200, 'Наименование не может превышать 200 символов'),
-	height: yup
+	item_weight: yup
 		.string()
-		.required('Наименование обязательно')
+		.required('Обязательный параметр')
 		.max(200, 'Наименование не может превышать 200 символов'),
-	width: yup
+	item_height: yup
 		.string()
-		.required('Наименование обязательно')
+		.required('Обязательный параметр')
 		.max(200, 'Наименование не может превышать 200 символов'),
-	length: yup
+	item_width: yup
 		.string()
-		.required('Наименование обязательно')
+		.required('Обязательный параметр')
 		.max(200, 'Наименование не может превышать 200 символов'),
-	section: yup
+	item_length: yup
+		.string()
+		.required('Обязательный параметр')
+		.max(200, 'Наименование не может превышать 200 символов'),
+	catalogs: yup
 		.mixed<string | SelOption[]>()
 		.test('is-event-selected', 'Выберите раздел', (value) => {
 			if (typeof value === 'string') {
@@ -71,7 +80,7 @@ export const oneGoodsSchema = yup.object().shape({
 			}
 		})
 		.required('Выберите раздел'),
-	maker: yup
+	brands: yup
 		.mixed<string | SelOption[]>()
 		.test('is-event-selected', 'Выберите производителя', (value) => {
 			if (typeof value === 'string') {

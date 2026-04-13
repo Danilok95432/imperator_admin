@@ -21,12 +21,13 @@ export const MainSection: FC<MainSectionProps> = ({
 	return (
 		<AdminSection className={styles.mainSection} isBlock={false}>
 			<ControlledSelect
-				name='section'
+				name='catalogs'
 				label='Категория товара (раздел каталога) * '
 				selectOptions={sectionsOption ?? [{ label: 'Выберите категорию', value: '0' }]}
 				margin='0 0 20px 0'
 			/>
 			<ControlledInput name='title' label='Наименование *' margin='0 0 20px 0' />
+			<ControlledInput name='artikul' label='Артикул *' margin='0 0 20px 0' />
 			<ControlledMultipleSelect
 				name='types'
 				label='Тип товара'
@@ -41,7 +42,7 @@ export const MainSection: FC<MainSectionProps> = ({
 				className={styles.select}
 			/>
 			<ControlledSelect
-				name='maker'
+				name='brands'
 				label='Производитель *'
 				selectOptions={makersOption ?? [{ label: 'Выберите производителя', value: '0' }]}
 				margin='0 0 20px 0'

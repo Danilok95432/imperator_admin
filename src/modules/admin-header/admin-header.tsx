@@ -12,7 +12,7 @@ export const AdminHeader: FC = () => {
 	return (
 		<header className={styles.adminHeader}>
 			<Container className={styles.adminHeaderContainer}>
-				<Link className={styles.logoLink} to={AdminRoute.AdminHome}>
+				<Link className={styles.logoLink} to={`${AdminRoute.Catalog}/${AdminRoute.CatalogTypes}`}>
 					<AdminLogoSvg />
 				</Link>
 				{/*

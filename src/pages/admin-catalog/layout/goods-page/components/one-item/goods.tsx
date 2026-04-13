@@ -1,6 +1,6 @@
 import { type OneGoodsInputs, oneGoodsSchema } from './schema'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -14,31 +14,89 @@ import { AdminControllers } from 'src/components/admin-controllers/admin-control
 import { AdminRoute } from 'src/routes/admin-routes/consts'
 
 import styles from './index.module.scss'
-import { useGetCategoryInfoQuery } from 'src/store/catalog/catalog.api'
+import { useGetGoodsInfoQuery, useSaveGoodsInfoMutation } from 'src/store/catalog/catalog.api'
 import adminStyles from 'src/routes/admin-layout/index.module.scss'
 import classNames from 'classnames'
 import { MainSection } from './components/main-section/main-section'
 import { ReqSection } from './components/req-section/req-section'
 import { AdditionalSection } from './components/additional-section/additional-section'
 import { MediaSection } from './components/media-section/media-section'
+import { SeoSection } from 'src/modules/seo-section/seo-section'
+import { booleanToNumberString } from 'src/helpers/utils'
 
 export const OneGoods = () => {
 	const { id = '0' } = useParams()
 
-	const { data } = useGetCategoryInfoQuery(id)
-	// const [saveNewsInfo] = useSaveCategoryInfoMutation()
-	const [, setAction] = useState<'apply' | 'save'>('apply')
+	const { data } = useGetGoodsInfoQuery(id)
+	const [saveGoodsInfo] = useSaveGoodsInfoMutation()
+	const [action, setAction] = useState<'apply' | 'save'>('apply')
 
 	const methods = useForm<OneGoodsInputs>({
 		mode: 'onBlur',
 		resolver: yupResolver(oneGoodsSchema),
 		defaultValues: {
 			hidden: false,
+			use_mainslider: false,
+			use_best: false,
+			use_old: false,
 		},
 	})
-	const { isSent } = useIsSent(methods.control)
+	const navigate = useNavigate()
+	const { isSent, markAsSent } = useIsSent(methods.control)
 	const onSubmit: SubmitHandler<OneGoodsInputs> = async (data) => {
-		console.log(data)
+		const formData = new FormData()
+		let selectedObj = ''
+		if (typeof data.types !== 'string' && data.types) {
+			selectedObj = data.types
+				.filter((opt) => opt.selected)
+				.map((opt) => opt.value)
+				.join(',')
+		}
+		formData.append('id', id)
+		formData.append('title', data.title)
+		formData.append('artikul', data.artikul)
+		formData.append(
+			'id_type',
+			typeof data.types === 'string' ? data.types : data.types ? selectedObj : '0',
+		)
+		formData.append(
+			'id_content',
+			typeof data.catalogs === 'string'
+				? data.catalogs
+				: data.catalogs
+					? data.catalogs[0].value
+					: '0',
+		)
+		formData.append(
+			'id_brand',
+			typeof data.brands === 'string' ? data.brands : data.brands ? data.brands[0].value : '0',
+		)
+		formData.append('item_weight', data.item_weight ?? '')
+		formData.append('item_width', data.item_width ?? '')
+		formData.append('item_length', data.item_length ?? '')
+		formData.append('item_height', data.item_height ?? '')
+		formData.append('item_desc', data.item_desc ?? '')
+		formData.append('pakage', data.pakage ?? '')
+		formData.append('nal', data.nal ?? '')
+		formData.append('item_price', data.item_price ?? '')
+		formData.append('item_price_discount', data.item_price_discount ?? '')
+		formData.append('short', data.short ?? '')
+		formData.append('full', data.full ?? '')
+		formData.append('hidden', booleanToNumberString(data.hidden))
+		formData.append('use_mainslider', booleanToNumberString(data.use_mainslider))
+		formData.append('use_best', booleanToNumberString(data.use_best))
+		formData.append('use_old', booleanToNumberString(data.use_old))
+		formData.append('seo_title', data.seo_title ?? '')
+		formData.append('seo_description', data.seo_description ?? '')
+		formData.append('seo_keywords', data.seo_keywords ?? '')
+		formData.append('seo_virtual', data.seo_virtual ?? '')
+		const res = await saveGoodsInfo(formData)
+		if (res) {
+			markAsSent(true)
+			if (action === 'save') {
+				navigate(`/${AdminRoute.Catalog}/${AdminRoute.CatalogGoods}`)
+			}
+		}
 	}
 
 	useEffect(() => {
@@ -50,7 +108,7 @@ export const OneGoods = () => {
 	return (
 		<>
 			<Link
-				to={`/${AdminRoute.Catalog}/${AdminRoute.CatalogCategories}`}
+				to={`/${AdminRoute.Catalog}/${AdminRoute.CatalogGoods}`}
 				className={classNames(adminStyles.adminReturnLink, styles.linkBack)}
 			>
 				Возврат к списку
@@ -61,10 +119,11 @@ export const OneGoods = () => {
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
 						<div className={styles.oneNewsContent}>
 							<div className={styles.oneNewsContentLeft}>
-								<MainSection />
+								<MainSection sectionsOption={data?.catalogs} makersOption={data?.brands} />
 								<ReqSection />
 								<AdditionalSection />
 								<MediaSection />
+								<SeoSection />
 							</div>
 							<div className={styles.oneNewsContentRight}>
 								<SwitchedRadioBtns
@@ -85,21 +144,21 @@ export const OneGoods = () => {
 									}
 								/>
 								<SwitchedRadioBtns
-									name='slider'
+									name='use_mainslider'
 									label='Главный слайдер'
 									$variant='switcher'
 									contentRadio1={<>Да</>}
 									contentRadio2={<>Нет</>}
 								/>
 								<SwitchedRadioBtns
-									name='hit'
+									name='use_best'
 									label='Хит'
 									$variant='switcher'
 									contentRadio1={<>Да</>}
 									contentRadio2={<>Нет</>}
 								/>
 								<SwitchedRadioBtns
-									name='closed'
+									name='use_old'
 									label='Снято с производства'
 									$variant='switcher'
 									contentRadio1={<>Да</>}

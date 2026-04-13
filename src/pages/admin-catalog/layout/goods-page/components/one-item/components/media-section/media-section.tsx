@@ -7,12 +7,16 @@ import { ReactDropzone } from 'src/components/react-dropzone/react-dropzone'
 import { ReactDropzoneFiles } from 'src/components/react-dropzone-files/react-dropzone-files'
 import { RemoveFileSvg } from 'src/UI/icons/removeFileSVG'
 import { AddButton } from 'src/UI/AddButton/AddButton'
+import { type ImageItemWithText } from 'src/types/photos'
+import { type FileItem } from 'src/types/files'
 
 type MainSectionProps = {
 	parentsOption?: SelOption[]
+	images?: ImageItemWithText[]
+	documents?: FileItem[]
 }
 
-export const MediaSection: FC<MainSectionProps> = ({ parentsOption }) => {
+export const MediaSection: FC<MainSectionProps> = ({ parentsOption, images, documents }) => {
 	return (
 		<AdminSection
 			className={styles.mainSection}
@@ -22,13 +26,13 @@ export const MediaSection: FC<MainSectionProps> = ({ parentsOption }) => {
 		>
 			<ReactDropzone
 				label='Изображение (305x286)'
-				name='mainphoto'
+				name='img'
 				prompt='PNG, JPG, JPEG. 1000 х1000px, не более 3 Мб'
 				accept={{ 'image/png': ['.png'], 'image/jpeg': ['.jpeg'] }}
 				margin='20px 0 20px 0'
 				previewVariant='sm-img'
-				imgtype='goods'
-				fileImages={[]}
+				imgtype='item'
+				fileImages={images}
 				className={styles.img}
 			/>
 			<h2 className={styles.subTitle}>Документы</h2>
@@ -42,8 +46,8 @@ export const MediaSection: FC<MainSectionProps> = ({ parentsOption }) => {
 					'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
 				}}
 				maxFiles={7}
-				files={[]}
-				fileType='goods'
+				files={documents}
+				fileType='item'
 				multiple
 				customUploadBtn={<AddButton>Добавить файл</AddButton>}
 				className={styles.img}

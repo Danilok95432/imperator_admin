@@ -1,5 +1,5 @@
 import React, { type FC, type ReactNode, useState } from 'react'
-import { type FieldError, useFormContext } from 'react-hook-form'
+import { type FieldError, useFormContext, Controller } from 'react-hook-form'
 import cn from 'classnames'
 import { ErrorMessage } from '@hookform/error-message'
 import { PasswordEyeSvg } from 'src/UI/icons/passwordEyeSVG'
@@ -7,7 +7,6 @@ import InputMask from 'react-input-mask'
 
 import styles from './index.module.scss'
 import { LockedInputSVG } from 'src/UI/icons/lockedInputSVG'
-import { Controller } from 'react-hook-form'
 
 type ControlledInputProps = {
 	className?: string
@@ -28,7 +27,71 @@ type ControlledInputProps = {
 	bigFont?: boolean
 	locked?: boolean
 	isPhone?: boolean
+	isSum?: boolean
 } & React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>
+
+const sanitizeSumValue = (value: string): string => {
+	return value
+		.replace(',', '.')
+		.replace(/[^\d.]/g, '')
+		.replace(/(\..*)\./g, '$1')
+}
+
+const formatSumForInput = (value: string): string => {
+	if (!value) return ''
+
+	const normalized = sanitizeSumValue(value)
+	const [rawInteger = '', rawDecimal = ''] = normalized.split('.')
+
+	const integerPart = rawInteger.replace(/^0+(?=\d)/, '') || '0'
+	const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+
+	if (normalized.includes('.')) {
+		return `${formattedInteger}.${rawDecimal.slice(0, 2)}`
+	}
+
+	return formattedInteger
+}
+
+const formatSumOnBlur = (value: string): string => {
+	if (!value) return ''
+
+	const normalized = sanitizeSumValue(value)
+	const [rawInteger = '', rawDecimal = ''] = normalized.split('.')
+
+	const integerPart = rawInteger.replace(/^0+(?=\d)/, '') || '0'
+	const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+	const decimalPart = (rawDecimal + '00').slice(0, 2)
+
+	return `${formattedInteger}.${decimalPart}`
+}
+
+// Сколько "значимых" символов было до курсора.
+// Игнорируем только пробелы-разделители тысяч.
+// Точку и копейки сохраняем в расчете.
+const countMeaningfulCharsBeforeCaret = (value: string, caretPosition: number): number => {
+	return value.slice(0, caretPosition).replace(/ /g, '').length
+}
+
+// Восстанавливаем курсор по количеству значимых символов.
+// Это позволяет нормально жить и целой части, и точке, и копейкам.
+const getCaretPositionFromMeaningfulIndex = (value: string, meaningfulIndex: number): number => {
+	if (meaningfulIndex <= 0) return 0
+
+	let passed = 0
+
+	for (let i = 0; i < value.length; i++) {
+		if (value[i] !== ' ') {
+			passed++
+		}
+
+		if (passed >= meaningfulIndex) {
+			return i + 1
+		}
+	}
+
+	return value.length
+}
 
 export const ControlledInput: FC<ControlledInputProps> = ({
 	name,
@@ -49,6 +112,7 @@ export const ControlledInput: FC<ControlledInputProps> = ({
 	locked = false,
 	subLabel,
 	isPhone = false,
+	isSum = false,
 	...props
 }) => {
 	const {
@@ -79,7 +143,7 @@ export const ControlledInput: FC<ControlledInputProps> = ({
 					{subLabel && <p className={styles.subLabel}>{subLabel}</p>}
 					<textarea
 						{...register(name)}
-						{...props}
+						{...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
 						readOnly={isReadOnly}
 						disabled={disabled}
 						className={cn(styles.controlledInput, {
@@ -104,7 +168,7 @@ export const ControlledInput: FC<ControlledInputProps> = ({
 		)
 	}
 
-	if (type === 'password')
+	if (type === 'password') {
 		return (
 			<div className={cn(styles.inputEl, className)} style={{ margin, width, maxWidth }}>
 				<label className={styles.inputWrapper}>
@@ -112,7 +176,7 @@ export const ControlledInput: FC<ControlledInputProps> = ({
 					<div className={styles.passwordInputWrapper}>
 						<input
 							{...register(name)}
-							{...props}
+							{...(props as React.InputHTMLAttributes<HTMLInputElement>)}
 							type={isVisiblePass ? 'text' : 'password'}
 							readOnly={isReadOnly}
 							className={cn(styles.controlledInput, {
@@ -124,7 +188,7 @@ export const ControlledInput: FC<ControlledInputProps> = ({
 							onClick={() => setIsVisiblePass(!isVisiblePass)}
 							type='button'
 						>
-							{<PasswordEyeSvg />}
+							<PasswordEyeSvg />
 						</button>
 					</div>
 				</label>
@@ -137,8 +201,8 @@ export const ControlledInput: FC<ControlledInputProps> = ({
 				)}
 			</div>
 		)
+	}
 
-	// В компоненте
 	if (isPhone) {
 		return (
 			<div
@@ -163,7 +227,7 @@ export const ControlledInput: FC<ControlledInputProps> = ({
 								onBlur={field.onBlur}
 								onChange={(e) => {
 									field.onChange(e.target.value)
-									if (props.onChange) props.onChange(e)
+									props.onChange?.(e)
 								}}
 								readOnly={isReadOnly}
 								disabled={disabled}
@@ -194,6 +258,87 @@ export const ControlledInput: FC<ControlledInputProps> = ({
 		)
 	}
 
+	if (isSum) {
+		return (
+			<div
+				className={cn(styles.inputEl, { [styles.inputElBig]: bigFont }, className)}
+				style={{ margin, width, maxWidth }}
+			>
+				<label className={styles.inputWrapper}>
+					{label && (
+						<p>
+							{label} {isRequired ? <span className={styles.reqStar}>*</span> : null}
+						</p>
+					)}
+					{subLabel && <p className={styles.subLabel}>{subLabel}</p>}
+
+					<Controller
+						name={name}
+						control={control}
+						defaultValue=''
+						render={({ field }) => (
+							<input
+								{...(props as React.InputHTMLAttributes<HTMLInputElement>)}
+								ref={field.ref}
+								type='text'
+								value={field.value || ''}
+								readOnly={isReadOnly}
+								disabled={disabled}
+								inputMode='decimal'
+								className={cn(styles.controlledInput, {
+									[styles.noValid]: errors[name],
+									[styles.noBorder]: isLogin,
+								})}
+								onChange={(e) => {
+									const input = e.target
+									const rawValue = input.value
+									const caret = input.selectionStart ?? rawValue.length
+
+									const meaningfulCharsBeforeCaret = countMeaningfulCharsBeforeCaret(
+										rawValue,
+										caret,
+									)
+
+									const formattedValue = formatSumForInput(rawValue)
+
+									field.onChange(formattedValue)
+
+									requestAnimationFrame(() => {
+										const newCaret = getCaretPositionFromMeaningfulIndex(
+											formattedValue,
+											meaningfulCharsBeforeCaret,
+										)
+										input.setSelectionRange(newCaret, newCaret)
+									})
+
+									props.onChange?.(e)
+								}}
+								onBlur={(e) => {
+									const blurredValue = formatSumOnBlur(e.target.value)
+									field.onChange(blurredValue)
+									field.onBlur()
+									props.onBlur?.(e)
+								}}
+							/>
+						)}
+					/>
+				</label>
+
+				{locked && (
+					<div className={styles.locked}>
+						<LockedInputSVG />
+					</div>
+				)}
+				{dynamicError && <p className={styles.warningMessage}>{dynamicError.message}</p>}
+				{errors[name] && (
+					<p className={styles.warningMessage}>
+						<ErrorMessage errors={errors} name={name} />
+					</p>
+				)}
+			</div>
+		)
+	}
+
 	return (
 		<div
 			className={cn(styles.inputEl, { [styles.inputElBig]: bigFont }, className)}
@@ -208,7 +353,7 @@ export const ControlledInput: FC<ControlledInputProps> = ({
 				{subLabel && <p className={styles.subLabel}>{subLabel}</p>}
 				<input
 					{...register(name)}
-					{...props}
+					{...(props as React.InputHTMLAttributes<HTMLInputElement>)}
 					readOnly={isReadOnly}
 					className={cn(styles.controlledInput, {
 						[styles.noValid]: errors[name],

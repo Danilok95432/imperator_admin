@@ -57,17 +57,21 @@ export const GoodsList: FC = () => {
 					<p key='0'>{goodsEl.id}</p>,
 					<p key='1'>{goodsEl.title}</p>,
 					<p key='2'>{goodsEl.articul}</p>,
-					<p key='3'>{goodsEl.type}</p>,
-					<p key='4'>{goodsEl.maker}</p>,
-					<p key='5'>{goodsEl.category}</p>,
-					<p key='6'>{goodsEl.price}</p>,
-					<p key='7'>{goodsEl.priceSite}</p>,
+					<p key='3'>{goodsEl.item_types}</p>,
+					<p key='4'>{goodsEl.brand}</p>,
+					<p key='5'>{goodsEl.catalog}</p>,
+					<p key='6' className={styles.center}>
+						{goodsEl.item_price}
+					</p>,
+					<p key='7' className={styles.center}>
+						{goodsEl.item_price_discount}
+					</p>,
 					<MainCheckBox
 						key='8'
-						checked={goodsEl.hit}
+						checked={goodsEl.use_best}
 						disabled={true}
 						svgNode={<CheckMarkSvg />}
-						className={styles.checkBoxWrapperNews}
+						className={styles.checkBoxWrapperGoods}
 					/>,
 					<MainCheckBox
 						key='9'
@@ -92,12 +96,12 @@ export const GoodsList: FC = () => {
 	}
 
 	const rowClickHandler = (id: string) => {
-		navigate(`/goods/${id}`)
+		navigate(`/catalog/goods/${id}`)
 	}
 
 	const handleAddTypeClick = async () => {
 		const newId = await addMaker()
-		navigate(`/goods/${newId}`)
+		navigate(`/catalog/goods/${newId}`)
 	}
 
 	// if (isLoading || !TypesInfoData?.types) return <Loader />
@@ -110,12 +114,12 @@ export const GoodsList: FC = () => {
 			</GridRow>
 			<CustomTable
 				className={styles.goodsTable}
-				rowData={formatObjectsTableData(goodsInfoData?.goods ?? [])}
+				rowData={formatObjectsTableData(goodsInfoData?.items ?? [])}
 				colTitles={tableTitles}
 				rowClickHandler={rowClickHandler}
 			/>
 			<TableFooter
-				totalElements={goodsInfoData?.goods.length}
+				totalElements={goodsInfoData?.items.length}
 				addClickHandler={handleAddTypeClick}
 				addText='Добавить товар'
 			/>

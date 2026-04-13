@@ -37,7 +37,7 @@ export const AuthModal = () => {
 				setAuth(true)
 				setUser(resData.user)
 				closeModal()
-				navigate(`/org/award/info`)
+				navigate(`/catalog/types`)
 			}
 		} catch (err) {
 			console.error(err)
@@ -54,7 +54,7 @@ export const AuthModal = () => {
 	return (
 		<div className={styles.authModal}>
 			<div className='modal-header'>
-				<h3>Т-6 Атманов Угол</h3>
+				<h3>Т-6 торговля</h3>
 			</div>
 			<div className='modal-content'>
 				<h4>Вход в систему</h4>
