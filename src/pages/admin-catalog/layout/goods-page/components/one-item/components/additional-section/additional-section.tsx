@@ -18,7 +18,7 @@ export const AdditionalSection = () => {
 				isTextarea
 				height='58px'
 			/>
-			<ControlledInput name='pakage' label='Упаковка' margin='0 0 20px 0' />
+			<ControlledInput name='package' label='Упаковка' margin='0 0 20px 0' />
 			<ControlledInput name='item_price' label='Цена' margin='0 0 20px 0' isSum />
 			<ControlledInput
 				name='item_price_discount'

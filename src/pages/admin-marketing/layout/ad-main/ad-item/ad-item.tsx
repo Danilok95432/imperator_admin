@@ -1,6 +1,6 @@
 import { type AdItemInputs, adItemsSchema } from './schema'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -13,22 +13,42 @@ import { AdminRoute } from 'src/routes/admin-routes/consts'
 import styles from './index.module.scss'
 import adminStyles from 'src/routes/admin-layout/index.module.scss'
 import classNames from 'classnames'
-import { useGetAdReklamaInfoQuery } from 'src/store/marketing/marketing.api'
+import {
+	useGetAdReklamaInfoQuery,
+	useSaveAdReklamaInfoMutation,
+} from 'src/store/marketing/marketing.api'
 import { AdSection } from './components/ad-section/ad-section'
 import { ControlledInput } from 'src/components/controlled-input/controlled-input'
 
 export const AdItem = () => {
 	const { data } = useGetAdReklamaInfoQuery(null)
-	// const [saveNewsInfo] = useSaveTypeInfoMutation()
-	const [, setAction] = useState<'apply' | 'save'>('apply')
+	const [saveReklamaInfo] = useSaveAdReklamaInfoMutation()
+	const [action, setAction] = useState<'apply' | 'save'>('apply')
+	const navigate = useNavigate()
 
 	const methods = useForm<AdItemInputs>({
 		mode: 'onBlur',
 		resolver: yupResolver(adItemsSchema),
 	})
-	const { isSent } = useIsSent(methods.control)
+	const { isSent, markAsSent } = useIsSent(methods.control)
 	const onSubmit: SubmitHandler<AdItemInputs> = async (data) => {
-		console.log(data)
+		const formData = new FormData()
+
+		formData.append('block_name', data.block_name ?? '')
+		if (data.advs) {
+			data?.advs.forEach((ad, index) => {
+				formData.append(`advs[${index}][id]`, ad.id ?? '')
+				formData.append(`advs[${index}][adv_text]`, ad.adv_text ?? '')
+			})
+		}
+
+		const res = await saveReklamaInfo(formData)
+		if (res) {
+			markAsSent(true)
+			if (action === 'save') {
+				navigate(`/${AdminRoute.Marketing}/${AdminRoute.MarketingAd}`)
+			}
+		}
 	}
 
 	useEffect(() => {
@@ -36,8 +56,6 @@ export const AdItem = () => {
 			methods.reset({ ...data })
 		}
 	}, [data])
-
-	const sections = [1, 2, 3]
 
 	return (
 		<>
@@ -53,9 +71,13 @@ export const AdItem = () => {
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
 						<div className={styles.oneNewsContent}>
 							<div className={styles.oneNewsContentLeft}>
-								<ControlledInput name='title' label='Название блока рекламы' margin=' 0 0 36px 0' />
-								{sections.map((el, idx) => {
-									return <AdSection number={String(el)} key={idx} />
+								<ControlledInput
+									name='block_name'
+									label='Название блока рекламы'
+									margin=' 0 0 36px 0'
+								/>
+								{data?.advs.map((el, idx) => {
+									return <AdSection number={Number(idx)} key={idx} />
 								})}
 							</div>
 						</div>

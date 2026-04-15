@@ -8,34 +8,38 @@ import { QuillEditor } from 'src/components/quill-editor/quill-editor'
 import { ControlledSelect } from 'src/components/controlled-select/controlled-select'
 
 type RewardSectionProps = {
-	number?: string
+	number?: number
 	colorOptions?: SelOption[]
 }
 
-export const RewardSection: FC<RewardSectionProps> = ({ number, colorOptions }) => {
+export const RewardSection: FC<RewardSectionProps> = ({ number = 0, colorOptions }) => {
 	return (
 		<AdminSection
 			className={styles.adSection}
 			isBlock={false}
-			titleText={`Секция ${number}`}
+			titleText={`Секция ${number + 1}`}
 			noBorder
 		>
-			<ControlledInput name={`rewardName${number}`} label='Название награды' margin='0 0 20px 0' />
+			<ControlledInput
+				name={`awards[${number}].title`}
+				label='Название награды'
+				margin='0 0 20px 0'
+			/>
 			<ControlledSelect
-				name={`colorReward${number}`}
+				name={`awards[${number}].color`}
 				className={styles.select}
 				label='Цвет названия награды'
 				selectOptions={colorOptions ?? [{ label: 'Бронза', value: '0' }]}
 				margin='0 0 20px 0'
 			/>
 			<QuillEditor
-				name={`mainText${number}`}
+				name={`awards[${number}].itemname`}
 				label='Основной текст'
 				$heightEditor='150px'
 				className={styles.editor}
 			/>
 			<ControlledInput
-				name={`concurs_name${number}`}
+				name={`awards[${number}].itemdesc`}
 				label='Название конкурса'
 				margin='0 0 20px 0'
 				isTextarea

@@ -5,19 +5,19 @@ import { ControlledInput } from 'src/components/controlled-input/controlled-inpu
 import styles from './index.module.scss'
 
 type AdSectionProps = {
-	number?: string
+	number?: number
 }
 
-export const AdSection: FC<AdSectionProps> = ({ number }) => {
+export const AdSection: FC<AdSectionProps> = ({ number = 0 }) => {
 	return (
 		<AdminSection
 			className={styles.adSection}
 			isBlock={false}
-			titleText={`Секция ${number}`}
+			titleText={`Секция ${number + 1}`}
 			noBorder
 		>
 			<ControlledInput
-				name={`textSection${number}`}
+				name={`advs[${number}].adv_text`}
 				label='Текст секции'
 				margin='0 0 20px 0'
 				isTextarea

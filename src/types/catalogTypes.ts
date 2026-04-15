@@ -96,7 +96,7 @@ export type CategoryInfoResponse = {
 export type GoodsElement = {
 	id: string
 	title: string
-	articul: string
+	artikul: string
 	type: string
 	maker: string
 	category: string
@@ -125,8 +125,11 @@ export type GoodsInfoResponse = {
 	id: string
 	title: string
 	artikul: string
-	catalogs: MultiSelOption[]
+	catalogs: SelOption[]
+	catalogs_id: string
 	brands: SelOption[]
+	brands_id: string
+	types: MultiSelOption[]
 	item_weight: string
 	item_width: string
 	item_length: string

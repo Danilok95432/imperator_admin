@@ -1,6 +1,6 @@
 import { type PromoItemInputs, promoItemsSchema } from './schema'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -14,20 +14,33 @@ import styles from './index.module.scss'
 import adminStyles from 'src/routes/admin-layout/index.module.scss'
 import classNames from 'classnames'
 import { MainSection } from './components/main-section/main-section'
-import { useGetAdPromoInfoQuery } from 'src/store/marketing/marketing.api'
+import {
+	useGetAdPromoInfoQuery,
+	useSaveAdPromoInfoMutation,
+} from 'src/store/marketing/marketing.api'
 
 export const PromoItem = () => {
 	const { data } = useGetAdPromoInfoQuery(null)
-	// const [saveNewsInfo] = useSaveTypeInfoMutation()
-	const [, setAction] = useState<'apply' | 'save'>('apply')
+	const [savePromoInfo] = useSaveAdPromoInfoMutation()
+	const [action, setAction] = useState<'apply' | 'save'>('apply')
+	const navigate = useNavigate()
 
 	const methods = useForm<PromoItemInputs>({
 		mode: 'onBlur',
 		resolver: yupResolver(promoItemsSchema),
 	})
-	const { isSent } = useIsSent(methods.control)
+	const { isSent, markAsSent } = useIsSent(methods.control)
 	const onSubmit: SubmitHandler<PromoItemInputs> = async (data) => {
-		console.log(data)
+		const formData = new FormData()
+		formData.append('block_name', data.block_name)
+		formData.append('block_desc', data.block_desc)
+		const res = await savePromoInfo(formData)
+		if (res) {
+			markAsSent(true)
+			if (action === 'save') {
+				navigate(`/${AdminRoute.Marketing}/${AdminRoute.MarketingAd}`)
+			}
+		}
 	}
 
 	useEffect(() => {
@@ -50,7 +63,7 @@ export const PromoItem = () => {
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
 						<div className={styles.oneNewsContent}>
 							<div className={styles.oneNewsContentLeft}>
-								<MainSection textOption={data?.text} />
+								<MainSection />
 							</div>
 						</div>
 						<AdminControllers

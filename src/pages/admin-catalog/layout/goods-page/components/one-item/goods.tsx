@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { type OneGoodsInputs, oneGoodsSchema } from './schema'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -76,7 +77,7 @@ export const OneGoods = () => {
 		formData.append('item_length', data.item_length ?? '')
 		formData.append('item_height', data.item_height ?? '')
 		formData.append('item_desc', data.item_desc ?? '')
-		formData.append('pakage', data.pakage ?? '')
+		formData.append('package', data.package ?? '')
 		formData.append('nal', data.nal ?? '')
 		formData.append('item_price', data.item_price ?? '')
 		formData.append('item_price_discount', data.item_price_discount ?? '')
@@ -101,7 +102,24 @@ export const OneGoods = () => {
 
 	useEffect(() => {
 		if (data) {
-			methods.reset({ ...data })
+			const brandsOptions = data.brands ?? []
+			const catalogsOptions = data.catalogs ?? []
+
+			// Находим нужные объекты для селектов
+			const brandsOption = brandsOptions.find((el) => Number(el.value) === Number(data.brands_id))
+			const catalogOption = catalogsOptions.find(
+				(el) => Number(el.value) === Number(data.catalogs_id),
+			)
+			// Исключаем не только brands_id/catalogs_id, но и brands/catalogs из restData
+			const { brands_id, catalogs_id, brands, catalogs, ...restData } = data
+
+			methods.reset({
+				// Поля для React Select
+				brands: brandsOption ? [brandsOption] : [],
+				catalogs: catalogOption ? [catalogOption] : [],
+				// Все остальные поля (без brands/catalogs/brands_id/catalogs_id)
+				...restData,
+			})
 		}
 	}, [data])
 
@@ -119,7 +137,11 @@ export const OneGoods = () => {
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
 						<div className={styles.oneNewsContent}>
 							<div className={styles.oneNewsContentLeft}>
-								<MainSection sectionsOption={data?.catalogs} makersOption={data?.brands} />
+								<MainSection
+									sectionsOption={data?.catalogs}
+									makersOption={data?.brands}
+									typesOption={data?.types}
+								/>
 								<ReqSection />
 								<AdditionalSection />
 								<MediaSection />

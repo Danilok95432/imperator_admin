@@ -73,13 +73,13 @@ export const marketingApi = createApi({
 		}),
 		getAdReklamaInfo: build.query<AdReklamaInfoResponse, null>({
 			query: () => ({
-				url: `ad/edit`,
+				url: `adv/edit`,
 			}),
 			providesTags: ['Ad'],
 		}),
 		saveAdReklamaInfo: build.mutation<string, FieldValues>({
 			query: (FormData) => ({
-				url: `ad/save`,
+				url: `adv/save`,
 				method: 'POST',
 				body: FormData,
 			}),
@@ -87,13 +87,13 @@ export const marketingApi = createApi({
 		}),
 		getAdRewardInfo: build.query<AdRewardInfoResponse, null>({
 			query: () => ({
-				url: `reward/edit`,
+				url: `awards/edit`,
 			}),
 			providesTags: ['Reward'],
 		}),
 		saveAdRewardInfo: build.mutation<string, FieldValues>({
 			query: (FormData) => ({
-				url: `reward/save`,
+				url: `awards/save`,
 				method: 'POST',
 				body: FormData,
 			}),

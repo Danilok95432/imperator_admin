@@ -24,30 +24,32 @@ export type PageInfoInfoResponse = {
 }
 
 export type AdPromoInfoResponse = {
-	text: SelOption[]
-	subText: string
+	block_name: string
+	block_desc: string
 	img: ImageItemWithText[]
 }
 
+export type AdItem = {
+	id: string
+	adv_text: string
+}
+
 export type AdReklamaInfoResponse = {
+	block_name: string
+	advs: AdItem[]
+}
+
+export type AwardItem = {
+	id: string
 	title: string
-	textSection1: string
-	textSection2: string
-	textSection3: string
+	colors_list_id: string
+	itemname: string
+	itemdesc: string
+	color: SelOption[]
 }
 
 export type AdRewardInfoResponse = {
-	title: string
-	rewardName1: string
-	colorReward1: SelOption[]
-	mainText1: string
-	concurs_name1: string
-	rewardName2: string
-	colorReward2: SelOption[]
-	mainText2: string
-	concurs_name2: string
-	rewardName3: string
-	colorReward3: SelOption[]
-	mainText3: string
-	concurs_name3: string
+	block_name: string
+	colors_list: SelOption[]
+	awards: AwardItem[]
 }

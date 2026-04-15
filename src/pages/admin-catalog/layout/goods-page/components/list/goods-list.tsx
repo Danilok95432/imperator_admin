@@ -56,7 +56,7 @@ export const GoodsList: FC = () => {
 				cells: [
 					<p key='0'>{goodsEl.id}</p>,
 					<p key='1'>{goodsEl.title}</p>,
-					<p key='2'>{goodsEl.articul}</p>,
+					<p key='2'>{goodsEl.artikul}</p>,
 					<p key='3'>{goodsEl.item_types}</p>,
 					<p key='4'>{goodsEl.brand}</p>,
 					<p key='5'>{goodsEl.catalog}</p>,

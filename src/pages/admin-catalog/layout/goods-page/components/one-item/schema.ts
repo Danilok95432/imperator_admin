@@ -14,7 +14,7 @@ export type OneGoodsInputs = {
 	item_length: string
 	item_height: string
 	item_desc?: string
-	pakage?: string
+	package?: string
 	nal?: string
 	item_price?: string
 	item_price_discount?: string
@@ -59,7 +59,7 @@ export const oneGoodsSchema = yup.object().shape({
 		.max(200, 'Наименование не может превышать 200 символов'),
 	catalogs: yup
 		.mixed<string | SelOption[]>()
-		.test('is-event-selected', 'Выберите раздел', (value) => {
+		.test('is-event-selected', 'Выберите категорию', (value) => {
 			if (typeof value === 'string') {
 				return true
 			} else if (Array.isArray(value) && value.length > 0) {
@@ -69,7 +69,7 @@ export const oneGoodsSchema = yup.object().shape({
 					firstElement !== null &&
 					'label' in firstElement &&
 					'value' in firstElement &&
-					firstElement.label === 'Раздел не выбран'
+					firstElement.label === 'Категория не выбрана'
 				) {
 					return false
 				} else {
@@ -79,7 +79,7 @@ export const oneGoodsSchema = yup.object().shape({
 				return false
 			}
 		})
-		.required('Выберите раздел'),
+		.required('Выберите категорию'),
 	brands: yup
 		.mixed<string | SelOption[]>()
 		.test('is-event-selected', 'Выберите производителя', (value) => {

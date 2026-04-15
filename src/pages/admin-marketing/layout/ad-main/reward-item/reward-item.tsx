@@ -1,6 +1,6 @@
 import { type RewardItemInputs, rewardItemsSchema } from './schema'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { yupResolver } from '@hookform/resolvers/yup'
 
@@ -13,31 +13,65 @@ import { AdminRoute } from 'src/routes/admin-routes/consts'
 import styles from './index.module.scss'
 import adminStyles from 'src/routes/admin-layout/index.module.scss'
 import classNames from 'classnames'
-import { useGetAdRewardInfoQuery } from 'src/store/marketing/marketing.api'
+import {
+	useGetAdRewardInfoQuery,
+	useSaveAdRewardInfoMutation,
+} from 'src/store/marketing/marketing.api'
 import { ControlledInput } from 'src/components/controlled-input/controlled-input'
 import { RewardSection } from './components/reward-section/reward-section'
 
 export const RewardItem = () => {
 	const { data } = useGetAdRewardInfoQuery(null)
-	// const [saveNewsInfo] = useSaveTypeInfoMutation()
-	const [, setAction] = useState<'apply' | 'save'>('apply')
+	const [saveRewardInfo] = useSaveAdRewardInfoMutation()
+	const [action, setAction] = useState<'apply' | 'save'>('apply')
+	const navigate = useNavigate()
 
 	const methods = useForm<RewardItemInputs>({
 		mode: 'onBlur',
 		resolver: yupResolver(rewardItemsSchema),
 	})
-	const { isSent } = useIsSent(methods.control)
+	const { isSent, markAsSent } = useIsSent(methods.control)
 	const onSubmit: SubmitHandler<RewardItemInputs> = async (data) => {
-		console.log(data)
+		console.log(1)
+		const formData = new FormData()
+
+		formData.append('block_name', data.block_name ?? '')
+		if (data.awards) {
+			data?.awards.forEach((award, index) => {
+				formData.append(`awards[${index}][id]`, award.id ?? '')
+				formData.append(`awards[${index}][title]`, award.title ?? '')
+				formData.append(`awards[${index}][itemname]`, award.itemname ?? '')
+				formData.append(`awards[${index}][itemdesc]`, award.itemdesc ?? '')
+				formData.append(`awards[${index}][colors_list_id]`, String(award.color?.[0]?.value ?? ''))
+			})
+		}
+		const res = await saveRewardInfo(formData)
+		if (res) {
+			markAsSent(true)
+			if (action === 'save') {
+				navigate(`/${AdminRoute.Marketing}/${AdminRoute.MarketingAd}`)
+			}
+		}
 	}
 
 	useEffect(() => {
-		if (data) {
-			methods.reset({ ...data })
-		}
-	}, [data])
+		if (!data) return
 
-	const sections = [1, 2, 3]
+		const colorsOptions = data.colors_list ?? []
+
+		methods.reset({
+			block_name: data.block_name ?? '',
+			awards: (data.awards ?? []).map((award) => ({
+				id: award.id,
+				title: award.title,
+				itemname: award.itemname,
+				itemdesc: award.itemdesc,
+				color: [
+					colorsOptions.find((el) => String(el.value) === String(award.colors_list_id)),
+				].filter(Boolean),
+			})),
+		})
+	}, [data, methods])
 
 	return (
 		<>
@@ -53,13 +87,17 @@ export const RewardItem = () => {
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
 						<div className={styles.oneNewsContent}>
 							<div className={styles.oneNewsContentLeft}>
-								<ControlledInput name='title' label='Название блока рекламы' margin=' 0 0 36px 0' />
-								{sections.map((el, idx) => {
+								<ControlledInput
+									name='block_name'
+									label='Название блока рекламы'
+									margin=' 0 0 36px 0'
+								/>
+								{data?.awards.map((el, idx) => {
 									return (
 										<RewardSection
-											number={String(el)}
+											number={Number(idx)}
 											key={idx}
-											colorOptions={data?.colorReward1}
+											colorOptions={data?.colors_list}
 										/>
 									)
 								})}
