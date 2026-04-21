@@ -1,8 +1,8 @@
-import { type OneOrderInputs, oneOrderSchema } from './schema'
+/* eslint-disable @typescript-eslint/naming-convention */
+import { type OneOrderInputs } from './schema'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { yupResolver } from '@hookform/resolvers/yup'
 
 import { useIsSent } from 'src/hooks/sent-mark/sent-mark'
 
@@ -17,29 +17,100 @@ import styles from './index.module.scss'
 import { MainSection } from './components/main-section/main-section'
 import adminStyles from 'src/routes/admin-layout/index.module.scss'
 import classNames from 'classnames'
-import { useGetOrderInfoQuery } from 'src/store/trading/trading.api'
+import { useGetOrderInfoQuery, useSaveOrderInfoMutation } from 'src/store/trading/trading.api'
 import { type GoodsCart } from 'src/types/trading'
 import { CustomTable } from 'src/components/custom-table/custom-table'
+import { booleanToNumberString } from 'src/helpers/utils'
 
 export const OneOrder = () => {
 	const { id = '0' } = useParams()
 
 	const { data } = useGetOrderInfoQuery(id)
-	// const [saveNewsInfo] = useSaveTypeInfoMutation()
-	const [, setAction] = useState<'apply' | 'save'>('apply')
+	const [saveOrderInfo] = useSaveOrderInfoMutation()
+	const [action, setAction] = useState<'apply' | 'save'>('apply')
 
 	const methods = useForm<OneOrderInputs>({
 		mode: 'onBlur',
-		resolver: yupResolver(oneOrderSchema),
 	})
-	const { isSent } = useIsSent(methods.control)
+	const navigate = useNavigate()
+	const { isSent, markAsSent } = useIsSent(methods.control)
 	const onSubmit: SubmitHandler<OneOrderInputs> = async (data) => {
-		console.log(data)
+		const formData = new FormData()
+		formData.append('id', id)
+		formData.append('delivery_address', data.delivery_address ?? '')
+		formData.append('delivery_time', data.delivery_time ?? '')
+		formData.append(
+			'id_order_delivery',
+			typeof data.order_delivery === 'string'
+				? data.order_delivery
+				: data.order_delivery
+					? data.order_delivery[0].value
+					: '0',
+		)
+		formData.append(
+			'id_order_status',
+			typeof data.order_status === 'string'
+				? data.order_status
+				: data.order_status
+					? data.order_status[0].value
+					: '0',
+		)
+		formData.append(
+			'id_sdek_point',
+			typeof data.sdek_point === 'string'
+				? data.sdek_point
+				: data.sdek_point
+					? data.sdek_point[0].value
+					: '0',
+		)
+		formData.append('order_date', data.order_date ?? '')
+		formData.append('price_delivery', data.price_delivery ?? '')
+		formData.append('price_items', data.price_items ?? '')
+		formData.append('price_total', data.price_total ?? '')
+		formData.append('telphone', data.telphone ?? '')
+		formData.append('hidden', booleanToNumberString(data.hidden))
+		const res = await saveOrderInfo(formData)
+		if (res) {
+			markAsSent(true)
+			if (action === 'save') {
+				navigate(`/${AdminRoute.Trading}/${AdminRoute.TradingOrder}`)
+			}
+		}
 	}
 
 	useEffect(() => {
 		if (data) {
-			methods.reset({ ...data })
+			const deliverOptions = data.order_delivery ?? []
+			const statusOptions = data.order_status ?? []
+			const sdekOptions = data.sdek_point ?? []
+
+			// Находим нужные объекты для селектов
+			const deliveryOption = deliverOptions.find(
+				(el) => Number(el.value) === Number(data.order_delivery_id),
+			)
+			const statusOption = statusOptions.find(
+				(el) => Number(el.value) === Number(data.order_status_id),
+			)
+			const sdekOption = sdekOptions.find((el) => Number(el.value) === Number(data.sdek_point_id))
+			// Исключаем не только brands_id/catalogs_id, но и brands/catalogs из restData
+			const {
+				order_delivery_id,
+				order_status_id,
+				sdek_point_id,
+				order_delivery,
+				order_status,
+				sdek_point,
+				...restData
+			} = data
+
+			methods.reset({
+				// Поля для React Select
+				order_delivery: deliveryOption ? [deliveryOption] : [],
+				order_status: statusOption ? [statusOption] : [],
+				sdek_point: sdekOption ? [sdekOption] : [],
+				// Все остальные поля (без brands/catalogs/brands_id/catalogs_id)
+				...restData,
+			})
 		}
 	}, [data])
 
@@ -59,11 +130,11 @@ export const OneOrder = () => {
 				cells: [
 					<p key='0'>{orderEl.id}</p>,
 					<p key='1'>{orderEl.category}</p>,
-					<p key='2'>{orderEl.maker}</p>,
-					<p key='3'>{orderEl.name}</p>,
-					<p key='4'>{orderEl.price}</p>,
-					<p key='5'>{orderEl.amount}</p>,
-					<p key='6'>{orderEl.sum}</p>,
+					<p key='2'>{orderEl.brand}</p>,
+					<p key='3'>{orderEl.title}</p>,
+					<p key='4'>{orderEl.price_item}</p>,
+					<p key='5'>{orderEl.item_count}</p>,
+					<p key='6'>{orderEl.price_total}</p>,
 				],
 			}
 		})
@@ -83,10 +154,14 @@ export const OneOrder = () => {
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
 						<div className={styles.oneNewsContent}>
 							<div className={styles.oneNewsContentLeft}>
-								<MainSection deliverOption={data?.deliver} statusOption={data?.status} />
+								<MainSection
+									deliverOption={data?.order_delivery}
+									statusOption={data?.order_status}
+									sdekOption={data?.sdek_point}
+								/>
 								<CustomTable
 									className={styles.ordersTable}
-									rowData={formatObjectsTableData(data?.goods ?? [])}
+									rowData={formatObjectsTableData(data?.order_items ?? [])}
 									colTitles={tableTitles}
 								/>
 							</div>

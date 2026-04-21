@@ -12,6 +12,7 @@ export const MainSection = () => {
 				margin='0 0 20px 0'
 			/>
 			<ControlledInput name='block_desc' label='Вторая надпись (под главной)' margin='0 0 20px 0' />
+			<ControlledInput name='block_link' label='Ссылка' margin='0 0 20px 0' />
 			<ReactDropzone
 				label='Изображение (размер 1220x550 px)'
 				name='img'

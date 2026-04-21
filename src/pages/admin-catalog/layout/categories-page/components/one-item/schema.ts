@@ -9,6 +9,7 @@ export type OneCategoryInputs = {
 	short?: string
 	full?: string
 	img?: ImageItemWithText[]
+	img_inside?: ImageItemWithText[]
 	seo_title?: string
 	seo_description?: string
 	seo_keywords?: string

@@ -26,6 +26,7 @@ export type PageInfoInfoResponse = {
 export type AdPromoInfoResponse = {
 	block_name: string
 	block_desc: string
+	block_link: string
 	img: ImageItemWithText[]
 }
 

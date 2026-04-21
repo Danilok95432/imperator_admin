@@ -38,7 +38,7 @@ export const CategoriesList: FC = () => {
 					<p key='0'>{categoryEl.title}</p>,
 					<MainCheckBox
 						key='1'
-						checked={categoryEl.hidden}
+						checked={!categoryEl.hidden}
 						disabled={true}
 						svgNode={<CheckMarkSvg />}
 						className={styles.checkBoxWrapperNews}

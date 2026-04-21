@@ -1,25 +1,21 @@
 import { type SelOption } from 'src/types/select'
 import { type GoodsCart } from 'src/types/trading'
-import * as yup from 'yup'
 
 export type OneOrderInputs = {
-	deliver?: SelOption[]
-	sdek: string
-	status?: SelOption[]
-	customer?: string
-	phone?: string
-	address?: string
-	time?: string
-	date?: string
-	sum?: string
-	priceDeliver?: string
-	totalSum?: string
-	goods?: GoodsCart[]
+	delivery_address?: string
+	delivery_time?: string
+	hidden?: boolean
+	id?: string
+	order_date?: string
+	order_delivery?: SelOption[] | string
+	order_delivery_id?: string
+	order_items?: GoodsCart[]
+	order_status?: SelOption[] | string
+	order_status_id?: string
+	price_delivery?: string
+	price_items?: string
+	price_total?: string
+	sdek_point?: SelOption[] | string
+	sdek_point_id?: string
+	telphone?: string
 }
-
-export const oneOrderSchema = yup.object().shape({
-	sdek: yup
-		.string()
-		.required('Заголовок обязателен')
-		.max(200, 'Заголовок не может превышать 200 символов'),
-})

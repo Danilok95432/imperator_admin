@@ -8,7 +8,7 @@ export const ContactsSection = () => {
 		<AdminSection className={styles.mainBlocksSection} noBorder>
 			<h2>Контакты на сайте</h2>
 			<ControlledInput
-				name='post'
+				name='contact_address'
 				label='Почтовый адрес'
 				isTextarea
 				height='58px'
@@ -16,19 +16,24 @@ export const ContactsSection = () => {
 				margin='0 0 20px 0'
 			/>
 			<ControlledInput
-				name='phone'
+				name='contact_telphone'
 				label='Контактный телефон'
 				isPhone
 				placeholder='+7 (***) ***-**-**'
 				margin='0 0 20px 0'
 			/>
 			<ControlledInput
-				name='email'
+				name='contact_email'
 				label='Контактный e-mail'
 				placeholder='abc@abc.net'
 				margin='0 0 20px 0'
 			/>
-			<ControlledInput name='vk' label='Адрес ВК' placeholder='Адрес ВК' margin='0 0 20px 0' />
+			<ControlledInput
+				name='contact_vk'
+				label='Адрес ВК'
+				placeholder='Адрес ВК'
+				margin='0 0 20px 0'
+			/>
 		</AdminSection>
 	)
 }

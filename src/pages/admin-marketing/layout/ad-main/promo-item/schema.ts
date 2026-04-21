@@ -4,6 +4,7 @@ import * as yup from 'yup'
 export type PromoItemInputs = {
 	block_name: string
 	block_desc: string
+	block_link?: string
 	img?: ImageItemWithText[]
 }
 

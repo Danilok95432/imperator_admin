@@ -5,27 +5,30 @@ import { AdminSection } from 'src/components/admin-section/admin-section'
 import { ControlledInput } from 'src/components/controlled-input/controlled-input'
 import styles from './index.module.scss'
 import { ControlledSelect } from 'src/components/controlled-select/controlled-select'
-import { ControlledDateInput } from 'src/components/controlled-date-input/controlled-date-input'
-import adminStyles from 'src/routes/admin-layout/index.module.scss'
-import classNames from 'classnames'
 
 type MainSectionProps = {
 	deliverOption?: SelOption[]
 	statusOption?: SelOption[]
+	sdekOption?: SelOption[]
 }
 
-export const MainSection: FC<MainSectionProps> = ({ deliverOption, statusOption }) => {
+export const MainSection: FC<MainSectionProps> = ({ deliverOption, statusOption, sdekOption }) => {
 	return (
 		<AdminSection className={styles.mainSection} isBlock={false}>
 			<ControlledSelect
-				name='deliver'
+				name='order_delivery'
 				label='Получение заказа'
 				selectOptions={deliverOption ?? [{ label: 'Доставка до двери', value: '0' }]}
 				margin='0 0 20px 0'
 			/>
-			<ControlledInput name='sdek' label='Пункт доставки СДЭК' margin='0 0 20px 0' />
 			<ControlledSelect
-				name='status'
+				name='sdek_point'
+				label='Пункт выдачи СДЭК'
+				selectOptions={sdekOption ?? [{ label: 'Пункт доставки СДЭК не выбран', value: '0' }]}
+				margin='0 0 20px 0'
+			/>
+			<ControlledSelect
+				name='order_status'
 				label='Статус заказа'
 				selectOptions={statusOption ?? [{ label: 'Ожидание', value: '0' }]}
 				margin='0 0 20px 0'
@@ -38,27 +41,28 @@ export const MainSection: FC<MainSectionProps> = ({ deliverOption, statusOption 
 				isTextarea
 				height='54px'
 			/>
-			<ControlledInput name='phone' label='Телефон' margin='0 0 20px 0' isPhone />
+			<ControlledInput name='telphone' label='Телефон' margin='0 0 20px 0' isPhone />
 			<ControlledInput
-				name='address'
+				name='delivery_address'
 				label='Точный адрес доставки (если выбран вариант «До двери»'
 				margin='0 0 20px 0'
 				isTextarea
 				height='54px'
 			/>
-			<ControlledInput name='time' label='Время доставки' margin='0 0 20px 0' />
-			<ControlledDateInput
+			<ControlledInput name='delivery_time' label='Время доставки' margin='0 0 20px 0' />
+			{/* <ControlledDateInput
 				className={classNames(adminStyles.adminDateTimeInput, adminStyles.adminDateTimeInputFull)}
 				label='Дата и время заказа'
-				name='date'
+				name='order_date'
 				placeholder='гггг-мм-дд чч:мм'
 				showTimeSelect
 				dateFormat='yyyy-MM-dd HH:mm'
 				timeFormat='HH:mm'
-			/>
-			<ControlledInput name='price' label='Стоимость товаров' margin='0 0 20px 0' />
-			<ControlledInput name='priceDeliver' label='Стоимость доставки' margin='0 0 20px 0' />
-			<ControlledInput name='totalSum' label='Общая стоимость' margin='0 0 20px 0' />
+			/> */}
+			<ControlledInput name='order_date' label='Дата и время заказа' margin='0 0 20px 0' />
+			<ControlledInput name='price_items' label='Стоимость товаров' margin='0 0 20px 0' />
+			<ControlledInput name='price_delivery' label='Стоимость доставки' margin='0 0 20px 0' />
+			<ControlledInput name='price_total' label='Общая стоимость' margin='0 0 20px 0' />
 		</AdminSection>
 	)
 }

@@ -1,9 +1,7 @@
-import { imageSchema, type ImagesInputs } from './schema'
+import { type ImagesInputs } from './schema'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
 
 import { useActions } from 'src/hooks/actions/actions'
-import { ControlledInput } from 'src/components/controlled-input/controlled-input'
 import { AdminButton } from 'src/UI/AdminButton/AdminButton'
 import { transformToFormData } from 'src/helpers/utils'
 
@@ -70,7 +68,6 @@ export const ImageModal: FC<ImageModalProps> = ({
 		: []
 	const methods = useForm<ImagesInputs>({
 		mode: 'onBlur',
-		resolver: yupResolver(imageSchema),
 	})
 
 	const { isSent, markAsSent } = useIsSent(methods.control)
@@ -128,7 +125,7 @@ export const ImageModal: FC<ImageModalProps> = ({
 			<div className='modal-content'>
 				<FormProvider {...methods}>
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
-						<ControlledInput
+						{/* <ControlledInput
 							name='title'
 							label='Название изображения *'
 							placeholder='Добавьте название'
@@ -141,7 +138,7 @@ export const ImageModal: FC<ImageModalProps> = ({
 							placeholder='Добавьте имя автора'
 							margin='0 0 20px 0'
 							disabled={!(imageArr?.length > 0)}
-						/>
+						/> */}
 						<ReactDropzone
 							name='thumbnail'
 							prompt='PNG, JPG, JPEG. 1000 х1000px, не более 3 Мб'

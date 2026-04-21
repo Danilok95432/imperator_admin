@@ -54,14 +54,14 @@ export const AllCustomersList: FC = () => {
 				rowId: customerEl.id,
 				cells: [
 					<p key='0'>{customerEl.id}</p>,
-					<p key='1'>{customerEl.customer}</p>,
-					<p key='2'>{customerEl.about}</p>,
-					<p key='3'>{customerEl.sumOrder}</p>,
-					<p key='4'>{customerEl.sumSale}</p>,
-					<p key='5'>{customerEl.sumRefund}</p>,
-					<p key='6'>{customerEl.phone}</p>,
-					<p key='7'>{customerEl.date}</p>,
-					<p key='8'>{customerEl.location}</p>,
+					<p key='1'>{customerEl.user_title}</p>,
+					<p key='2'>{customerEl.user_comment}</p>,
+					<p key='3'>{customerEl.summa_orders}</p>,
+					<p key='4'>{customerEl.summa_sale}</p>,
+					<p key='5'>{customerEl.summa_return}</p>,
+					<p key='6'>{customerEl.telphone}</p>,
+					<p key='7'>{customerEl.regdate}</p>,
+					<p key='8'>{customerEl.city_name}</p>,
 					<RowController
 						id={customerEl.id}
 						className={styles.rowActionButton}
@@ -78,12 +78,12 @@ export const AllCustomersList: FC = () => {
 	}
 
 	const rowClickHandler = (id: string) => {
-		navigate(`/all/${id}`)
+		navigate(`/customers/all/${id}`)
 	}
 
 	const handleAddTypeClick = async () => {
 		const newId = await addCustomer()
-		navigate(`/all/${newId}`)
+		navigate(`/customers/all/${newId}`)
 	}
 
 	// if (isLoading || !TypesInfoData?.types) return <Loader />
@@ -96,12 +96,12 @@ export const AllCustomersList: FC = () => {
 			</GridRow>
 			<CustomTable
 				className={styles.customersTable}
-				rowData={formatObjectsTableData(customersData?.customers ?? [])}
+				rowData={formatObjectsTableData(customersData?.siteusers ?? [])}
 				colTitles={tableTitles}
 				rowClickHandler={rowClickHandler}
 			/>
 			<TableFooter
-				totalElements={customersData?.customers.length}
+				totalElements={customersData?.siteusers.length}
 				addClickHandler={handleAddTypeClick}
 				addText='Добавить покупателя'
 			/>

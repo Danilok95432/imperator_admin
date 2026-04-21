@@ -1,19 +1,22 @@
 import { type SelOption } from './select'
 
 export type CustomerElement = {
+	city_name: string
+	email: string
+	hidden: boolean
 	id: string
-	customer: string
-	about: string
-	sumOrder: string
-	sumSale: string
-	sumRefund: string
-	phone: string
-	date: string
-	location: string
+	regdate: string
+	summa_orders: string
+	summa_return: string
+	summa_sale: string
+	telphone: string
+	user_comment: string
+	user_title: string
 }
 
 export type CustomerResponse = {
-	customers: CustomerElement[]
+	siteusers: CustomerElement[]
+	totalitems: string
 }
 
 export type CustomerNewIdResponse = {
@@ -22,21 +25,21 @@ export type CustomerNewIdResponse = {
 
 export type UserCartOrders = {
 	id: string
-	date: string
-	status: string
+	order_date: string
+	order_status_name: string
 	sostav: string
-	amount: string
-	sum: string
+	count_items: string
+	order_summ: string
 }
 
 export type CustomerInfoResponse = {
 	fio: string
 	email: string
-	phone: string
+	telphone: string
 	type: SelOption[]
-	about: string
-	review: string
-	reviewToggle: boolean
+	user_comment: string
+	review_text: string
+	review_on_main: boolean
 	hidden: boolean
 	vip: boolean
 	orders: UserCartOrders[]

@@ -19,7 +19,7 @@ export const customerApi = createApi({
 			{ customer?: string; phone?: string; date?: string }
 		>({
 			query: ({ customer, phone, date }) => ({
-				url: 'customers/list',
+				url: 'siteusers/list',
 				params: {
 					customer,
 					phone,
@@ -30,13 +30,13 @@ export const customerApi = createApi({
 		}),
 		getNewIdCustomer: build.query<CustomerNewIdResponse, null>({
 			query: () => ({
-				url: `customers/getnew`,
+				url: `siteusers/getnew`,
 			}),
 			providesTags: ['Customers'],
 		}),
 		deleteCustomerById: build.mutation<null, string>({
 			query: (customerId) => ({
-				url: `customers/delete`,
+				url: `siteusers/delete`,
 				method: 'DELETE',
 				body: { id: customerId },
 			}),
@@ -44,7 +44,7 @@ export const customerApi = createApi({
 		}),
 		getCustomerInfo: build.query<CustomerInfoResponse, string>({
 			query: (id) => ({
-				url: `customers/edit`,
+				url: `siteusers/edit`,
 				params: {
 					id,
 				},
@@ -53,7 +53,7 @@ export const customerApi = createApi({
 		}),
 		saveCustomerInfo: build.mutation<string, FieldValues>({
 			query: (FormData) => ({
-				url: `customers/save`,
+				url: `siteusers/save`,
 				method: 'POST',
 				body: FormData,
 			}),

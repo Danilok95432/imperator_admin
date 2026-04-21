@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react'
+import { useEffect, useState, type FC } from 'react'
 import { defaultMainBlocksValues, type SettingsInputs } from 'src/pages/admin-settings/schema'
 
 import { Helmet } from 'react-helmet-async'
@@ -17,24 +17,52 @@ import { useNavigate } from 'react-router-dom'
 import { ContactsSection } from './components/contacts-section/contacts-section'
 import { InfoSection } from './components/info-section/info-section'
 import { SettingsSection } from './components/settings-section/settings-section'
+import {
+	useGetSettingsQuery,
+	useSaveSettingsInfoMutation,
+} from 'src/store/site-settings/site-settings.api'
+import { booleanToNumberString } from 'src/helpers/utils'
 
 export const AdminSettings: FC = () => {
 	const methods = useForm<SettingsInputs>({
 		mode: 'onBlur',
 		defaultValues: defaultMainBlocksValues,
 	})
-
+	const { data } = useGetSettingsQuery(null)
+	const [saveSettings] = useSaveSettingsInfoMutation()
 	const { isSent, markAsSent } = useIsSent(methods.control)
 	const [action, setAction] = useState<'apply' | 'save'>('apply')
 	const navigate = useNavigate()
 
-	const onSubmit: SubmitHandler<SettingsInputs> = (data) => {
-		console.log(data)
-		markAsSent(true)
-		if (action === 'save') {
-			navigate(`/${AdminRoute.AdminHome}`)
+	const onSubmit: SubmitHandler<SettingsInputs> = async (data) => {
+		const formData = new FormData()
+		formData.append('use_promo', booleanToNumberString(data.use_promo))
+		formData.append('use_adv', booleanToNumberString(data.use_adv))
+		formData.append('use_awards', booleanToNumberString(data.use_awards))
+		formData.append('use_best', booleanToNumberString(data.use_best))
+		formData.append('use_mainslider', booleanToNumberString(data.use_mainslider))
+		formData.append('use_catalog', booleanToNumberString(data.use_catalog))
+		formData.append('use_reviews', booleanToNumberString(data.use_reviews))
+		formData.append('contact_address', data.contact_address)
+		formData.append('contact_email', data.contact_email)
+		formData.append('contact_telphone', data.contact_telphone)
+		formData.append('contact_vk', data.contact_vk)
+		formData.append('info_copyright', data.info_copyright)
+		formData.append('site_title', data.site_title)
+		const res = await saveSettings(formData)
+		if (res) {
+			markAsSent(true)
+			if (action === 'save') {
+				navigate(`/${AdminRoute.AdminSettings}`)
+			}
 		}
 	}
+
+	useEffect(() => {
+		if (data) {
+			methods.reset({ ...data })
+		}
+	}, [data])
 	return (
 		<>
 			<Helmet>

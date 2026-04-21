@@ -8,7 +8,7 @@ export const InfoSection = () => {
 		<AdminSection className={styles.mainBlocksSection} noBorder>
 			<h2>Информация в футере</h2>
 			<ControlledInput
-				name='copyright'
+				name='info_copyright'
 				label='Копирайт'
 				placeholder='Название торговой марки и год'
 				margin='0 0 20px 0'

@@ -29,6 +29,7 @@ export type OneGoodsInputs = {
 	seo_keywords?: string
 	seo_virtual?: string
 	img?: ImageItemWithText[]
+	images?: ImageItemWithText[]
 	documents?: FileItem[]
 }
 

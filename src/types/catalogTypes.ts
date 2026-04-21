@@ -84,6 +84,7 @@ export type CategoryInfoResponse = {
 	short: string
 	full: string
 	img: ImageItemWithText[]
+	img_inside: ImageItemWithText[]
 	seo_title: string
 	seo_description: string
 	seo_keywords: string
@@ -150,5 +151,6 @@ export type GoodsInfoResponse = {
 	seo_keywords: string
 	seo_virtual: string
 	img: ImageItemWithText[]
+	images: ImageItemWithText[]
 	documents: FileItem[]
 }

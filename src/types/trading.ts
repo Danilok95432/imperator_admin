@@ -2,17 +2,18 @@ import { type ImageItemWithText } from './photos'
 import { type SelOption } from './select'
 
 export type OrdersElement = {
-	id: string
-	status: string
-	source: string
-	customer: string
 	comment: string
-	sum: string
-	priceDeliver: string
-	totalSum: string
-	phone: string
-	date: string
-	amount: string
+	fio: string
+	hidden: boolean
+	id: string
+	items_count: string
+	order_date: string
+	order_sourse_name: string
+	order_status_name: string
+	price_delivery: string
+	price_items: string
+	price_total: string
+	tephone: string
 }
 
 export type OrderResponse = {
@@ -24,28 +25,32 @@ export type OrderNewIdResponse = {
 }
 
 export type GoodsCart = {
-	id: string
+	brand: string
 	category: string
-	maker: string
-	name: string
-	price: string
-	amount: string
-	sum: string
+	id: string
+	item_count: string
+	price_item: string
+	price_total: string
+	title: string
 }
 
 export type OrderInfoResponse = {
-	deliver: SelOption[]
-	sdek: string
-	status: SelOption[]
-	customer: string
-	phone: string
-	address: string
-	time: string
-	date: string
-	sum: string
-	priceDeliver: string
-	totalSum: string
-	goods: GoodsCart[]
+	delivery_address: string
+	delivery_time: string
+	hidden: boolean
+	id: string
+	order_date: string
+	order_delivery: SelOption[]
+	order_delivery_id: string
+	order_items: GoodsCart[]
+	order_status: SelOption[]
+	order_status_id: string
+	price_delivery: string
+	price_items: string
+	price_total: string
+	sdek_point: SelOption[]
+	sdek_point_id: string
+	telphone: string
 }
 
 export type SalesElement = {

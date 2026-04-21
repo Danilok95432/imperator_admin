@@ -8,7 +8,7 @@ export const SettingsSection = () => {
 		<AdminSection className={styles.mainBlocksSection} noBorder>
 			<h2>Настройки сайта</h2>
 			<ControlledInput
-				name='title'
+				name='site_title'
 				label='Заголовок сайта (title)'
 				placeholder='Заголовок сайта (title)'
 			/>

@@ -144,7 +144,12 @@ export const OneGoods = () => {
 								/>
 								<ReqSection />
 								<AdditionalSection />
-								<MediaSection />
+								<MediaSection
+									img={data?.img}
+									images={data?.images}
+									documents={data?.documents}
+									idItem={id}
+								/>
 								<SeoSection />
 							</div>
 							<div className={styles.oneNewsContentRight}>

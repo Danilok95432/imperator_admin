@@ -57,16 +57,16 @@ export const OrdersList: FC = () => {
 				rowId: orderEl.id,
 				cells: [
 					<p key='0'>{orderEl.id}</p>,
-					<p key='1'>{orderEl.status}</p>,
-					<p key='2'>{orderEl.source}</p>,
-					<p key='3'>{orderEl.customer}</p>,
+					<p key='1'>{orderEl.order_status_name}</p>,
+					<p key='2'>{orderEl.order_sourse_name}</p>,
+					<p key='3'>{orderEl.fio}</p>,
 					<p key='4'>{orderEl.comment}</p>,
-					<p key='5'>{orderEl.sum}</p>,
-					<p key='6'>{orderEl.priceDeliver}</p>,
-					<p key='7'>{orderEl.totalSum}</p>,
-					<p key='8'>{orderEl.phone}</p>,
-					<p key='9'>{orderEl.date}</p>,
-					<p key='10'>{orderEl.amount}</p>,
+					<p key='5'>{orderEl.price_items}</p>,
+					<p key='6'>{orderEl.price_delivery}</p>,
+					<p key='7'>{orderEl.price_total}</p>,
+					<p key='8'>{orderEl.tephone}</p>,
+					<p key='9'>{orderEl.order_date}</p>,
+					<p key='10'>{orderEl.items_count}</p>,
 					<RowController
 						id={orderEl.id}
 						className={styles.rowActionButton}
@@ -83,12 +83,12 @@ export const OrdersList: FC = () => {
 	}
 
 	const rowClickHandler = (id: string) => {
-		navigate(`/orders/${id}`)
+		navigate(`/trading/orders/${id}`)
 	}
 
 	const handleAddTypeClick = async () => {
 		const newId = await addOrder()
-		navigate(`/orders/${newId}`)
+		navigate(`/trading/orders/${newId}`)
 	}
 
 	// if (isLoading || !TypesInfoData?.types) return <Loader />

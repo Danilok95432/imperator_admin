@@ -34,6 +34,7 @@ export const PromoItem = () => {
 		const formData = new FormData()
 		formData.append('block_name', data.block_name)
 		formData.append('block_desc', data.block_desc)
+		formData.append('block_link', data.block_link ?? '')
 		const res = await savePromoInfo(formData)
 		if (res) {
 			markAsSent(true)

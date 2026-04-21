@@ -1,5 +1,5 @@
 import { type SelOption } from 'src/types/select'
-import { type FC } from 'react'
+import { useCallback, useEffect, useState, type FC } from 'react'
 
 import { AdminSection } from 'src/components/admin-section/admin-section'
 import styles from './index.module.scss'
@@ -9,14 +9,70 @@ import { RemoveFileSvg } from 'src/UI/icons/removeFileSVG'
 import { AddButton } from 'src/UI/AddButton/AddButton'
 import { type ImageItemWithText } from 'src/types/photos'
 import { type FileItem } from 'src/types/files'
+import { useActions } from 'src/hooks/actions/actions'
+import { ImageModal } from 'src/modals/images-modal/images-modal'
+import { useGetNewIdImageQuery } from 'src/store/uploadImages/uploadImages.api'
+import { AddImageCulturePlusSVG } from 'src/UI/icons/addImageCulturePlusSVG'
 
 type MainSectionProps = {
 	parentsOption?: SelOption[]
+	img?: ImageItemWithText[]
 	images?: ImageItemWithText[]
 	documents?: FileItem[]
+	idItem?: string
 }
 
-export const MediaSection: FC<MainSectionProps> = ({ parentsOption, images, documents }) => {
+export const MediaSection: FC<MainSectionProps> = ({
+	parentsOption,
+	img,
+	images,
+	documents,
+	idItem,
+}) => {
+	const [localeImages, setLocaleImages] = useState<ImageItemWithText[]>(images ?? [])
+	const { refetch: getNewId } = useGetNewIdImageQuery({
+		imgtype: 'item_images',
+		idItem,
+	})
+
+	const addImage = async () => {
+		const newIdResponse = await getNewId().unwrap()
+		return newIdResponse.id
+	}
+
+	const syncAddImagesHandler = useCallback((newImage: ImageItemWithText) => {
+		setLocaleImages((prevImages) => [...prevImages, newImage])
+	}, [])
+
+	const syncEditImagesHandler = useCallback((editImage: ImageItemWithText) => {
+		setLocaleImages((prevImages) => {
+			return prevImages.map((image) => {
+				if (image.id === editImage.id) {
+					return { ...image, ...editImage }
+				}
+				return image
+			})
+		})
+	}, [])
+
+	const { openModal } = useActions()
+
+	const handleOpenModal = async () => {
+		const newId = await addImage()
+		openModal(
+			<ImageModal
+				id={newId}
+				imgtype='item_images'
+				syncAddHandler={syncAddImagesHandler}
+				syncEditHandler={syncEditImagesHandler}
+			/>,
+		)
+	}
+
+	useEffect(() => {
+		setLocaleImages(images ?? [])
+	}, [images])
+
 	return (
 		<AdminSection
 			className={styles.mainSection}
@@ -32,8 +88,41 @@ export const MediaSection: FC<MainSectionProps> = ({ parentsOption, images, docu
 				margin='20px 0 20px 0'
 				previewVariant='sm-img'
 				imgtype='item'
-				fileImages={images}
+				fileImages={img}
 				className={styles.img}
+			/>
+			<ReactDropzone
+				margin='30px 0 0 0'
+				previewVariant='img-list'
+				label='Изображения для слайдера внутри карточки товара'
+				variant='culture'
+				name='images'
+				accept={{ 'image/png': ['.png'], 'image/jpeg': ['.jpeg'] }}
+				maxFiles={8}
+				fileImages={localeImages}
+				syncAdd={syncAddImagesHandler}
+				syncEdit={syncEditImagesHandler}
+				imgtype='item_images'
+				dzAreaClassName={styles.eventGalleryController}
+				multiple
+				customOpenModal={
+					<AddButton
+						onClick={handleOpenModal}
+						icon={<AddImageCulturePlusSVG />}
+						$padding='44px 60px'
+					>
+						{' '}
+					</AddButton>
+				}
+				customUploadBtn={
+					<AddButton
+						onClick={handleOpenModal}
+						icon={<AddImageCulturePlusSVG />}
+						$padding='44px 60px'
+					>
+						{' '}
+					</AddButton>
+				}
 			/>
 			<h2 className={styles.subTitle}>Документы</h2>
 			<ReactDropzoneFiles

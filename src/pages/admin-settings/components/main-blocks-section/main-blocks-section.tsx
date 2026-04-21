@@ -8,43 +8,43 @@ export const MainBlocksSection = () => {
 		<AdminSection className={styles.mainBlocksSection} noBorder>
 			<h2>Блоки главной страницы</h2>
 			<ControlledCheckbox
-				name='isShowPromo'
+				name='use_promo'
 				label='Показать блок «Промо» (главное изображение с надписью)'
 				$margin='0 0 20px 0'
 				type='checkbox'
 			/>
 			<ControlledCheckbox
-				name='isShowAwards'
+				name='use_awards'
 				label='Показать блок «Награды»'
 				$margin='0 0 20px 0'
 				type='checkbox'
 			/>
 			<ControlledCheckbox
-				name='isShowMainSlider'
+				name='use_mainslider'
 				label='Показать блок «Главный слайдер» (слайдер с одним товаром на страницу)'
 				$margin='0 0 20px 0'
 				type='checkbox'
 			/>
 			<ControlledCheckbox
-				name='isShowBest'
+				name='use_best'
 				label='Показать блок «Наше лучшее» (слайдер с несколькими товарами)'
 				$margin='0 0 20px 0'
 				type='checkbox'
 			/>
 			<ControlledCheckbox
-				name='isShowAd'
+				name='use_adv'
 				label='Показать блок «Реклама»'
 				$margin='0 0 20px 0'
 				type='checkbox'
 			/>
 			<ControlledCheckbox
-				name='isShowCatalog'
+				name='use_catalog'
 				label='Показать блок «Каталог продукции» (товарные группы со ссылками на товары)'
 				$margin='0 0 20px 0'
 				type='checkbox'
 			/>
 			<ControlledCheckbox
-				name='isShowReview'
+				name='use_reviews'
 				label='Показать блок «Отзывы покупателей»'
 				type='checkbox'
 				$margin='0 0 20px 0'

@@ -60,11 +60,11 @@ export const OneCustomer = () => {
 				rowId: orderEl.id,
 				cells: [
 					<p key='0'>{orderEl.id}</p>,
-					<p key='1'>{orderEl.date}</p>,
-					<p key='2'>{orderEl.status}</p>,
+					<p key='1'>{orderEl.order_date}</p>,
+					<p key='2'>{orderEl.order_status_name}</p>,
 					<p key='3'>{orderEl.sostav}</p>,
-					<p key='4'>{orderEl.amount}</p>,
-					<p key='5'>{orderEl.sum}</p>,
+					<p key='4'>{orderEl.count_items}</p>,
+					<p key='5'>{orderEl.order_summ}</p>,
 				],
 			}
 		})
