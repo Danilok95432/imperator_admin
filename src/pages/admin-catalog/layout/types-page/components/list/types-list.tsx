@@ -20,7 +20,6 @@ import {
 import { MainCheckBox } from 'src/UI/MainCheckBox/MainCheckBox'
 import { CheckMarkSvg } from 'src/UI/icons/checkMarkSVG'
 import { Loader } from 'src/components/loader/loader'
-import { formatDateTimeTicket } from 'src/helpers/utils'
 
 export const TypesList: FC = () => {
 	const filterValues = useAppSelector(getFiltrationValues)
@@ -47,7 +46,7 @@ export const TypesList: FC = () => {
 				rowId: TypeEl.id,
 				cells: [
 					<p key='0'>{TypeEl.title}</p>,
-					<p key='1'>{formatDateTimeTicket(TypeEl.createdate)}</p>,
+					<p key='1'>{TypeEl.createdate}</p>,
 					<MainCheckBox
 						key='2'
 						checked={TypeEl.hidden}
