@@ -17,5 +17,16 @@ export type OneOrderInputs = {
 	price_total?: string
 	sdek_point?: SelOption[] | string
 	sdek_point_id?: string
-	telphone?: string
+	order_telphone?: string
+	order_street?: string
+	order_surname?: string
+	order_user_title?: string
+	order_room?: string
+	order_secondname?: string
+	order_dom?: string
+	order_email?: string
+	order_firstname?: string
+	order_address?: string
+	citys?: SelOption[] | string
+	citys_id?: string
 }

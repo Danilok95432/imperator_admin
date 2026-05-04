@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { type OneCustomerInputs, oneCustomerSchema } from './schema'
 import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useParams } from 'react-router-dom'
@@ -42,7 +43,23 @@ export const OneCustomer = () => {
 
 	useEffect(() => {
 		if (data) {
-			methods.reset({ ...data })
+			const cityOptions = data.citys ?? []
+			const userOptions = data.user_types ?? []
+
+			// Находим нужные объекты для селектов
+			const cityOption = cityOptions.find((el) => Number(el.value) === Number(data.citys_id))
+			const userOption = userOptions.find((el) => Number(el.value) === Number(data.user_types_id))
+			// Исключаем не только brands_id/catalogs_id, но и brands/catalogs/login из restData
+			const { citys_id, user_types_id, citys, user_types, login, ...restData } = data
+
+			methods.reset({
+				// Поля для React Select
+				citys: cityOption ? [cityOption] : [],
+				user_types: userOption ? [userOption] : [],
+				login: data.email,
+				// Все остальные поля (без brands/catalogs/brands_id/catalogs_id)
+				...restData,
+			})
 		}
 	}, [data])
 
@@ -84,7 +101,7 @@ export const OneCustomer = () => {
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate className={styles.form}>
 						<div className={styles.oneNewsContent}>
 							<div className={styles.oneNewsContentLeft}>
-								<MainSection customerOption={data?.type} />
+								<MainSection cityOption={data?.citys} />
 							</div>
 							<div className={styles.oneNewsContentRight}>
 								<SwitchedRadioBtns
@@ -112,7 +129,7 @@ export const OneCustomer = () => {
 									contentRadio2={<>Нет</>}
 								/>
 								<SwitchedRadioBtns
-									name='reviewToggle'
+									name='review_on_main'
 									label='Отзыв на главной'
 									$variant='switcher'
 									contentRadio1={<>Да</>}

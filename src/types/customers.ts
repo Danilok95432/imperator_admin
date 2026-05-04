@@ -33,14 +33,26 @@ export type UserCartOrders = {
 }
 
 export type CustomerInfoResponse = {
-	fio: string
+	citys: SelOption[]
+	citys_id: string
+	dom: string
 	email: string
-	telphone: string
-	type: SelOption[]
-	user_comment: string
-	review_text: string
-	review_on_main: boolean
+	fathname: string
+	firstname: string
 	hidden: boolean
-	vip: boolean
+	id: string
 	orders: UserCartOrders[]
+	review_on_main: boolean
+	review_text: string
+	room: string
+	street: string
+	surname: string
+	telphone: string
+	user_comment: string
+	user_title: string
+	user_types: SelOption[]
+	user_types_id: string
+	login: string
+	password: string
+	password2: string
 }

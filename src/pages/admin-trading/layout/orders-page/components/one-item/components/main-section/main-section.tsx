@@ -10,9 +10,15 @@ type MainSectionProps = {
 	deliverOption?: SelOption[]
 	statusOption?: SelOption[]
 	sdekOption?: SelOption[]
+	cityOption?: SelOption[]
 }
 
-export const MainSection: FC<MainSectionProps> = ({ deliverOption, statusOption, sdekOption }) => {
+export const MainSection: FC<MainSectionProps> = ({
+	deliverOption,
+	statusOption,
+	sdekOption,
+	cityOption,
+}) => {
 	return (
 		<AdminSection className={styles.mainSection} isBlock={false}>
 			<ControlledSelect
@@ -34,16 +40,27 @@ export const MainSection: FC<MainSectionProps> = ({ deliverOption, statusOption,
 				margin='0 0 20px 0'
 				className={styles.select}
 			/>
+			<ControlledInput name='order_firstname' label='Имя' margin='0 0 20px 0' />
+			<ControlledInput name='order_surname' label='Фамилия' margin='0 0 20px 0' />
+			<ControlledInput name='order_secondname' label='Отчество' margin='0 0 20px 0' />
 			<ControlledInput
-				name='customer'
-				label='Заказчик'
+				name='order_user_title'
+				label='Наименование покупателя'
 				margin='0 0 20px 0'
-				isTextarea
-				height='54px'
 			/>
-			<ControlledInput name='telphone' label='Телефон' margin='0 0 20px 0' isPhone />
+			<ControlledInput name='order_email' label='Отчество' margin='0 0 20px 0' />
+			<ControlledInput name='order_telphone' label='Телефон' margin='0 0 20px 0' isPhone />
+			<ControlledSelect
+				name='citys'
+				label='Город'
+				selectOptions={cityOption ?? [{ label: 'Выберите город', value: '0' }]}
+				margin='0 0 20px 0'
+			/>
+			<ControlledInput name='order_street' label='Улица' margin='0 0 20px 0' />
+			<ControlledInput name='order_dom' label='Дом' margin='0 0 20px 0' />
+			<ControlledInput name='order_room' label='Квартира' margin='0 0 20px 0' />
 			<ControlledInput
-				name='delivery_address'
+				name='order_address'
 				label='Точный адрес доставки (если выбран вариант «До двери»'
 				margin='0 0 20px 0'
 				isTextarea

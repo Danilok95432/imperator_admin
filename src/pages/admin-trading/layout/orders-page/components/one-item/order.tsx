@@ -67,7 +67,17 @@ export const OneOrder = () => {
 		formData.append('price_delivery', data.price_delivery ?? '')
 		formData.append('price_items', data.price_items ?? '')
 		formData.append('price_total', data.price_total ?? '')
-		formData.append('telphone', data.telphone ?? '')
+		formData.append('order_telphone', data.order_telphone ?? '')
+		formData.append('order_street', data.order_street ?? '')
+		formData.append('order_surname', data.order_surname ?? '')
+		formData.append('order_user_title', data.order_user_title ?? '')
+		formData.append('order_room', data.order_room ?? '')
+		formData.append('order_secondname', data.order_secondname ?? '')
+		formData.append('order_dom', data.order_dom ?? '')
+		formData.append('order_email', data.order_email ?? '')
+		formData.append('order_firstname', data.order_firstname ?? '')
+		formData.append('order_address', data.order_address ?? '')
+
 		formData.append('hidden', booleanToNumberString(data.hidden))
 		const res = await saveOrderInfo(formData)
 		if (res) {
@@ -83,6 +93,9 @@ export const OneOrder = () => {
 			const deliverOptions = data.order_delivery ?? []
 			const statusOptions = data.order_status ?? []
 			const sdekOptions = data.sdek_point ?? []
+			const cityOptions = data.citys ?? []
+
+			const cityOption = cityOptions.find((el) => Number(el.value) === Number(data.citys_id))
 
 			// Находим нужные объекты для селектов
 			const deliveryOption = deliverOptions.find(
@@ -100,6 +113,8 @@ export const OneOrder = () => {
 				order_delivery,
 				order_status,
 				sdek_point,
+				citys,
+				citys_id,
 				...restData
 			} = data
 
@@ -108,6 +123,7 @@ export const OneOrder = () => {
 				order_delivery: deliveryOption ? [deliveryOption] : [],
 				order_status: statusOption ? [statusOption] : [],
 				sdek_point: sdekOption ? [sdekOption] : [],
+				citys: cityOption ? [cityOption] : [],
 				// Все остальные поля (без brands/catalogs/brands_id/catalogs_id)
 				...restData,
 			})
@@ -158,6 +174,7 @@ export const OneOrder = () => {
 									deliverOption={data?.order_delivery}
 									statusOption={data?.order_status}
 									sdekOption={data?.sdek_point}
+									cityOption={data?.citys}
 								/>
 								<CustomTable
 									className={styles.ordersTable}

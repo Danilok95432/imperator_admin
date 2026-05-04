@@ -8,24 +8,41 @@ import { ControlledSelect } from 'src/components/controlled-select/controlled-se
 
 type MainSectionProps = {
 	customerOption?: SelOption[]
+	cityOption?: SelOption[]
 }
 
-export const MainSection: FC<MainSectionProps> = ({ customerOption }) => {
+export const MainSection: FC<MainSectionProps> = ({ customerOption, cityOption }) => {
 	return (
 		<AdminSection className={styles.mainSection} isBlock={false}>
 			<ControlledSelect
-				name='type'
+				name='user_types'
 				label='Тип покупателя'
 				selectOptions={customerOption ?? [{ label: 'Выберите тип', value: '0' }]}
 				margin='0 0 20px 0'
 			/>
+			<ControlledInput name='firstname' label='Имя' margin='0 0 20px 0' />
+			<ControlledInput name='surname' label='Фамилия' margin='0 0 20px 0' />
+			<ControlledInput name='fathname' label='Отчество' margin='0 0 20px 0' />
+			<ControlledInput name='user_title' label='Наименование пользователя' margin='0 0 20px 0' />
+			<ControlledInput name='telphone' label='Телефон' margin='0 0 20px 0' isPhone />
+			<ControlledInput name='email' label='E-mail' margin='0 0 20px 0' />
+			<ControlledInput name='login' label='Логин' margin='0 0 20px 0' />
+			<ControlledInput name='password' label='Пароль' margin='0 0 20px 0' type='password' />
 			<ControlledInput
-				name='fio'
-				label='Наименование (ФИО или название организации)'
+				name='password2'
+				label='Подтверждение пароля'
+				margin='0 0 20px 0'
+				type='password'
+			/>
+			<ControlledSelect
+				name='citys'
+				label='Город'
+				selectOptions={cityOption ?? [{ label: 'Выберите город', value: '0' }]}
 				margin='0 0 20px 0'
 			/>
-			<ControlledInput name='email' label='E-mail' margin='0 0 20px 0' />
-			<ControlledInput name='phone' label='Телефон' margin='0 0 20px 0' isPhone />
+			<ControlledInput name='street' label='Улица' margin='0 0 20px 0' />
+			<ControlledInput name='dom' label='Дом' margin='0 0 20px 0' />
+			<ControlledInput name='room' label='Квартира' margin='0 0 20px 0' />
 			<ControlledInput
 				name='about'
 				label='Примечание «О покупателе»'
@@ -34,7 +51,7 @@ export const MainSection: FC<MainSectionProps> = ({ customerOption }) => {
 				height='54px'
 			/>
 			<ControlledInput
-				name='review'
+				name='user_comment'
 				label='Отзыв покупателя'
 				margin='0 0 20px 0'
 				isTextarea

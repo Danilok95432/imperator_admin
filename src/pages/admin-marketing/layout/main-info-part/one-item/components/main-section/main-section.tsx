@@ -14,14 +14,19 @@ type MainSectionProps = {
 export const MainSection: FC<MainSectionProps> = ({ pageOption }) => {
 	return (
 		<AdminSection className={styles.mainSection} isBlock={false}>
-			<ControlledSelect
-				name='type'
-				label='Тип страницы *'
-				selectOptions={pageOption ?? [{ label: 'Выберите тип', value: '0' }]}
+			<ControlledInput
+				name='pageName'
+				label='Название информационной страницы'
 				margin='0 0 20px 0'
 			/>
-			<ControlledInput name='pageName' label='Наименование *' margin='0 0 20px 0' />
-			<QuillEditor name='desc' label='Текст для страницы' $heightEditor='150px' />
+			<ControlledSelect
+				name='type'
+				label='Связаная страница на сайте'
+				selectOptions={pageOption ?? [{ label: 'Выберите тип', value: '0' }]}
+				margin='0 0 36px 0'
+				className={styles.select}
+			/>
+			<QuillEditor name='desc' label='Основной текст страницы' $heightEditor='150px' />
 		</AdminSection>
 	)
 }

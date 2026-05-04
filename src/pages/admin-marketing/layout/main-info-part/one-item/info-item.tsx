@@ -7,9 +7,6 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useIsSent } from 'src/hooks/sent-mark/sent-mark'
 
 import { Container } from 'src/UI/Container/Container'
-import { SwitchedRadioBtns } from 'src/components/switched-radio-btns/switched-radio-btns'
-import { SwitchedHiddenSvg } from 'src/UI/icons/switchedHiddenSVG'
-import { SwitchedShowSvg } from 'src/UI/icons/switchedShowSVG'
 import { AdminControllers } from 'src/components/admin-controllers/admin-controllers'
 import { AdminRoute } from 'src/routes/admin-routes/consts'
 
@@ -50,7 +47,7 @@ export const OneInfoItem = () => {
 				to={`/${AdminRoute.Marketing}/${AdminRoute.MarketingInfo}`}
 				className={classNames(adminStyles.adminReturnLink, styles.linkBack)}
 			>
-				Возврат к списку страниц
+				Возврат к списку информационных страниц
 			</Link>
 			<h4 className={styles.titleNewsForm}>Страница: </h4>
 			<Container className={styles.cont}>
@@ -59,25 +56,6 @@ export const OneInfoItem = () => {
 						<div className={styles.oneNewsContent}>
 							<div className={styles.oneNewsContentLeft}>
 								<MainSection pageOption={data?.type} />
-							</div>
-							<div className={styles.oneNewsContentRight}>
-								<SwitchedRadioBtns
-									name='hidden'
-									label='Спрятать'
-									$variant='switcher'
-									contentRadio1={
-										<>
-											<SwitchedShowSvg />
-											Показать
-										</>
-									}
-									contentRadio2={
-										<>
-											<SwitchedHiddenSvg />
-											Спрятать
-										</>
-									}
-								/>
 							</div>
 						</div>
 						<AdminControllers
@@ -93,7 +71,7 @@ export const OneInfoItem = () => {
 				to={`/${AdminRoute.Marketing}/${AdminRoute.MarketingInfo}`}
 				className={classNames(adminStyles.adminReturnLink, styles.linkBack)}
 			>
-				Возврат к списку страниц
+				Возврат к списку информационных страниц
 			</Link>
 		</>
 	)
