@@ -36,6 +36,7 @@ export type CustomerInfoResponse = {
 	citys: SelOption[]
 	citys_id: string
 	dom: string
+	use_spam: boolean
 	email: string
 	fathname: string
 	firstname: string
@@ -52,7 +53,8 @@ export type CustomerInfoResponse = {
 	user_title: string
 	user_types: SelOption[]
 	user_types_id: string
-	login: string
-	password: string
-	password2: string
+	user_name: string
+	user_pass: string
+	user_pass2: string
+	vip: boolean
 }

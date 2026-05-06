@@ -11,6 +11,7 @@ type MainSectionProps = {
 	statusOption?: SelOption[]
 	sdekOption?: SelOption[]
 	cityOption?: SelOption[]
+	usersOption?: SelOption[]
 }
 
 export const MainSection: FC<MainSectionProps> = ({
@@ -18,6 +19,7 @@ export const MainSection: FC<MainSectionProps> = ({
 	statusOption,
 	sdekOption,
 	cityOption,
+	usersOption,
 }) => {
 	return (
 		<AdminSection className={styles.mainSection} isBlock={false}>
@@ -40,6 +42,12 @@ export const MainSection: FC<MainSectionProps> = ({
 				margin='0 0 20px 0'
 				className={styles.select}
 			/>
+			<ControlledSelect
+				name='siteusers'
+				label='Выбор пользователя'
+				selectOptions={usersOption ?? [{ label: 'Выберите пользователя', value: '0' }]}
+				margin='0 0 20px 0'
+			/>
 			<ControlledInput name='order_firstname' label='Имя' margin='0 0 20px 0' />
 			<ControlledInput name='order_surname' label='Фамилия' margin='0 0 20px 0' />
 			<ControlledInput name='order_secondname' label='Отчество' margin='0 0 20px 0' />
@@ -48,7 +56,7 @@ export const MainSection: FC<MainSectionProps> = ({
 				label='Наименование покупателя'
 				margin='0 0 20px 0'
 			/>
-			<ControlledInput name='order_email' label='Отчество' margin='0 0 20px 0' />
+			<ControlledInput name='order_email' label='Email' margin='0 0 20px 0' />
 			<ControlledInput name='order_telphone' label='Телефон' margin='0 0 20px 0' isPhone />
 			<ControlledSelect
 				name='citys'
@@ -58,7 +66,7 @@ export const MainSection: FC<MainSectionProps> = ({
 			/>
 			<ControlledInput name='order_street' label='Улица' margin='0 0 20px 0' />
 			<ControlledInput name='order_dom' label='Дом' margin='0 0 20px 0' />
-			<ControlledInput name='order_room' label='Квартира' margin='0 0 20px 0' />
+			<ControlledInput name='order_house' label='Квартира' margin='0 0 20px 0' />
 			<ControlledInput
 				name='order_address'
 				label='Точный адрес доставки (если выбран вариант «До двери»'
@@ -77,9 +85,21 @@ export const MainSection: FC<MainSectionProps> = ({
 				timeFormat='HH:mm'
 			/> */}
 			<ControlledInput name='order_date' label='Дата и время заказа' margin='0 0 20px 0' />
-			<ControlledInput name='price_items' label='Стоимость товаров' margin='0 0 20px 0' />
+			<ControlledInput
+				name='price_items'
+				label='Стоимость товаров'
+				margin='0 0 20px 0'
+				isLogin
+				stelsDisabled
+			/>
 			<ControlledInput name='price_delivery' label='Стоимость доставки' margin='0 0 20px 0' />
-			<ControlledInput name='price_total' label='Общая стоимость' margin='0 0 20px 0' />
+			<ControlledInput
+				name='price_total'
+				label='Общая стоимость'
+				margin='0 0 20px 0'
+				isLogin
+				stelsDisabled
+			/>
 		</AdminSection>
 	)
 }

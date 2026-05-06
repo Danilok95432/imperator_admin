@@ -28,6 +28,7 @@ type ControlledInputProps = {
 	locked?: boolean
 	isPhone?: boolean
 	isSum?: boolean
+	stelsDisabled?: boolean
 } & React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>
 
 const sanitizeSumValue = (value: string): string => {
@@ -113,6 +114,7 @@ export const ControlledInput: FC<ControlledInputProps> = ({
 	subLabel,
 	isPhone = false,
 	isSum = false,
+	stelsDisabled,
 	...props
 }) => {
 	const {
@@ -358,8 +360,9 @@ export const ControlledInput: FC<ControlledInputProps> = ({
 					className={cn(styles.controlledInput, {
 						[styles.noValid]: errors[name],
 						[styles.noBorder]: isLogin,
+						[styles.noBg]: stelsDisabled,
 					})}
-					disabled={disabled}
+					disabled={disabled ?? stelsDisabled}
 				/>
 			</label>
 			{locked && (

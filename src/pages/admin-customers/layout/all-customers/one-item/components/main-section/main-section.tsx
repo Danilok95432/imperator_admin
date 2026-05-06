@@ -5,6 +5,7 @@ import { AdminSection } from 'src/components/admin-section/admin-section'
 import { ControlledInput } from 'src/components/controlled-input/controlled-input'
 import styles from './index.module.scss'
 import { ControlledSelect } from 'src/components/controlled-select/controlled-select'
+import { ControlledCheckbox } from 'src/components/controlled-checkbox/controlled-checkbox'
 
 type MainSectionProps = {
 	customerOption?: SelOption[]
@@ -26,10 +27,16 @@ export const MainSection: FC<MainSectionProps> = ({ customerOption, cityOption }
 			<ControlledInput name='user_title' label='Наименование пользователя' margin='0 0 20px 0' />
 			<ControlledInput name='telphone' label='Телефон' margin='0 0 20px 0' isPhone />
 			<ControlledInput name='email' label='E-mail' margin='0 0 20px 0' />
-			<ControlledInput name='login' label='Логин' margin='0 0 20px 0' />
-			<ControlledInput name='password' label='Пароль' margin='0 0 20px 0' type='password' />
+			<ControlledCheckbox
+				type='checkbox'
+				label='Пользователь хочет получать новости на почту'
+				name='use_spam'
+				$margin='0 0 20px 0'
+			/>
+			<ControlledInput name='user_name' label='Логин' margin='0 0 20px 0' />
+			<ControlledInput name='user_pass' label='Пароль' margin='0 0 20px 0' type='password' />
 			<ControlledInput
-				name='password2'
+				name='user_pass2'
 				label='Подтверждение пароля'
 				margin='0 0 20px 0'
 				type='password'
@@ -44,14 +51,14 @@ export const MainSection: FC<MainSectionProps> = ({ customerOption, cityOption }
 			<ControlledInput name='dom' label='Дом' margin='0 0 20px 0' />
 			<ControlledInput name='room' label='Квартира' margin='0 0 20px 0' />
 			<ControlledInput
-				name='about'
+				name='user_comment'
 				label='Примечание «О покупателе»'
 				margin='0 0 20px 0'
 				isTextarea
 				height='54px'
 			/>
 			<ControlledInput
-				name='user_comment'
+				name='review_text'
 				label='Отзыв покупателя'
 				margin='0 0 20px 0'
 				isTextarea

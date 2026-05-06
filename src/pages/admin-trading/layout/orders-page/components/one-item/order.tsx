@@ -63,6 +63,14 @@ export const OneOrder = () => {
 					? data.sdek_point[0].value
 					: '0',
 		)
+		formData.append(
+			'siteusers',
+			typeof data.siteusers === 'string'
+				? data.siteusers
+				: data.siteusers
+					? data.siteusers[0].value
+					: '0',
+		)
 		formData.append('order_date', data.order_date ?? '')
 		formData.append('price_delivery', data.price_delivery ?? '')
 		formData.append('price_items', data.price_items ?? '')
@@ -71,7 +79,7 @@ export const OneOrder = () => {
 		formData.append('order_street', data.order_street ?? '')
 		formData.append('order_surname', data.order_surname ?? '')
 		formData.append('order_user_title', data.order_user_title ?? '')
-		formData.append('order_room', data.order_room ?? '')
+		formData.append('order_house', data.order_house ?? '')
 		formData.append('order_secondname', data.order_secondname ?? '')
 		formData.append('order_dom', data.order_dom ?? '')
 		formData.append('order_email', data.order_email ?? '')
@@ -94,6 +102,7 @@ export const OneOrder = () => {
 			const statusOptions = data.order_status ?? []
 			const sdekOptions = data.sdek_point ?? []
 			const cityOptions = data.citys ?? []
+			const siteusersOptions = data.siteusers ?? []
 
 			const cityOption = cityOptions.find((el) => Number(el.value) === Number(data.citys_id))
 
@@ -105,6 +114,9 @@ export const OneOrder = () => {
 				(el) => Number(el.value) === Number(data.order_status_id),
 			)
 			const sdekOption = sdekOptions.find((el) => Number(el.value) === Number(data.sdek_point_id))
+			const siteuserOption = siteusersOptions.find(
+				(el) => Number(el.value) === Number(data.siteusers_id),
+			)
 			// Исключаем не только brands_id/catalogs_id, но и brands/catalogs из restData
 			const {
 				order_delivery_id,
@@ -115,6 +127,8 @@ export const OneOrder = () => {
 				sdek_point,
 				citys,
 				citys_id,
+				siteusers,
+				siteusers_id,
 				...restData
 			} = data
 
@@ -124,6 +138,7 @@ export const OneOrder = () => {
 				order_status: statusOption ? [statusOption] : [],
 				sdek_point: sdekOption ? [sdekOption] : [],
 				citys: cityOption ? [cityOption] : [],
+				siteusers: siteuserOption ? [siteuserOption] : [],
 				// Все остальные поля (без brands/catalogs/brands_id/catalogs_id)
 				...restData,
 			})
@@ -175,6 +190,7 @@ export const OneOrder = () => {
 									statusOption={data?.order_status}
 									sdekOption={data?.sdek_point}
 									cityOption={data?.citys}
+									usersOption={data?.siteusers}
 								/>
 								<CustomTable
 									className={styles.ordersTable}

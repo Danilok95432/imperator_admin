@@ -123,6 +123,10 @@
 	padding-left: 0px;
 }
 
+input.noBg {
+	background-color: transparent!important;
+}
+
 .inputEl {
 	position: relative;
 	flex-grow: 1;
@@ -193,4 +197,3 @@
 		transform: rotate(45deg);
 	}
 }
-

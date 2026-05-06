@@ -21,7 +21,7 @@ export type OneOrderInputs = {
 	order_street?: string
 	order_surname?: string
 	order_user_title?: string
-	order_room?: string
+	order_house?: string
 	order_secondname?: string
 	order_dom?: string
 	order_email?: string
@@ -29,4 +29,6 @@ export type OneOrderInputs = {
 	order_address?: string
 	citys?: SelOption[] | string
 	citys_id?: string
+	siteusers?: SelOption[] | string
+	siteusers_id?: string
 }

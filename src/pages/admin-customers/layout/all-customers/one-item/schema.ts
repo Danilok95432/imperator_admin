@@ -10,6 +10,7 @@ export type OneCustomerInputs = {
 	fathname: string
 	firstname: string
 	hidden?: boolean
+	vip?: boolean
 	id?: string
 	orders?: UserCartOrders[]
 	review_on_main?: boolean
@@ -22,9 +23,10 @@ export type OneCustomerInputs = {
 	user_title?: string
 	user_types: SelOption[] | string
 	user_types_id?: string
-	login?: string
-	password?: string
-	password2?: string
+	user_name?: string
+	user_pass?: string
+	user_pass2?: string
+	use_spam?: boolean
 }
 
 export const oneCustomerSchema = yup.object().shape({
@@ -63,4 +65,5 @@ export const oneCustomerSchema = yup.object().shape({
 			}
 		})
 		.required('Выберите тип'),
+	user_pass2: yup.string().oneOf([yup.ref('user_pass')], 'Пароли не совпадают'),
 })
