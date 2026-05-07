@@ -2,20 +2,22 @@ import { type SelOption } from 'src/types/select'
 import * as yup from 'yup'
 
 export type OneInfoItemInputs = {
-	type: SelOption[] | string
-	pageName: string
-	desc?: string
+	id?: string
+	page_name: string
+	page_text?: string
+	parents: SelOption[] | string
+	parents_id?: string
 	hidden?: boolean
 }
 
 export const oneInfoItemSchema = yup.object().shape({
-	pageName: yup
+	page_name: yup
 		.string()
 		.required('Наименование обязательно')
 		.max(200, 'Наименование не может превышать 200 символов'),
-	type: yup
+	parents: yup
 		.mixed<string | SelOption[]>()
-		.test('is-event-selected', 'Выберите тип', (value) => {
+		.test('is-event-selected', 'Выберите страницу', (value) => {
 			if (typeof value === 'string') {
 				return true
 			} else if (Array.isArray(value) && value.length > 0) {
@@ -25,7 +27,7 @@ export const oneInfoItemSchema = yup.object().shape({
 					firstElement !== null &&
 					'label' in firstElement &&
 					'value' in firstElement &&
-					firstElement.label === 'Тип не выбран'
+					firstElement.label === 'Связанная страница не выбрана'
 				) {
 					return false
 				} else {
@@ -35,5 +37,5 @@ export const oneInfoItemSchema = yup.object().shape({
 				return false
 			}
 		})
-		.required('Выберите тип'),
+		.required('Выберите страницу'),
 })

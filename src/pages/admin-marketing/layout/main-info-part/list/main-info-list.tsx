@@ -18,6 +18,7 @@ import {
 	useDeletePageInfoByIdMutation,
 	useGetAllPagesInfoQuery,
 	useGetNewIdPageInfoQuery,
+	useHidePageInfoByIdMutation,
 } from 'src/store/marketing/marketing.api'
 
 export const MainInfoList: FC = () => {
@@ -28,6 +29,7 @@ export const MainInfoList: FC = () => {
 	})
 	const { refetch: getNewId } = useGetNewIdPageInfoQuery(null)
 	const [deletePageInfoById] = useDeletePageInfoByIdMutation()
+	const [hidePageInfoById] = useHidePageInfoByIdMutation()
 
 	const navigate = useNavigate()
 
@@ -36,19 +38,19 @@ export const MainInfoList: FC = () => {
 		return newIdResponse.id
 	}
 
-	const tableTitles = ['ID', 'Название страницы', 'Тип страницы', 'Спрятать', '']
+	const tableTitles = ['ID', 'Название страницы', 'Связанная страница', 'Спрятать', '']
 	const formatObjectsTableData = (pageInfoData: PageInfoElement[]) => {
 		return pageInfoData.map((padeInfoEl) => {
 			return {
 				rowId: padeInfoEl.id,
 				cells: [
 					<p key='0'>{padeInfoEl.id}</p>,
-					<p key='1'>{padeInfoEl.pageName}</p>,
-					<p key='2'>{padeInfoEl.type}</p>,
+					<p key='1'>{padeInfoEl.page_name}</p>,
+					<p key='2'>{padeInfoEl.parent_name}</p>,
 					<MainCheckBox
 						key='3'
 						checked={padeInfoEl.hidden}
-						disabled={true}
+						onChangeBox={async () => await hidePageInfoById(padeInfoEl.id)}
 						svgNode={<CheckMarkSvg />}
 						className={styles.checkBoxWrapperNews}
 					/>,
@@ -56,6 +58,7 @@ export const MainInfoList: FC = () => {
 						id={padeInfoEl.id}
 						className={styles.rowActionButton}
 						removeHandler={rowDeleteHandler}
+						noHide
 						key='4'
 					/>,
 				],
@@ -68,12 +71,12 @@ export const MainInfoList: FC = () => {
 	}
 
 	const rowClickHandler = (id: string) => {
-		navigate(`/main-info/${id}`)
+		navigate(`/marketing/main-info/${id}`)
 	}
 
 	const handleAddTypeClick = async () => {
 		const newId = await addCustomer()
-		navigate(`/main-info/${newId}`)
+		navigate(`/marketing/main-info/${newId}`)
 	}
 
 	// if (isLoading || !TypesInfoData?.types) return <Loader />

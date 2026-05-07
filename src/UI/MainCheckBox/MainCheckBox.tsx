@@ -10,12 +10,14 @@ type MainCheckBoxProps = {
 	checked: boolean
 	disabled?: boolean
 	label?: string
+	onChangeBox?: () => void
 }
 export const MainCheckBox: FC<MainCheckBoxProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
 	svgNode,
 	checked,
 	disabled,
 	label,
+	onChangeBox,
 	...props
 }) => {
 	const [active, setActive] = useState(checked)
@@ -26,11 +28,14 @@ export const MainCheckBox: FC<MainCheckBoxProps & React.InputHTMLAttributes<HTML
 				if (!disabled) {
 					setActive(!active)
 				}
+				if (onChangeBox) onChangeBox()
+				// onChangeBox && onChangeBox()
+				// if (onChangeBox) onChangeBox()
 				e.stopPropagation()
 			}}
 		>
 			<label className={cn({ [styles._active]: active })}>{active && <CheckMarkSvg />}</label>
-			<input type='checkbox' />
+			<input type='checkbox' onChange={onChangeBox} />
 			{label && <p>{label}</p>}
 		</div>
 	)

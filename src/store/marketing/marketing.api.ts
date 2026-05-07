@@ -19,7 +19,7 @@ export const marketingApi = createApi({
 	endpoints: (build) => ({
 		getAllPagesInfo: build.query<PageInfoResponse, { pageName?: string }>({
 			query: ({ pageName }) => ({
-				url: 'pageinfo/list',
+				url: 'pages/list',
 				params: {
 					pageName,
 				},
@@ -28,13 +28,21 @@ export const marketingApi = createApi({
 		}),
 		getNewIdPageInfo: build.query<PageInfoNewIdResponse, null>({
 			query: () => ({
-				url: `pageinfo/getnew`,
+				url: `pages/getnew`,
 			}),
 			providesTags: ['MainInfo'],
 		}),
+		hidePageInfoById: build.mutation<null, string>({
+			query: (pageInfoId) => ({
+				url: `pages/hide`,
+				method: 'POST',
+				body: { id: pageInfoId },
+			}),
+			invalidatesTags: ['MainInfo'],
+		}),
 		deletePageInfoById: build.mutation<null, string>({
 			query: (pageInfoId) => ({
-				url: `pageinfo/delete`,
+				url: `pages/delete`,
 				method: 'DELETE',
 				body: { id: pageInfoId },
 			}),
@@ -42,7 +50,7 @@ export const marketingApi = createApi({
 		}),
 		getPageInfoInfo: build.query<PageInfoInfoResponse, string>({
 			query: (id) => ({
-				url: `pageinfo/edit`,
+				url: `pages/edit`,
 				params: {
 					id,
 				},
@@ -51,7 +59,7 @@ export const marketingApi = createApi({
 		}),
 		savePageInfoInfo: build.mutation<string, FieldValues>({
 			query: (FormData) => ({
-				url: `pageinfo/save`,
+				url: `pages/save`,
 				method: 'POST',
 				body: FormData,
 			}),
@@ -106,6 +114,7 @@ export const {
 	useDeletePageInfoByIdMutation,
 	useGetAllPagesInfoQuery,
 	useGetNewIdPageInfoQuery,
+	useHidePageInfoByIdMutation,
 	useGetPageInfoInfoQuery,
 	useSavePageInfoInfoMutation,
 	useGetAdPromoInfoQuery,

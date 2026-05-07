@@ -3,13 +3,14 @@ import { type SelOption } from './select'
 
 export type PageInfoElement = {
 	id: string
-	pageName: string
-	type: string
+	page_name: string
+	parent_name: string
 	hidden: boolean
 }
 
 export type PageInfoResponse = {
 	pages: PageInfoElement[]
+	totalitems: string
 }
 
 export type PageInfoNewIdResponse = {
@@ -17,9 +18,11 @@ export type PageInfoNewIdResponse = {
 }
 
 export type PageInfoInfoResponse = {
-	type: SelOption[]
-	pageName: string
-	desc: string
+	id: string
+	page_name: string
+	page_text: string
+	parents: SelOption[]
+	parents_id: string
 	hidden: boolean
 }
 
