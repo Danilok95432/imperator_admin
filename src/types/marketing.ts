@@ -52,8 +52,29 @@ export type AwardItem = {
 	color: SelOption[]
 }
 
+export type AwardInfoResponse = {
+	title: string
+	itemname: string
+	itemdesc: string
+	colors_list: SelOption[]
+	colors_list_id: string
+	hidden: boolean
+	img: ImageItemWithText[]
+}
+
 export type AdRewardInfoResponse = {
 	block_name: string
 	colors_list: SelOption[]
 	awards: AwardItem[]
+}
+
+export type AdRewardItem = {
+	id: string
+	title: string
+	hidden: boolean
+}
+
+export type AdRewardListResponse = {
+	awards: AdRewardItem[]
+	block_name: string
 }

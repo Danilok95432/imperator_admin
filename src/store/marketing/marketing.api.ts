@@ -4,12 +4,14 @@ import { baseQueryWithReauth } from 'src/helpers/base-query'
 
 import { ReducerPath } from 'src/helpers/consts'
 import {
+	type AdRewardListResponse,
 	type AdPromoInfoResponse,
 	type AdReklamaInfoResponse,
 	type AdRewardInfoResponse,
 	type PageInfoInfoResponse,
 	type PageInfoNewIdResponse,
 	type PageInfoResponse,
+	AwardInfoResponse,
 } from 'src/types/marketing'
 
 export const marketingApi = createApi({
@@ -107,6 +109,54 @@ export const marketingApi = createApi({
 			}),
 			invalidatesTags: ['Reward'],
 		}),
+		getAwardInfo: build.query<AwardInfoResponse, string>({
+			query: (id) => ({
+				url: `awards/edit_item`,
+				params: {
+					id,
+				},
+			}),
+			providesTags: ['Reward'],
+		}),
+		saveAwardInfo: build.mutation<string, FieldValues>({
+			query: (FormData) => ({
+				url: `awards/save_item`,
+				method: 'POST',
+				body: FormData,
+			}),
+			invalidatesTags: ['Reward'],
+		}),
+		getAllAwards: build.query<AdRewardListResponse, { title?: string }>({
+			query: (title) => ({
+				url: 'awards/list',
+				params: {
+					title,
+				},
+			}),
+			providesTags: ['Reward'],
+		}),
+		getNewIdAward: build.query<PageInfoNewIdResponse, null>({
+			query: () => ({
+				url: `awards/getnew`,
+			}),
+			providesTags: ['Reward'],
+		}),
+		hideAwardById: build.mutation<null, string>({
+			query: (pageInfoId) => ({
+				url: `awards/hide_item`,
+				method: 'POST',
+				body: { id: pageInfoId },
+			}),
+			invalidatesTags: ['Reward'],
+		}),
+		deleteAwardById: build.mutation<null, string>({
+			query: (pageInfoId) => ({
+				url: `awards/delete_item`,
+				method: 'DELETE',
+				body: { id: pageInfoId },
+			}),
+			invalidatesTags: ['Reward'],
+		}),
 	}),
 })
 
@@ -123,4 +173,10 @@ export const {
 	useSaveAdPromoInfoMutation,
 	useSaveAdReklamaInfoMutation,
 	useSaveAdRewardInfoMutation,
+	useDeleteAwardByIdMutation,
+	useGetAllAwardsQuery,
+	useGetNewIdAwardQuery,
+	useHideAwardByIdMutation,
+	useGetAwardInfoQuery,
+	useSaveAwardInfoMutation,
 } = marketingApi

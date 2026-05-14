@@ -156,7 +156,9 @@ import { DistributionPage } from 'src/pages/admin-marketing/layout/distribution/
 import { AdList } from 'src/pages/admin-marketing/layout/ad-main/list/ad-list'
 import { PromoItem } from 'src/pages/admin-marketing/layout/ad-main/promo-item/promo-item'
 import { AdItem } from 'src/pages/admin-marketing/layout/ad-main/ad-item/ad-item'
-import { RewardItem } from 'src/pages/admin-marketing/layout/ad-main/reward-item/reward-item'
+import { RewardPage } from 'src/pages/admin-marketing/layout/ad-main/reward-item/reward-item'
+import { RewardOneItem } from 'src/pages/admin-marketing/layout/ad-main/reward-item/components/reward-one-item/reward-one-item'
+import { RewardList } from 'src/pages/admin-marketing/layout/ad-main/reward-item/components/reward-list/reward-list'
 
 export const AdminRoutes: FC = () => {
 	return (
@@ -221,8 +223,14 @@ export const AdminRoutes: FC = () => {
 						/>
 						<Route
 							path={`/${AdminRoute.Marketing}/${AdminRoute.MarketingAd}/${AdminRoute.AdReward}`}
-							element={<RewardItem />}
-						/>
+							element={<RewardPage />}
+						>
+							<Route index element={<RewardList />} />
+							<Route
+								path={`/${AdminRoute.Marketing}/${AdminRoute.MarketingAd}/${AdminRoute.AdReward}/:id`}
+								element={<RewardOneItem />}
+							/>
+						</Route>
 					</Route>
 					<Route path={AdminRoute.MarketingDistribution} element={<DistributionPage />} />
 					<Route path={AdminRoute.MarketingInfo} element={<MainInfoPartPage />}>
