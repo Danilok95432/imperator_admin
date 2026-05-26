@@ -21,7 +21,7 @@ export const MainSection: FC<MainSectionProps> = ({ parentsOption, img, imgInsid
 			<ControlledInput name='title' label='Наименование категории *' margin='0 0 20px 0' />
 			<ControlledSelect
 				name='parent'
-				label='Раздел-родитель *'
+				label='Раздел-родитель'
 				selectOptions={parentsOption ?? [{ label: 'Выберите раздел', value: '0' }]}
 				margin='0 0 20px 0'
 			/>

@@ -45,6 +45,8 @@ export const OneGoods = () => {
 	const navigate = useNavigate()
 	const { isSent, markAsSent } = useIsSent(methods.control)
 	const onSubmit: SubmitHandler<OneGoodsInputs> = async (data) => {
+		const normalizePrice = data?.item_price?.replace(/\s/g, '')
+		const normalizeDiscountPrice = data?.item_price_discount?.replace(/\s/g, '')
 		const formData = new FormData()
 		let selectedObj = ''
 		if (typeof data.types !== 'string' && data.types) {
@@ -79,8 +81,8 @@ export const OneGoods = () => {
 		formData.append('item_desc', data.item_desc ?? '')
 		formData.append('package', data.package ?? '')
 		formData.append('nal', data.nal ?? '')
-		formData.append('item_price', data.item_price ?? '')
-		formData.append('item_price_discount', data.item_price_discount ?? '')
+		formData.append('item_price', normalizePrice ?? '')
+		formData.append('item_price_discount', normalizeDiscountPrice ?? '')
 		formData.append('short', data.short ?? '')
 		formData.append('full', data.full ?? '')
 		formData.append('hidden', booleanToNumberString(data.hidden))
@@ -146,7 +148,7 @@ export const OneGoods = () => {
 								<AdditionalSection />
 								<MediaSection
 									img={data?.img}
-									images={data?.images}
+									images={data?.images ? [...data.images].reverse() : []}
 									documents={data?.documents}
 									idItem={id}
 								/>
@@ -159,14 +161,14 @@ export const OneGoods = () => {
 									$variant='switcher'
 									contentRadio1={
 										<>
-											<SwitchedShowSvg />
-											Показать
+											<SwitchedHiddenSvg />
+											Спрятать
 										</>
 									}
 									contentRadio2={
 										<>
-											<SwitchedHiddenSvg />
-											Спрятать
+											<SwitchedShowSvg />
+											Показать
 										</>
 									}
 								/>

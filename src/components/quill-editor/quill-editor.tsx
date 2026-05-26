@@ -31,6 +31,18 @@ const StyledEditorWrapper = styled.div<StyledEditorWrapperProps>`
 		margin-bottom: 5px;
 	}
 
+	.quill {
+		width: ${({ $width }) => $width ?? '100%'};
+		max-width: ${({ $maxWidth }) => $maxWidth ?? 'none'};
+		height: ${({ $heightEditor }) => $heightEditor ?? '750px'};
+		min-width: 320px;
+		min-height: 250px;
+		resize: both;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+	}
+
 	.ql-snow {
 		border: 1px solid #afafaf;
 		font-family: 'Open Sans', sans-serif;
@@ -39,15 +51,22 @@ const StyledEditorWrapper = styled.div<StyledEditorWrapperProps>`
 
 	.ql-toolbar {
 		border-radius: 3px 3px 0 0;
-		max-width: ${({ $maxWidth }) => $maxWidth ?? 'auto'};
-		width: ${({ $width }) => $width ?? '100%'};
+		width: 100%;
+		flex-shrink: 0;
 	}
 
 	.ql-container {
 		border-radius: 0 0 3px 3px;
-		height: ${({ $heightEditor }) => $heightEditor ?? '750px'};
-		max-width: ${({ $maxWidth }) => $maxWidth ?? 'auto'};
-		width: ${({ $width }) => $width ?? '100%'};
+		width: 100%;
+		flex: 1;
+		min-height: 0;
+		overflow: hidden;
+	}
+
+	.ql-editor {
+		height: 100%;
+		overflow-y: auto;
+		white-space: pre-wrap;
 	}
 
 	.ql-snow .ql-tooltip[data-mode='video']::before {
@@ -87,7 +106,7 @@ const StyledEditorWrapper = styled.div<StyledEditorWrapperProps>`
 		margin: 1em 0;
 		width: 100%;
 		position: relative;
-		padding-bottom: 56.25%; /* 16:9 */
+		padding-bottom: 56.25%;
 		height: 0;
 		overflow: hidden;
 		border-radius: 4px;
@@ -148,7 +167,6 @@ export const QuillEditor: FC<QuillEditorProps & StyledEditorWrapperProps> = ({
 	} = useFormContext()
 
 	const vkScriptLoaded = useRef(false)
-	const previousValue = useRef<string>('')
 	const editorRef = useRef<ReactQuill>(null)
 
 	useEffect(() => {
@@ -210,47 +228,43 @@ export const QuillEditor: FC<QuillEditorProps & StyledEditorWrapperProps> = ({
 				control={control}
 				rules={rules}
 				render={({ field }) => {
-					const handleChange = (
-						content: string,
-						delta: unknown,
-						source: string,
-						editor: { getHTML: () => string },
-					) => {
-						const html = editor.getHTML()
-						const cleanHtml = html.replace(/&quot;/g, '"')
-						const cleanHtmlWithoutTrailing = cleanHtml
-							.replace(/>\s*$/, '')
-							.replace(/<\/iframe>\s*$/, '')
-							.replace(/>\s*<\/p>$/, '</p>')
-							.replace(/"&gt;/, '')
-							.trim()
+					const processVideoEmbeds = (html: string) => {
+						return html.replace(
+							/<iframe[^>]*src="([^"]*)"[^>]*><\/iframe>|<iframe[^>]*src="([^"]*)"[^>]*>/g,
+							(_match: string, srcWithClosing: string, srcWithoutClosing: string) => {
+								const src = srcWithClosing || srcWithoutClosing
 
-						const processedHtml = cleanHtmlWithoutTrailing.replace(
-							/<iframe[^>]*src="([^"]*)"[^>]*>/g,
-							(_match: string, src: string) => {
 								if (src.includes('vkvideo.ru')) {
 									try {
 										const urlMatch = src.match(/video_ext\.php\?oid=([^&]+)&id=(\d+)/)
+
 										if (urlMatch) {
 											const oid = urlMatch[1]
 											const id = urlMatch[2]
+
 											return `<div class="vk-video-container"><div id="vk_video_${oid}_${id}"></div></div>`
 										}
 									} catch (e) {
 										console.error('Error processing VK video:', e)
 									}
 								}
+
 								return `<iframe src="${src}" frameborder="0" allowfullscreen="true" width="100%" height="400"></iframe>`
 							},
 						)
-
-						if (processedHtml !== previousValue.current) {
-							previousValue.current = processedHtml
-							field.onChange(processedHtml)
-						}
 					}
 
-					const initialValue = field.value ? `${field.value}<p><br></p>` : '<p><br></p>'
+					const handleChange = (
+						_content: string,
+						_delta: unknown,
+						_source: string,
+						editor: { getHTML: () => string },
+					) => {
+						const html = editor.getHTML()
+						const processedHtml = processVideoEmbeds(html)
+
+						field.onChange(processedHtml)
+					}
 
 					return (
 						<ReactQuill
@@ -260,7 +274,8 @@ export const QuillEditor: FC<QuillEditorProps & StyledEditorWrapperProps> = ({
 							modules={modules}
 							formats={formats}
 							onChange={handleChange}
-							value={initialValue}
+							value={field.value || ''}
+							preserveWhitespace
 						/>
 					)
 				}}

@@ -83,7 +83,7 @@ export const OneCategory = () => {
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
 						<div className={styles.oneNewsContent}>
 							<div className={styles.oneNewsContentLeft}>
-								<MainSection />
+								<MainSection img={data?.img} imgInside={data?.img_inside} />
 								<SeoSection />
 							</div>
 							<div className={styles.oneNewsContentRight}>
@@ -93,14 +93,14 @@ export const OneCategory = () => {
 									$variant='switcher'
 									contentRadio1={
 										<>
-											<SwitchedShowSvg />
-											Показать
+											<SwitchedHiddenSvg />
+											Спрятать
 										</>
 									}
 									contentRadio2={
 										<>
-											<SwitchedHiddenSvg />
-											Спрятать
+											<SwitchedShowSvg />
+											Показать
 										</>
 									}
 								/>

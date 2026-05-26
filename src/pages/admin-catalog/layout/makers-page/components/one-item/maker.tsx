@@ -87,14 +87,14 @@ export const OneMaker = () => {
 									$variant='switcher'
 									contentRadio1={
 										<>
-											<SwitchedShowSvg />
-											Показать
+											<SwitchedHiddenSvg />
+											Спрятать
 										</>
 									}
 									contentRadio2={
 										<>
-											<SwitchedHiddenSvg />
-											Спрятать
+											<SwitchedShowSvg />
+											Показать
 										</>
 									}
 								/>

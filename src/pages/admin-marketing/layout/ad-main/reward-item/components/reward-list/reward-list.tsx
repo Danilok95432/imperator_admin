@@ -16,6 +16,7 @@ import {
 	useDeleteAwardByIdMutation,
 	useGetAllAwardsQuery,
 	useGetNewIdAwardQuery,
+	useHideAwardByIdMutation,
 	useSaveAdRewardInfoMutation,
 } from 'src/store/marketing/marketing.api'
 import { ControlledInput } from 'src/components/controlled-input/controlled-input'
@@ -40,6 +41,7 @@ export const RewardList = () => {
 	})
 	const { refetch: getNewId } = useGetNewIdAwardQuery(null)
 	const [deleteTypeById] = useDeleteAwardByIdMutation()
+	const [hidePageInfoById] = useHideAwardByIdMutation()
 	const [saveRewardInfo] = useSaveAdRewardInfoMutation()
 	const [action, setAction] = useState<'apply' | 'save'>('apply')
 	const navigate = useNavigate()
@@ -86,7 +88,7 @@ export const RewardList = () => {
 					<MainCheckBox
 						key='2'
 						checked={awardEl.hidden}
-						disabled={true}
+						onChangeBox={async () => await hidePageInfoById(awardEl.id)}
 						svgNode={<CheckMarkSvg />}
 						className={styles.checkBoxWrapperNews}
 					/>,
