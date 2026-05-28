@@ -46,7 +46,11 @@ export const OneCategory = () => {
 		formData.append('full', data.full ?? '')
 		formData.append(
 			'parent',
-			typeof data.parent === 'string' ? data.parent : data.parent ? data.parent[0].value : '0',
+			typeof data.parent === 'string'
+				? data.parent
+				: data.parent && data.parent.length > 0
+					? data.parent[0].value
+					: '0',
 		)
 		formData.append('seo_title', data.seo_title ?? '')
 		formData.append('seo_description', data.seo_description ?? '')

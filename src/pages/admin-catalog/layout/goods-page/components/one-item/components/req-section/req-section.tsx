@@ -10,7 +10,7 @@ export const ReqSection = () => {
 			titleText='Обязательные данные товара'
 			titleStyleClass={styles.title}
 		>
-			<ControlledInput name='item_weight' label='Вес нетто, г * *' margin='0 0 20px 0' />
+			<ControlledInput name='item_weight' label='Вес нетто, гр. *' margin='0 0 20px 0' />
 			<ControlledInput name='item_width' label='Ширина, мм *' margin='0 0 20px 0' />
 			<ControlledInput name='item_length' label='Длина, мм *' margin='0 0 20px 0' />
 			<ControlledInput name='item_height' label='Высота, мм *' margin='0 0 20px 0' />

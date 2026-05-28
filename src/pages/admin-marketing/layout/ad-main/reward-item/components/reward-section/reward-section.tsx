@@ -18,26 +18,22 @@ type RewardSectionProps = {
 export const RewardSection: FC<RewardSectionProps> = ({ number = 0, colorOptions, img }) => {
 	return (
 		<AdminSection className={styles.adSection} isBlock={false} noBorder>
-			<ControlledInput
-				name={`awards[${number}].title`}
-				label='Название награды'
-				margin='0 0 20px 0'
-			/>
+			<ControlledInput name={`title`} label='Название награды' margin='0 0 20px 0' />
 			<ControlledSelect
-				name={`awards[${number}].color`}
+				name={`colors_list`}
 				className={styles.select}
 				label='Цвет названия награды'
 				selectOptions={colorOptions ?? [{ label: 'Бронза', value: '0' }]}
 				margin='0 0 20px 0'
 			/>
 			<QuillEditor
-				name={`awards[${number}].itemname`}
+				name={`itemname`}
 				label='Основной текст'
 				$heightEditor='150px'
 				className={styles.editor}
 			/>
 			<ControlledInput
-				name={`awards[${number}].itemdesc`}
+				name={`itemdesc`}
 				label='Название конкурса'
 				margin='0 0 20px 0'
 				isTextarea
