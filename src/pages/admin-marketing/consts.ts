@@ -13,4 +13,8 @@ export const MarketingTabNavigation: TabNavigationItem[] = [
 		title: 'Раздел «Информация»',
 		link: '/marketing/main-info',
 	},
+	{
+		title: 'Отзывы',
+		link: '/marketing/reviews',
+	},
 ]

@@ -131,4 +131,5 @@ export enum AdminRoute {
 	AdReward = 'ad-reward',
 	MarketingDistribution = 'distribution',
 	MarketingInfo = 'main-info',
+	MarketingReview = 'reviews',
 }

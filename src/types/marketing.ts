@@ -78,3 +78,25 @@ export type AdRewardListResponse = {
 	awards: AdRewardItem[]
 	block_name: string
 }
+
+export type ReviewItem = {
+	fio: string
+	hidden: boolean
+	id: string
+	rating: string
+	review_date: string
+	role: string
+}
+
+export type ReviewsListResponse = {
+	reviews: ReviewItem[]
+}
+
+export type ReviewItemInfoResponse = {
+	comment: string
+	fio: string
+	hidden: boolean
+	rating: string
+	review_date: string
+	role: string
+}

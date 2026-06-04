@@ -11,12 +11,14 @@ import {
 	type PageInfoInfoResponse,
 	type PageInfoNewIdResponse,
 	type PageInfoResponse,
-	AwardInfoResponse,
+	type AwardInfoResponse,
+	type ReviewsListResponse,
+	type ReviewItemInfoResponse,
 } from 'src/types/marketing'
 
 export const marketingApi = createApi({
 	reducerPath: ReducerPath.Marketing,
-	tagTypes: ['Marketing', 'MainInfo', 'Reward', 'Ad', 'Promo'],
+	tagTypes: ['Marketing', 'MainInfo', 'Reward', 'Ad', 'Promo', 'Review'],
 	baseQuery: baseQueryWithReauth,
 	endpoints: (build) => ({
 		getAllPagesInfo: build.query<PageInfoResponse, { pageName?: string }>({
@@ -157,6 +159,54 @@ export const marketingApi = createApi({
 			}),
 			invalidatesTags: ['Reward'],
 		}),
+		getAllReviews: build.query<ReviewsListResponse, { title?: string }>({
+			query: ({ title }) => ({
+				url: 'reviews/list',
+				params: {
+					title,
+				},
+			}),
+			providesTags: ['Review'],
+		}),
+		getNewIdReview: build.query<PageInfoNewIdResponse, null>({
+			query: () => ({
+				url: `reviews/getnew`,
+			}),
+			providesTags: ['Review'],
+		}),
+		hideReviewById: build.mutation<null, string>({
+			query: (pageInfoId) => ({
+				url: `reviews/hide`,
+				method: 'POST',
+				body: { id: pageInfoId },
+			}),
+			invalidatesTags: ['Review'],
+		}),
+		deleteReviewById: build.mutation<null, string>({
+			query: (pageInfoId) => ({
+				url: `reviews/delete`,
+				method: 'DELETE',
+				body: { id: pageInfoId },
+			}),
+			invalidatesTags: ['Review'],
+		}),
+		getReviewInfo: build.query<ReviewItemInfoResponse, string>({
+			query: (id) => ({
+				url: `reviews/edit`,
+				params: {
+					id,
+				},
+			}),
+			providesTags: ['Review'],
+		}),
+		saveReviewInfo: build.mutation<string, FieldValues>({
+			query: (FormData) => ({
+				url: `reviews/save`,
+				method: 'POST',
+				body: FormData,
+			}),
+			invalidatesTags: ['Review'],
+		}),
 	}),
 })
 
@@ -179,4 +229,10 @@ export const {
 	useHideAwardByIdMutation,
 	useGetAwardInfoQuery,
 	useSaveAwardInfoMutation,
+	useGetAllReviewsQuery,
+	useDeleteReviewByIdMutation,
+	useGetNewIdReviewQuery,
+	useGetReviewInfoQuery,
+	useHideReviewByIdMutation,
+	useSaveReviewInfoMutation,
 } = marketingApi

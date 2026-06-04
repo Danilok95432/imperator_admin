@@ -10,55 +10,59 @@ import { RowController } from 'src/components/row-controller/row-controller'
 import { TableFooter } from 'src/components/table-footer/table-footer'
 
 import styles from './index.module.scss'
-import { TypeElementsFiltrationInputs } from './consts'
-import { type TypesElement } from 'src/types/catalogTypes'
-import {
-	useDeleteTypeByIdMutation,
-	useGetAllTypesQuery,
-	useGetNewIdTypeQuery,
-} from 'src/store/catalog/catalog.api'
+import { MainInfoElementsFiltrationInputs } from './consts'
+import { type ReviewItem } from 'src/types/marketing'
 import { MainCheckBox } from 'src/UI/MainCheckBox/MainCheckBox'
 import { CheckMarkSvg } from 'src/UI/icons/checkMarkSVG'
+import {
+	useDeleteReviewByIdMutation,
+	useGetAllReviewsQuery,
+	useGetNewIdReviewQuery,
+	useHideReviewByIdMutation,
+} from 'src/store/marketing/marketing.api'
 import { Loader } from 'src/components/loader/loader'
 
-export const TypesList: FC = () => {
+export const ReviewsList: FC = () => {
 	const filterValues = useAppSelector(getFiltrationValues)
 
-	const { data: TypesInfoData, isLoading } = useGetAllTypesQuery({
+	const { data: reviewsData, isLoading } = useGetAllReviewsQuery({
 		title: filterValues.title,
-		category: filterValues.category,
-		date: filterValues.date,
 	})
-	const { refetch: getNewId } = useGetNewIdTypeQuery(null)
-	const [deleteTypeById] = useDeleteTypeByIdMutation()
+	const { refetch: getNewId } = useGetNewIdReviewQuery(null)
+	const [deletePageInfoById] = useDeleteReviewByIdMutation()
+	const [hidePageInfoById] = useHideReviewByIdMutation()
 
 	const navigate = useNavigate()
 
-	const addType = async () => {
+	const addReview = async () => {
 		const newIdResponse = await getNewId().unwrap()
 		return newIdResponse.id
 	}
 
-	const tableTitles = ['Тип товара', 'Тип создан', 'Активен', '']
-	const formatObjectsTableData = (TypesData: TypesElement[]) => {
-		return TypesData.map((TypeEl) => {
+	const tableTitles = ['ID', 'ФИО', 'Роль', 'Рейтинг', 'Дата отзыва', 'Спрятать', '']
+	const formatObjectsTableData = (reviews: ReviewItem[]) => {
+		return reviews.map((review) => {
 			return {
-				rowId: TypeEl.id,
+				rowId: review.id,
 				cells: [
-					<p key='0'>{TypeEl.title}</p>,
-					<p key='1'>{TypeEl.createdate}</p>,
+					<p key='0'>{review.id}</p>,
+					<p key='1'>{review.fio}</p>,
+					<p key='2'>{review.role}</p>,
+					<p key='3'>{review.rating}</p>,
+					<p key='4'>{review.review_date}</p>,
 					<MainCheckBox
-						key='2'
-						checked={!TypeEl.hidden}
-						disabled={true}
+						key='5'
+						checked={review.hidden}
+						onChangeBox={async () => await hidePageInfoById(review.id)}
 						svgNode={<CheckMarkSvg />}
 						className={styles.checkBoxWrapperNews}
 					/>,
 					<RowController
-						id={TypeEl.id}
+						id={review.id}
 						className={styles.rowActionButton}
 						removeHandler={rowDeleteHandler}
-						key='3'
+						noHide
+						key='6'
 					/>,
 				],
 			}
@@ -66,36 +70,36 @@ export const TypesList: FC = () => {
 	}
 
 	const rowDeleteHandler = async (id: string) => {
-		await deleteTypeById(id)
+		await deletePageInfoById(id)
 	}
 
 	const rowClickHandler = (id: string) => {
-		navigate(`/catalog/types/${id}`)
+		navigate(`/marketing/reviews/${id}`)
 	}
 
 	const handleAddTypeClick = async () => {
-		const newId = await addType()
-		navigate(`/catalog/types/${newId}`)
+		const newId = await addReview()
+		navigate(`/marketing/reviews/${newId}`)
 	}
 
-	if (isLoading || !TypesInfoData?.types) return <Loader />
+	if (isLoading || !reviewsData?.reviews) return <Loader />
 
 	return (
 		<div>
-			<h3>Типы товаров</h3>
+			<h3>Отзывы</h3>
 			<GridRow $margin='0 0 15px 0' $padding='0 29px' className={styles.searchRow}>
-				<TableFiltration filterInputs={TypeElementsFiltrationInputs} />
+				<TableFiltration filterInputs={MainInfoElementsFiltrationInputs} />
 			</GridRow>
 			<CustomTable
-				className={styles.typesTable}
-				rowData={formatObjectsTableData(TypesInfoData?.types ?? [])}
+				className={styles.mainInfoTable}
+				rowData={formatObjectsTableData(reviewsData?.reviews ?? [])}
 				colTitles={tableTitles}
 				rowClickHandler={rowClickHandler}
 			/>
 			<TableFooter
-				totalElements={TypesInfoData?.types.length}
+				totalElements={reviewsData?.reviews.length}
 				addClickHandler={handleAddTypeClick}
-				addText='Добавить тип'
+				addText='Добавить отзыв'
 			/>
 		</div>
 	)

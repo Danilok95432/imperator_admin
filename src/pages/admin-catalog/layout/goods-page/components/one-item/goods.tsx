@@ -40,6 +40,11 @@ export const OneGoods = () => {
 			use_mainslider: false,
 			use_best: false,
 			use_old: false,
+			use_weight: false,
+			item_weight: '',
+			weight_one: '',
+			weight_price_kg: '',
+			weight_default: '',
 		},
 	})
 	const navigate = useNavigate()
@@ -47,6 +52,7 @@ export const OneGoods = () => {
 	const onSubmit: SubmitHandler<OneGoodsInputs> = async (data) => {
 		const normalizePrice = data?.item_price?.replace(/\s/g, '')
 		const normalizeDiscountPrice = data?.item_price_discount?.replace(/\s/g, '')
+		const normalizeWeightPriceKg = data?.weight_price_kg?.replace(/\s/g, '')
 		const formData = new FormData()
 		let selectedObj = ''
 		if (typeof data.types !== 'string' && data.types) {
@@ -74,7 +80,12 @@ export const OneGoods = () => {
 			'id_brand',
 			typeof data.brands === 'string' ? data.brands : data.brands ? data.brands[0].value : '0',
 		)
-		formData.append('item_weight', data.item_weight ?? '')
+		formData.append('use_weight', booleanToNumberString(data.use_weight))
+		if (data.use_weight) {
+			formData.append('weight_one', data.weight_one ?? '')
+			formData.append('weight_price_kg', normalizeWeightPriceKg ?? '')
+			formData.append('weight_default', data.weight_default ?? '')
+		} else formData.append('item_weight', data.item_weight ?? '')
 		formData.append('item_width', data.item_width ?? '')
 		formData.append('item_length', data.item_length ?? '')
 		formData.append('item_height', data.item_height ?? '')

@@ -27,7 +27,7 @@ export const MainSection: FC<MainSectionProps> = ({
 				margin='0 0 20px 0'
 			/>
 			<ControlledInput name='title' label='Наименование *' margin='0 0 20px 0' />
-			<ControlledInput name='artikul' label='Артикул *' margin='0 0 20px 0' />
+			<ControlledInput name='artikul' label='Порядок *' margin='0 0 20px 0' />
 			<ControlledMultipleSelect
 				name='types'
 				label='Тип товара'

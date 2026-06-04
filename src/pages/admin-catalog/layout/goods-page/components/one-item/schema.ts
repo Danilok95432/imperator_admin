@@ -9,6 +9,10 @@ export type OneGoodsInputs = {
 	catalogs: SelOption[] | string
 	brands: SelOption[] | string
 	types?: MultiSelOption[] | string
+	use_weight: boolean
+	weight_one: string
+	weight_price_kg: string
+	weight_default: string
 	item_weight: string
 	item_width: string
 	item_length: string
@@ -33,38 +37,74 @@ export type OneGoodsInputs = {
 	documents?: FileItem[]
 }
 
-export const oneGoodsSchema = yup.object().shape({
+const weightString = yup
+	.string()
+	.defined()
+	.default('')
+	.max(200, 'Значение не может превышать 200 символов')
+
+export const oneGoodsSchema = yup.object({
 	title: yup
 		.string()
 		.required('Обязательный параметр')
 		.max(200, 'Наименование не может превышать 200 символов'),
+
 	artikul: yup
 		.string()
 		.required('Обязательный параметр')
-		.max(200, 'Наименование не может превышать 200 символов'),
-	item_weight: yup
-		.string()
-		.required('Обязательный параметр')
-		.max(200, 'Наименование не может превышать 200 символов'),
+		.max(200, 'Артикул не может превышать 200 символов'),
+
+	use_weight: yup.boolean().defined().default(false),
+
+	weight_one: weightString.when('use_weight', {
+		is: true,
+		then: (schema) => schema.required('Обязательный параметр'),
+		otherwise: (schema) => schema,
+	}),
+
+	weight_price_kg: weightString.when('use_weight', {
+		is: true,
+		then: (schema) => schema.required('Обязательный параметр'),
+		otherwise: (schema) => schema,
+	}),
+
+	weight_default: weightString.when('use_weight', {
+		is: true,
+		then: (schema) => schema.required('Обязательный параметр'),
+		otherwise: (schema) => schema,
+	}),
+
+	item_weight: weightString.when('use_weight', {
+		is: false,
+		then: (schema) => schema.required('Обязательный параметр'),
+		otherwise: (schema) => schema,
+	}),
+
 	item_height: yup
 		.string()
 		.required('Обязательный параметр')
-		.max(200, 'Наименование не может превышать 200 символов'),
+		.max(200, 'Значение не может превышать 200 символов'),
+
 	item_width: yup
 		.string()
 		.required('Обязательный параметр')
-		.max(200, 'Наименование не может превышать 200 символов'),
+		.max(200, 'Значение не может превышать 200 символов'),
+
 	item_length: yup
 		.string()
 		.required('Обязательный параметр')
-		.max(200, 'Наименование не может превышать 200 символов'),
+		.max(200, 'Значение не может превышать 200 символов'),
+
 	catalogs: yup
 		.mixed<string | SelOption[]>()
 		.test('is-event-selected', 'Выберите категорию', (value) => {
 			if (typeof value === 'string') {
 				return true
-			} else if (Array.isArray(value) && value.length > 0) {
+			}
+
+			if (Array.isArray(value) && value.length > 0) {
 				const firstElement = value[0]
+
 				if (
 					typeof firstElement === 'object' &&
 					firstElement !== null &&
@@ -73,21 +113,25 @@ export const oneGoodsSchema = yup.object().shape({
 					firstElement.label === 'Категория не выбрана'
 				) {
 					return false
-				} else {
-					return true
 				}
-			} else {
-				return false
+
+				return true
 			}
+
+			return false
 		})
 		.required('Выберите категорию'),
+
 	brands: yup
 		.mixed<string | SelOption[]>()
 		.test('is-event-selected', 'Выберите производителя', (value) => {
 			if (typeof value === 'string') {
 				return true
-			} else if (Array.isArray(value) && value.length > 0) {
+			}
+
+			if (Array.isArray(value) && value.length > 0) {
 				const firstElement = value[0]
+
 				if (
 					typeof firstElement === 'object' &&
 					firstElement !== null &&
@@ -96,12 +140,12 @@ export const oneGoodsSchema = yup.object().shape({
 					firstElement.label === 'Производитель не выбран'
 				) {
 					return false
-				} else {
-					return true
 				}
-			} else {
-				return false
+
+				return true
 			}
+
+			return false
 		})
 		.required('Выберите производителя'),
 })

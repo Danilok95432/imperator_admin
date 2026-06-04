@@ -57,13 +57,13 @@ export const MainSection: FC<MainSectionProps> = ({ customerOption, cityOption }
 				isTextarea
 				height='54px'
 			/>
-			<ControlledInput
+			{/* <ControlledInput
 				name='review_text'
 				label='Отзыв покупателя'
 				margin='0 0 20px 0'
 				isTextarea
 				height='54px'
-			/>
+			/> */}
 		</AdminSection>
 	)
 }

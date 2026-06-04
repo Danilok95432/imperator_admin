@@ -159,6 +159,9 @@ import { AdItem } from 'src/pages/admin-marketing/layout/ad-main/ad-item/ad-item
 import { RewardPage } from 'src/pages/admin-marketing/layout/ad-main/reward-item/reward-item'
 import { RewardOneItem } from 'src/pages/admin-marketing/layout/ad-main/reward-item/components/reward-one-item/reward-one-item'
 import { RewardList } from 'src/pages/admin-marketing/layout/ad-main/reward-item/components/reward-list/reward-list'
+import { ReviewsPage } from 'src/pages/admin-marketing/layout/reviews/reviews-page'
+import { ReviewsList } from 'src/pages/admin-marketing/layout/reviews/reviews-list/reviews-list'
+import { OneReview } from 'src/pages/admin-marketing/layout/reviews/one-item/review'
 
 export const AdminRoutes: FC = () => {
 	return (
@@ -236,6 +239,10 @@ export const AdminRoutes: FC = () => {
 					<Route path={AdminRoute.MarketingInfo} element={<MainInfoPartPage />}>
 						<Route index element={<MainInfoList />} />
 						<Route path=':id' element={<OneInfoItem />} />
+					</Route>
+					<Route path={AdminRoute.MarketingReview} element={<ReviewsPage />}>
+						<Route index element={<ReviewsList />} />
+						<Route path=':id' element={<OneReview />} />
 					</Route>
 				</Route>
 
