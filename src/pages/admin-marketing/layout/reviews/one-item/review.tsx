@@ -16,7 +16,7 @@ import adminStyles from 'src/routes/admin-layout/index.module.scss'
 import classNames from 'classnames'
 import { useGetReviewInfoQuery, useSaveReviewInfoMutation } from 'src/store/marketing/marketing.api'
 import { MainSection } from './components/main-section/main-section'
-import { booleanToNumberString, currentDateString } from 'src/helpers/utils'
+import { booleanToNumberString, currentDateString, formatDateToYYYYMMDD } from 'src/helpers/utils'
 import { StarRatingSVG } from 'src/UI/icons/starRatingSVG'
 import { FlexRow } from 'src/components/flex-row/flex-row'
 
@@ -88,7 +88,7 @@ export const OneReview = () => {
 		formData.append('comment', data.comment ?? '')
 		formData.append('rating', data.rating ?? '')
 		formData.append('role', data.role ?? '')
-		formData.append('review_date', data.review_date ?? '')
+		formData.append('review_date', formatDateToYYYYMMDD(data.review_date ?? ''))
 		formData.append('hidden', booleanToNumberString(data.hidden))
 		const res = await saveReview(formData)
 		if (res) {

@@ -21,8 +21,8 @@ export const MainSection: FC<MainSectionProps> = ({ customerOption, cityOption }
 				selectOptions={customerOption ?? [{ label: 'Выберите тип', value: '0' }]}
 				margin='0 0 20px 0'
 			/>
-			<ControlledInput name='firstname' label='Имя' margin='0 0 20px 0' />
 			<ControlledInput name='surname' label='Фамилия' margin='0 0 20px 0' />
+			<ControlledInput name='firstname' label='Имя' margin='0 0 20px 0' />
 			<ControlledInput name='fathname' label='Отчество' margin='0 0 20px 0' />
 			<ControlledInput name='user_title' label='Наименование пользователя' margin='0 0 20px 0' />
 			<ControlledInput name='telphone' label='Телефон' margin='0 0 20px 0' isPhone />

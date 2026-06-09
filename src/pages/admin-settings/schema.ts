@@ -12,6 +12,7 @@ export type SettingsInputs = {
 	contact_vk: string
 	info_copyright: string
 	site_title: string
+	metric?: string
 }
 
 export const defaultMainBlocksValues = {

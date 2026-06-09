@@ -49,6 +49,7 @@ export const AdminSettings: FC = () => {
 		formData.append('contact_vk', data.contact_vk)
 		formData.append('info_copyright', data.info_copyright)
 		formData.append('site_title', data.site_title)
+		formData.append('metric', data.metric ?? '')
 		const res = await saveSettings(formData)
 		if (res) {
 			markAsSent(true)
