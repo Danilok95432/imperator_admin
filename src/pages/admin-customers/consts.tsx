@@ -1,5 +1,4 @@
 import { type TabNavigationItem } from 'src/types/navigation'
-import { VipIconSVG } from 'src/UI/icons/vipIconSVG'
 
 export const CustomersTabNavigation: TabNavigationItem[] = [
 	{
@@ -10,9 +9,9 @@ export const CustomersTabNavigation: TabNavigationItem[] = [
 		title: 'Постоянные',
 		link: '/customers/regular',
 	},
-	{
-		title: 'VIP-персоны',
-		link: '/customers/vip',
-		icon: <VipIconSVG />,
-	},
+	// {
+	// 	title: 'VIP-персоны',
+	// 	link: '/customers/vip',
+	// 	icon: <VipIconSVG />,
+	// },
 ]
