@@ -146,6 +146,8 @@ export type GoodsInfoResponse = {
 	use_mainslider: boolean
 	use_best: boolean
 	use_old: boolean
+	use_new: boolean
+	use_theme: boolean
 	seo_title: string
 	seo_description: string
 	seo_keywords: string

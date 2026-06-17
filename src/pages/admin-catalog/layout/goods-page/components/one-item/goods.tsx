@@ -100,6 +100,8 @@ export const OneGoods = () => {
 		formData.append('use_mainslider', booleanToNumberString(data.use_mainslider))
 		formData.append('use_best', booleanToNumberString(data.use_best))
 		formData.append('use_old', booleanToNumberString(data.use_old))
+		formData.append('use_new', booleanToNumberString(data.use_new))
+		formData.append('use_theme', booleanToNumberString(data.use_theme))
 		formData.append('seo_title', data.seo_title ?? '')
 		formData.append('seo_description', data.seo_description ?? '')
 		formData.append('seo_keywords', data.seo_keywords ?? '')
@@ -204,6 +206,20 @@ export const OneGoods = () => {
 									contentRadio1={<>Да</>}
 									contentRadio2={<>Нет</>}
 								/>
+								<SwitchedRadioBtns
+									name='use_new'
+									label='Новинка'
+									$variant='switcher'
+									contentRadio1={<>Да</>}
+									contentRadio2={<>Нет</>}
+								/>
+								{/* <SwitchedRadioBtns
+									name='use_theme'
+									label='Тематическая серия'
+									$variant='switcher'
+									contentRadio1={<>Да</>}
+									contentRadio2={<>Нет</>}
+								/ */}
 							</div>
 						</div>
 						<AdminControllers
