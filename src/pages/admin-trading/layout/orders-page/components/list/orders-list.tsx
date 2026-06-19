@@ -1,4 +1,4 @@
-import { type FC } from 'react'
+import { useState, type FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { TableFiltration } from 'src/modules/table-filtration/table-filtration'
 import { getFiltrationValues } from 'src/modules/table-filtration/store/table-filtration.selectors'
@@ -20,13 +20,26 @@ import { type OrdersElement } from 'src/types/trading'
 
 export const OrdersList: FC = () => {
 	const filterValues = useAppSelector(getFiltrationValues)
+	const [currentPage, setCurrentPage] = useState(1)
+	const [itemsPerPage, setItemsPerPage] = useState<number | 'all'>(100)
 
 	const { data: ordersData } = useGetAllOrdersQuery({
 		source: filterValues.source,
 		customer: filterValues.customer,
 		phone: filterValues.phone,
 		date: filterValues.date,
+		limit: itemsPerPage === 'all' ? undefined : itemsPerPage,
+		page: itemsPerPage === 'all' ? undefined : currentPage,
 	})
+	const handlePageChange = (newPage: number) => {
+		setCurrentPage(newPage)
+	}
+
+	const handleItemsPerPageChange = (value: string) => {
+		const newValue = value === 'all' ? 'all' : parseInt(value)
+		setItemsPerPage(newValue)
+		setCurrentPage(1)
+	}
 	const { refetch: getNewId } = useGetNewIdOrderQuery(null)
 	const [deleteTypeById] = useDeleteOrderByIdMutation()
 
@@ -106,7 +119,14 @@ export const OrdersList: FC = () => {
 				rowClickHandler={rowClickHandler}
 			/>
 			<TableFooter
-				totalElements={ordersData?.orders.length}
+				totalElements={Number(ordersData?.orders.length)}
+				currentPage={currentPage}
+				totalPages={Math.ceil(
+					Number(ordersData?.orders.length) /
+						(itemsPerPage === 'all' ? Number(ordersData?.orders.length) : itemsPerPage),
+				)}
+				onPageChange={handlePageChange}
+				onLimitChange={handleItemsPerPageChange}
 				addClickHandler={handleAddTypeClick}
 				addText='Добавить заказ'
 			/>

@@ -14,11 +14,13 @@ import 'swiper/swiper-bundle.css'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import './index.scss'
+import { ScrollToTop } from './UI/ScrollToTop/scroll-to-top'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 	<Provider store={store}>
 		<HelmetProvider>
 			<BrowserRouter>
+				<ScrollToTop />
 				<ToastContainer />
 				<App />
 				<Modal />

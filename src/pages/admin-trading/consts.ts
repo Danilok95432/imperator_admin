@@ -6,6 +6,10 @@ export const TradingTabNavigation: TabNavigationItem[] = [
 		link: '/trading/orders',
 	},
 	{
+		title: 'Удаленные заказы',
+		link: '/trading/deleted-orders',
+	},
+	{
 		title: 'Продажи',
 		link: '/trading/sale',
 	},

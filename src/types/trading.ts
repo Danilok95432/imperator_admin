@@ -32,6 +32,8 @@ export type GoodsCart = {
 	price_item: string
 	price_total: string
 	title: string
+	use_weight: boolean
+	item_weight: string
 }
 
 export type OrderInfoResponse = {

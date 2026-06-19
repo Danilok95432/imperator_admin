@@ -118,6 +118,7 @@ export enum AdminRoute {
 	CatalogCategories = 'categories',
 	Trading = 'trading',
 	TradingOrder = 'orders',
+	TradingDeletedOrder = 'deleted-orders',
 	TradingSale = 'sale',
 	TradingRefund = 'refunds',
 	Customers = 'customers',

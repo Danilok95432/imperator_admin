@@ -1,4 +1,4 @@
-import { type FC } from 'react'
+import { useState, type FC } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { TableFiltration } from 'src/modules/table-filtration/table-filtration'
 import { getFiltrationValues } from 'src/modules/table-filtration/store/table-filtration.selectors'
@@ -22,9 +22,13 @@ import { GoodsElementsFiltrationInputs } from './consts'
 
 export const GoodsList: FC = () => {
 	const filterValues = useAppSelector(getFiltrationValues)
+	const [currentPage, setCurrentPage] = useState(1)
+	const [itemsPerPage, setItemsPerPage] = useState<number | 'all'>(100)
 
 	const { data: goodsInfoData } = useGetAllGoodsQuery({
 		title: filterValues.title,
+		limit: itemsPerPage === 'all' ? undefined : itemsPerPage,
+		page: itemsPerPage === 'all' ? undefined : currentPage,
 	})
 	const { refetch: getNewId } = useGetNewIdGoodsQuery(null)
 	const [deleteTypeById] = useDeleteGoodsByIdMutation()
@@ -91,6 +95,16 @@ export const GoodsList: FC = () => {
 		})
 	}
 
+	const handlePageChange = (newPage: number) => {
+		setCurrentPage(newPage)
+	}
+
+	const handleItemsPerPageChange = (value: string) => {
+		const newValue = value === 'all' ? 'all' : parseInt(value)
+		setItemsPerPage(newValue)
+		setCurrentPage(1)
+	}
+
 	const rowDeleteHandler = async (id: string) => {
 		await deleteTypeById(id)
 	}
@@ -119,7 +133,14 @@ export const GoodsList: FC = () => {
 				rowClickHandler={rowClickHandler}
 			/>
 			<TableFooter
-				totalElements={goodsInfoData?.items.length}
+				totalElements={Number(goodsInfoData?.items.length)}
+				currentPage={currentPage}
+				totalPages={Math.ceil(
+					Number(goodsInfoData?.items.length) /
+						(itemsPerPage === 'all' ? Number(goodsInfoData?.items.length) : itemsPerPage),
+				)}
+				onPageChange={handlePageChange}
+				onLimitChange={handleItemsPerPageChange}
 				addClickHandler={handleAddTypeClick}
 				addText='Добавить товар'
 			/>

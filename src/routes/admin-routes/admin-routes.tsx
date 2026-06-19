@@ -162,6 +162,9 @@ import { RewardList } from 'src/pages/admin-marketing/layout/ad-main/reward-item
 import { ReviewsPage } from 'src/pages/admin-marketing/layout/reviews/reviews-page'
 import { ReviewsList } from 'src/pages/admin-marketing/layout/reviews/reviews-list/reviews-list'
 import { OneReview } from 'src/pages/admin-marketing/layout/reviews/one-item/review'
+import { DeletedOrdersPage } from 'src/pages/admin-trading/layout/deleted-orders-page/deleted-order-page'
+import { DeletedOrdersList } from 'src/pages/admin-trading/layout/deleted-orders-page/components/list/orders-list'
+import { DeletedOneOrder } from 'src/pages/admin-trading/layout/deleted-orders-page/components/one-item/order'
 
 export const AdminRoutes: FC = () => {
 	return (
@@ -189,6 +192,10 @@ export const AdminRoutes: FC = () => {
 					<Route path={AdminRoute.TradingOrder} element={<OrdersPage />}>
 						<Route index element={<OrdersList />} />
 						<Route path=':id' element={<OneOrder />} />
+					</Route>
+					<Route path={AdminRoute.TradingDeletedOrder} element={<DeletedOrdersPage />}>
+						<Route index element={<DeletedOrdersList />} />
+						<Route path=':id' element={<DeletedOneOrder />} />
 					</Route>
 					<Route path={AdminRoute.TradingRefund} element={<RefundsPage />}>
 						<Route index element={<RefundsList />} />

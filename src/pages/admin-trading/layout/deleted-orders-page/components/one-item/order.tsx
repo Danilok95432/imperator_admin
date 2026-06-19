@@ -10,7 +10,6 @@ import { Container } from 'src/UI/Container/Container'
 import { SwitchedRadioBtns } from 'src/components/switched-radio-btns/switched-radio-btns'
 import { SwitchedHiddenSvg } from 'src/UI/icons/switchedHiddenSVG'
 import { SwitchedShowSvg } from 'src/UI/icons/switchedShowSVG'
-import { AdminControllers } from 'src/components/admin-controllers/admin-controllers'
 import { AdminRoute } from 'src/routes/admin-routes/consts'
 
 import styles from './index.module.scss'
@@ -22,18 +21,18 @@ import { type GoodsCart } from 'src/types/trading'
 import { CustomTable } from 'src/components/custom-table/custom-table'
 import { booleanToNumberString } from 'src/helpers/utils'
 
-export const OneOrder = () => {
+export const DeletedOneOrder = () => {
 	const { id = '0' } = useParams()
 
 	const { data } = useGetOrderInfoQuery(id)
 	const [saveOrderInfo] = useSaveOrderInfoMutation()
-	const [action, setAction] = useState<'apply' | 'save'>('apply')
+	const [action] = useState<'apply' | 'save'>('apply')
 
 	const methods = useForm<OneOrderInputs>({
 		mode: 'onBlur',
 	})
 	const navigate = useNavigate()
-	const { isSent, markAsSent } = useIsSent(methods.control)
+	const { markAsSent } = useIsSent(methods.control)
 	const onSubmit: SubmitHandler<OneOrderInputs> = async (data) => {
 		const formData = new FormData()
 		formData.append('id', id)
@@ -164,9 +163,7 @@ export const OneOrder = () => {
 					<p key='2'>{orderEl.brand}</p>,
 					<p key='3'>{orderEl.title}</p>,
 					<p key='4'>{orderEl.price_item}</p>,
-					<p key='5'>
-						{orderEl.use_weight ? `${orderEl.item_weight} гр.` : `${orderEl.item_count} шт.`}
-					</p>,
+					<p key='5'>{orderEl.item_count}</p>,
 					<p key='6'>{orderEl.price_total}</p>,
 				],
 			}
@@ -220,12 +217,12 @@ export const OneOrder = () => {
 								/>
 							</div>
 						</div>
-						<AdminControllers
+						{/* <AdminControllers
 							variant='4'
 							outLink={`/${AdminRoute.Trading}/${AdminRoute.TradingOrder}`}
 							isSent={isSent}
 							actionHandler={setAction}
-						/>
+						/> */}
 					</form>
 				</FormProvider>
 			</Container>

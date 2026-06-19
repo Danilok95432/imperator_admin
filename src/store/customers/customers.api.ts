@@ -16,14 +16,16 @@ export const customerApi = createApi({
 	endpoints: (build) => ({
 		getAllCustomers: build.query<
 			CustomerResponse,
-			{ customer?: string; phone?: string; date?: string }
+			{ customer?: string; phone?: string; date?: string; limit?: number; page?: number }
 		>({
-			query: ({ customer, phone, date }) => ({
+			query: ({ customer, phone, date, limit, page }) => ({
 				url: 'siteusers/list',
 				params: {
 					customer,
 					phone,
 					date,
+					limit,
+					page,
 				},
 			}),
 			providesTags: ['Customers'],

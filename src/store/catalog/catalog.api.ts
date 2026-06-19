@@ -158,11 +158,13 @@ export const catalogApi = createApi({
 			}),
 			invalidatesTags: ['Categories', 'CategoryInfo'],
 		}),
-		getAllGoods: build.query<GoodsResponse, { title?: string }>({
-			query: ({ title }) => ({
+		getAllGoods: build.query<GoodsResponse, { title?: string; limit?: number; page?: number }>({
+			query: ({ title, limit, page }) => ({
 				url: 'catalog_items/list',
 				params: {
 					title,
+					limit,
+					page,
 				},
 			}),
 			providesTags: ['Goods'],

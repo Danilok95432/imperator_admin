@@ -22,15 +22,48 @@ export const tradingApi = createApi({
 	endpoints: (build) => ({
 		getAllOrders: build.query<
 			OrderResponse,
-			{ source?: string; customer?: string; phone?: string; date?: string }
+			{
+				source?: string
+				customer?: string
+				phone?: string
+				date?: string
+				limit?: number
+				page?: number
+			}
 		>({
-			query: ({ source, customer, phone, date }) => ({
+			query: ({ source, customer, phone, date, limit, page }) => ({
 				url: 'orders/list',
 				params: {
 					source,
 					customer,
 					phone,
 					date,
+					limit,
+					page,
+				},
+			}),
+			providesTags: ['Orders'],
+		}),
+		getAllDeletedOrders: build.query<
+			OrderResponse,
+			{
+				source?: string
+				customer?: string
+				phone?: string
+				date?: string
+				limit?: number
+				page?: number
+			}
+		>({
+			query: ({ source, customer, phone, date, limit, page }) => ({
+				url: 'orders/list_deleted',
+				params: {
+					source,
+					customer,
+					phone,
+					date,
+					limit,
+					page,
 				},
 			}),
 			providesTags: ['Orders'],
@@ -177,4 +210,5 @@ export const {
 	useSaveOrderInfoMutation,
 	useSaveRefundInfoMutation,
 	useSaveSaleInfoMutation,
+	useGetAllDeletedOrdersQuery,
 } = tradingApi
