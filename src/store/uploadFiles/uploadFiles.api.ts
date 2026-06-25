@@ -66,4 +66,5 @@ export const {
 	useGetUploadedFileQuery,
 	useSaveUploadedFileInfoMutation,
 	useGetNewIdFileQuery,
+	useLazyGetNewIdFileQuery,
 } = uploadFilesApi

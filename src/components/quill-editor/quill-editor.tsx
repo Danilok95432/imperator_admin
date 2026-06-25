@@ -1,4 +1,4 @@
-import { type FC, useCallback, useEffect, useMemo, useRef } from 'react'
+import { type ChangeEvent, type FC, useCallback, useEffect, useMemo, useRef } from 'react'
 import { Controller, type ControllerProps, type FieldError, useFormContext } from 'react-hook-form'
 import { ErrorMessage } from '@hookform/error-message'
 import ReactQuill from 'react-quill'
@@ -7,6 +7,10 @@ import './vk-video-format'
 import './rutube-video-format'
 
 import styled from 'styled-components'
+import {
+	useLazyGetNewIdFileQuery,
+	useUploadFilesMutation,
+} from 'src/store/uploadFiles/uploadFiles.api'
 
 interface QuillEditorProps extends Omit<ControllerProps, 'render'> {
 	name: string
@@ -14,6 +18,7 @@ interface QuillEditorProps extends Omit<ControllerProps, 'render'> {
 	dynamicError?: FieldError | undefined
 	label?: string
 	className?: string
+	maxDocumentSizeMb?: number
 }
 
 type StyledEditorWrapperProps = {
@@ -21,6 +26,34 @@ type StyledEditorWrapperProps = {
 	$maxWidth?: string
 	$width?: string
 }
+
+const DOCUMENT_FILETYPE = 'static'
+
+const Quill = ReactQuill.Quill
+const Link = Quill.import('formats/link')
+
+class DocumentLink extends Link {
+	static blotName = 'document-link'
+	static tagName = 'A'
+	static className = 'ql-document-link'
+
+	static create(value: string) {
+		const node = super.create(value) as HTMLAnchorElement
+
+		node.setAttribute('href', value)
+		node.setAttribute('target', '_blank')
+		node.setAttribute('rel', 'noopener noreferrer')
+		node.setAttribute('download', '')
+
+		return node
+	}
+
+	static formats(domNode: HTMLAnchorElement) {
+		return domNode.getAttribute('href')
+	}
+}
+
+Quill.register(DocumentLink, true)
 
 const StyledEditorWrapper = styled.div<StyledEditorWrapperProps>`
 	label {
@@ -56,7 +89,8 @@ const StyledEditorWrapper = styled.div<StyledEditorWrapperProps>`
 		font-family: 'Open Sans', sans-serif;
 	}
 
-	.quillCustomToolbar .ql-typography {
+	.quillCustomToolbar .ql-typography,
+	.quillCustomToolbar .ql-document {
 		width: auto;
 		min-width: 48px;
 		padding: 0 8px;
@@ -64,8 +98,14 @@ const StyledEditorWrapper = styled.div<StyledEditorWrapperProps>`
 		font-weight: 700;
 	}
 
-	.quillCustomToolbar .ql-typography:hover {
+	.quillCustomToolbar .ql-typography:hover,
+	.quillCustomToolbar .ql-document:hover {
 		color: #06c;
+	}
+
+	.quillCustomToolbar .ql-document:disabled {
+		cursor: not-allowed;
+		opacity: 0.5;
 	}
 
 	.ql-toolbar {
@@ -86,6 +126,11 @@ const StyledEditorWrapper = styled.div<StyledEditorWrapperProps>`
 		height: 100%;
 		overflow-y: auto;
 		white-space: pre-wrap;
+	}
+
+	.ql-editor a {
+		color: #0645ad;
+		text-decoration: underline;
 	}
 
 	.ql-snow .ql-tooltip[data-mode='video']::before {
@@ -150,11 +195,29 @@ const formats = [
 	'list',
 	'bullet',
 	'link',
+	'document-link',
 	'image',
 	'video',
 	'vk-video',
 	'rutube-video',
 ]
+
+const allowedDocumentMimeTypes = new Set([
+	'application/pdf',
+	'application/msword',
+	'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+])
+
+const allowedDocumentExtensions = ['.pdf', '.doc', '.docx']
+
+const isAllowedDocumentFile = (file: File) => {
+	const fileName = file.name.toLowerCase()
+
+	return (
+		allowedDocumentMimeTypes.has(file.type) ||
+		allowedDocumentExtensions.some((extension) => fileName.endsWith(extension))
+	)
+}
 
 const typographyText = (text: string) => {
 	return text
@@ -190,6 +253,26 @@ const typographyHtml = (html: string) => {
 	return root.innerHTML
 }
 
+const normalizeDocumentLinks = (html: string) => {
+	if (typeof DOMParser === 'undefined') {
+		return html
+	}
+
+	const parser = new DOMParser()
+	const doc = parser.parseFromString(`<div>${html}</div>`, 'text/html')
+	const root = doc.body.firstElementChild
+
+	if (!root) return html
+
+	root.querySelectorAll<HTMLAnchorElement>('a.ql-document-link').forEach((link) => {
+		link.setAttribute('target', '_blank')
+		link.setAttribute('rel', 'noopener noreferrer')
+		link.setAttribute('download', '')
+	})
+
+	return root.innerHTML
+}
+
 const processVideoEmbeds = (html: string) => {
 	return html.replace(
 		/<iframe[^>]*src="([^"]*)"[^>]*><\/iframe>|<iframe[^>]*src="([^"]*)"[^>]*>/g,
@@ -216,6 +299,82 @@ const processVideoEmbeds = (html: string) => {
 	)
 }
 
+const createDocumentUploadFormData = (file: File, fileId: string) => {
+	const formData = new FormData()
+
+	formData.append('id', fileId)
+	formData.append('itemfile', file)
+	formData.append('filetype', DOCUMENT_FILETYPE)
+
+	return formData
+}
+
+const extractStringValueByKeys = (response: unknown, keys: string[]): string | null => {
+	if (!response || typeof response !== 'object') {
+		return null
+	}
+
+	const responseObject = response as Record<string, unknown>
+
+	for (const key of keys) {
+		const value = responseObject[key]
+
+		if (typeof value === 'string' && value.trim()) {
+			return value
+		}
+
+		if (typeof value === 'number') {
+			return String(value)
+		}
+	}
+
+	const nestedKeys = ['data', 'result', 'item', 'fileinfo', 'fileInfo', 'uploadedFile']
+
+	for (const key of nestedKeys) {
+		const nestedValue = responseObject[key]
+		const nestedResult = extractStringValueByKeys(nestedValue, keys)
+
+		if (nestedResult) {
+			return nestedResult
+		}
+	}
+
+	return null
+}
+
+const extractNewFileId = (response: unknown): string | null => {
+	return extractStringValueByKeys(response, [
+		'id',
+		'ID',
+		'id_file',
+		'idFile',
+		'file_id',
+		'fileId',
+		'new_id',
+		'newId',
+	])
+}
+
+const extractUploadedFileUrl = (response: unknown): string | null => {
+	return extractStringValueByKeys(response, [
+		'url',
+		'link',
+		'href',
+		'src',
+		'path',
+		'file',
+		'file_url',
+		'fileUrl',
+		'file_link',
+		'fileLink',
+		'download_url',
+		'downloadUrl',
+		'static_url',
+		'staticUrl',
+		'ticket_link',
+	])
+}
+
 export const QuillEditor: FC<QuillEditorProps & StyledEditorWrapperProps> = ({
 	name,
 	rules,
@@ -225,6 +384,7 @@ export const QuillEditor: FC<QuillEditorProps & StyledEditorWrapperProps> = ({
 	$maxWidth,
 	$width,
 	className,
+	maxDocumentSizeMb = 20,
 	...rest
 }) => {
 	const {
@@ -232,8 +392,21 @@ export const QuillEditor: FC<QuillEditorProps & StyledEditorWrapperProps> = ({
 		formState: { errors },
 	} = useFormContext()
 
+	const [getNewIdFile, { isFetching: isGettingNewFileId }] = useLazyGetNewIdFileQuery()
+	const [uploadFiles, { isLoading: isDocumentUploading }] = useUploadFilesMutation()
+
+	const isFileActionLoading = isGettingNewFileId || isDocumentUploading
+
+	const isFileActionLoadingRef = useRef(false)
+
+	useEffect(() => {
+		isFileActionLoadingRef.current = isFileActionLoading
+	}, [isFileActionLoading])
+
 	const vkScriptLoaded = useRef(false)
 	const editorRef = useRef<ReactQuill>(null)
+	const documentInputRef = useRef<HTMLInputElement>(null)
+	const selectedDocumentRangeRef = useRef<{ index: number; length: number } | null>(null)
 	const fieldOnChangeRef = useRef<((value: string) => void) | null>(null)
 	const toolbarId = useRef(`quill-toolbar-${Math.random().toString(36).slice(2)}`).current
 
@@ -257,19 +430,136 @@ export const QuillEditor: FC<QuillEditorProps & StyledEditorWrapperProps> = ({
 		})
 	}, [])
 
+	const openDocumentDialog = useCallback(() => {
+		if (isFileActionLoadingRef.current) return
+
+		const quill = editorRef.current?.getEditor()
+
+		if (!quill) return
+
+		const range = quill.getSelection()
+
+		if (!range || range.length === 0) {
+			window.alert('Сначала выделите текст, который нужно превратить в ссылку на документ')
+			return
+		}
+
+		const selectedText = quill.getText(range.index, range.length).trim()
+
+		if (!selectedText) {
+			window.alert('Выделите непустой текст для ссылки на документ')
+			return
+		}
+
+		selectedDocumentRangeRef.current = {
+			index: range.index,
+			length: range.length,
+		}
+
+		documentInputRef.current?.click()
+	}, [])
+
+	const insertDocumentLink = useCallback(
+		async (file: File) => {
+			const quill = editorRef.current?.getEditor()
+			const selectedRange = selectedDocumentRangeRef.current
+
+			if (!quill || !selectedRange) return
+
+			if (!isAllowedDocumentFile(file)) {
+				window.alert('Можно загрузить только документы DOC, DOCX или PDF')
+				selectedDocumentRangeRef.current = null
+				return
+			}
+
+			const maxSizeBytes = maxDocumentSizeMb * 1024 * 1024
+
+			if (file.size > maxSizeBytes) {
+				window.alert(`Размер документа не должен превышать ${maxDocumentSizeMb} МБ`)
+				selectedDocumentRangeRef.current = null
+				return
+			}
+
+			try {
+				const newIdResponse = await getNewIdFile({
+					filetype: DOCUMENT_FILETYPE,
+				}).unwrap()
+
+				console.log('New file id response:', newIdResponse)
+
+				const newFileId = extractNewFileId(newIdResponse)
+
+				if (!newFileId) {
+					throw new Error('В ответе getnew не найден id файла')
+				}
+
+				const formData = createDocumentUploadFormData(file, newFileId)
+
+				const uploadResponse = await uploadFiles(formData).unwrap()
+
+				console.log('Uploaded document response:', uploadResponse)
+
+				const documentUrl = extractUploadedFileUrl(uploadResponse)
+
+				if (!documentUrl) {
+					throw new Error('В ответе загрузки не найдена ссылка на файл')
+				}
+
+				quill.formatText(selectedRange.index, selectedRange.length, 'link', false, 'silent')
+				quill.formatText(
+					selectedRange.index,
+					selectedRange.length,
+					'document-link',
+					documentUrl,
+					'user',
+				)
+
+				quill.setSelection(selectedRange.index + selectedRange.length, 0, 'silent')
+
+				const html = quill.root.innerHTML
+				const processedHtml = processVideoEmbeds(normalizeDocumentLinks(html))
+
+				fieldOnChangeRef.current?.(processedHtml)
+			} catch (error) {
+				console.error('Document upload error:', error)
+				window.alert('Не удалось загрузить документ')
+			} finally {
+				selectedDocumentRangeRef.current = null
+			}
+		},
+		[getNewIdFile, maxDocumentSizeMb, uploadFiles],
+	)
+
+	const handleDocumentInputChange = useCallback(
+		(event: ChangeEvent<HTMLInputElement>) => {
+			const file = event.target.files?.[0]
+
+			event.target.value = ''
+
+			if (!file) {
+				selectedDocumentRangeRef.current = null
+				return
+			}
+
+			void insertDocumentLink(file)
+		},
+		[insertDocumentLink],
+	)
+
 	const modules = useMemo(
 		() => ({
 			toolbar: {
 				container: `#${toolbarId}`,
 				handlers: {
 					typography: applyTypography,
+					document: openDocumentDialog,
 				},
 			},
 			clipboard: {
 				matchVisual: false,
 			},
 		}),
-		[applyTypography, toolbarId],
+		[applyTypography, openDocumentDialog, toolbarId],
 	)
 
 	useEffect(() => {
@@ -344,7 +634,8 @@ export const QuillEditor: FC<QuillEditorProps & StyledEditorWrapperProps> = ({
 						editor: { getHTML: () => string },
 					) => {
 						const html = editor.getHTML()
-						const processedHtml = processVideoEmbeds(html)
+						const normalizedHtml = normalizeDocumentLinks(html)
+						const processedHtml = processVideoEmbeds(normalizedHtml)
 
 						field.onChange(processedHtml)
 					}
@@ -374,12 +665,24 @@ export const QuillEditor: FC<QuillEditorProps & StyledEditorWrapperProps> = ({
 								<button type='button' className='ql-image' />
 								<button type='button' className='ql-video' />
 
+								<button type='button' className='ql-document' disabled={isFileActionLoading}>
+									{isFileActionLoading ? '...' : 'FILE'}
+								</button>
+
 								<button type='button' className='ql-typography'>
 									Typo
 								</button>
 
 								<button type='button' className='ql-clean' />
 							</div>
+
+							<input
+								ref={documentInputRef}
+								type='file'
+								accept='.doc,.docx,.pdf,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+								style={{ display: 'none' }}
+								onChange={handleDocumentInputChange}
+							/>
 
 							<ReactQuill
 								{...field}

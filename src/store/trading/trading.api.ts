@@ -4,6 +4,7 @@ import { baseQueryWithReauth } from 'src/helpers/base-query'
 
 import { ReducerPath } from 'src/helpers/consts'
 import {
+	type CitysResponse,
 	type OrderInfoResponse,
 	type OrderNewIdResponse,
 	type OrderResponse,
@@ -191,6 +192,12 @@ export const tradingApi = createApi({
 			}),
 			invalidatesTags: ['Refunds', 'RefundInfo'],
 		}),
+		getSearchCity: build.query<CitysResponse, { search: string; id?: string }>({
+			query: ({ search, id }) => ({
+				url: `orders/search_city`,
+				params: { search, id },
+			}),
+		}),
 	}),
 })
 
@@ -211,4 +218,5 @@ export const {
 	useSaveRefundInfoMutation,
 	useSaveSaleInfoMutation,
 	useGetAllDeletedOrdersQuery,
+	useGetSearchCityQuery,
 } = tradingApi

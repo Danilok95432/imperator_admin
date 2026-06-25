@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { type OneOrderInputs } from './schema'
-import { FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
+import { FormProvider, type SubmitHandler, useForm, useWatch } from 'react-hook-form'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
@@ -17,21 +17,57 @@ import styles from './index.module.scss'
 import { MainSection } from './components/main-section/main-section'
 import adminStyles from 'src/routes/admin-layout/index.module.scss'
 import classNames from 'classnames'
-import { useGetOrderInfoQuery, useSaveOrderInfoMutation } from 'src/store/trading/trading.api'
+import {
+	useGetOrderInfoQuery,
+	useGetSearchCityQuery,
+	useSaveOrderInfoMutation,
+} from 'src/store/trading/trading.api'
 import { type GoodsCart } from 'src/types/trading'
 import { CustomTable } from 'src/components/custom-table/custom-table'
 import { booleanToNumberString } from 'src/helpers/utils'
+
+type SelectOptionLike = {
+	label?: string
+	value?: string
+}
+
+type SelectFieldValue = string | SelectOptionLike[] | undefined
+
+const getSelectValue = (value: SelectFieldValue) => {
+	if (Array.isArray(value)) {
+		return value[0]?.value ?? ''
+	}
+
+	return value ?? ''
+}
 
 export const OneOrder = () => {
 	const { id = '0' } = useParams()
 
 	const { data } = useGetOrderInfoQuery(id)
+	const { data: selectedCityData } = useGetSearchCityQuery(
+		{
+			search: data?.city_name ?? '',
+			id: data?.citys_id ?? '',
+		},
+		{
+			skip: !data?.citys_id || !data?.city_name,
+		},
+	)
+
+	const selectedCityOption = selectedCityData?.citys?.find(
+		(el) => Number(el.value) === Number(data?.citys_id),
+	)
 	const [saveOrderInfo] = useSaveOrderInfoMutation()
 	const [action, setAction] = useState<'apply' | 'save'>('apply')
 
 	const methods = useForm<OneOrderInputs>({
 		mode: 'onBlur',
 	})
+	const values = useWatch({
+		control: methods.control,
+	})
+	const cityValue = getSelectValue(values.citys ?? [])
 	const navigate = useNavigate()
 	const { isSent, markAsSent } = useIsSent(methods.control)
 	const onSubmit: SubmitHandler<OneOrderInputs> = async (data) => {
@@ -71,6 +107,7 @@ export const OneOrder = () => {
 					? data.siteusers[0].value
 					: '0',
 		)
+		formData.append('id_city', cityValue)
 		formData.append('order_date', data.order_date ?? '')
 		formData.append('price_delivery', data.price_delivery ?? '')
 		formData.append('price_items', data.price_items ?? '')
@@ -97,54 +134,52 @@ export const OneOrder = () => {
 	}
 
 	useEffect(() => {
-		if (data) {
-			const deliverOptions = data.order_delivery ?? []
-			const statusOptions = data.order_status ?? []
-			const sdekOptions = data.sdek_point ?? []
-			const cityOptions = data.citys ?? []
-			const siteusersOptions = data.siteusers ?? []
+		if (!data) return
 
-			const cityOption = cityOptions.find((el) => Number(el.value) === Number(data.citys_id))
+		const hasSavedCity = Boolean(data.citys_id && data.city_name)
 
-			// Находим нужные объекты для селектов
-			const deliveryOption = deliverOptions.find(
-				(el) => Number(el.value) === Number(data.order_delivery_id),
-			)
-			const statusOption = statusOptions.find(
-				(el) => Number(el.value) === Number(data.order_status_id),
-			)
-			const sdekOption = sdekOptions.find((el) => Number(el.value) === Number(data.sdek_point_id))
-			const siteuserOption = siteusersOptions.find(
-				(el) => Number(el.value) === Number(data.siteusers_id),
-			)
-			// Исключаем не только brands_id/catalogs_id, но и brands/catalogs из restData
-			const {
-				order_delivery_id,
-				order_status_id,
-				sdek_point_id,
-				order_delivery,
-				order_status,
-				sdek_point,
-				citys,
-				citys_id,
-				siteusers,
-				siteusers_id,
-				...restData
-			} = data
+		if (hasSavedCity && !selectedCityOption) return
 
-			methods.reset({
-				// Поля для React Select
-				order_delivery: deliveryOption ? [deliveryOption] : [],
-				order_status: statusOption ? [statusOption] : [],
-				sdek_point: sdekOption ? [sdekOption] : [],
-				citys: cityOption ? [cityOption] : [],
-				siteusers: siteuserOption ? [siteuserOption] : [],
-				// Все остальные поля (без brands/catalogs/brands_id/catalogs_id)
-				...restData,
-			})
-		}
-	}, [data])
+		const deliverOptions = data.order_delivery ?? []
+		const statusOptions = data.order_status ?? []
+		const sdekOptions = data.sdek_point ?? []
+		const siteusersOptions = data.siteusers ?? []
 
+		const deliveryOption = deliverOptions.find(
+			(el) => Number(el.value) === Number(data.order_delivery_id),
+		)
+		const statusOption = statusOptions.find(
+			(el) => Number(el.value) === Number(data.order_status_id),
+		)
+		const sdekOption = sdekOptions.find((el) => Number(el.value) === Number(data.sdek_point_id))
+		const siteuserOption = siteusersOptions.find(
+			(el) => Number(el.value) === Number(data.siteusers_id),
+		)
+
+		const {
+			order_delivery_id,
+			order_status_id,
+			sdek_point_id,
+			order_delivery,
+			order_status,
+			sdek_point,
+			citys,
+			citys_id,
+			city_name,
+			siteusers,
+			siteusers_id,
+			...restData
+		} = data
+
+		methods.reset({
+			order_delivery: deliveryOption ? [deliveryOption] : [],
+			order_status: statusOption ? [statusOption] : [],
+			sdek_point: sdekOption ? [sdekOption] : [],
+			citys: selectedCityOption ? [selectedCityOption] : [],
+			siteusers: siteuserOption ? [siteuserOption] : [],
+			...restData,
+		})
+	}, [data, selectedCityOption])
 	const tableTitles = [
 		'№',
 		'Категория',

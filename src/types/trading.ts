@@ -64,6 +64,7 @@ export type OrderInfoResponse = {
 	order_address: string
 	citys: SelOption[]
 	citys_id: string
+	city_name: string
 	siteusers: SelOption[]
 	siteusers_id: string
 }
@@ -135,4 +136,8 @@ export type RefundInfoResponse = {
 	urlTitle: string
 	url: string
 	hidden: boolean
+}
+
+export type CitysResponse = {
+	citys: SelOption[]
 }

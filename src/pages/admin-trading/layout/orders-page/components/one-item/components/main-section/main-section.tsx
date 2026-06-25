@@ -1,10 +1,12 @@
 import { type SelOption } from 'src/types/select'
-import { type FC } from 'react'
+import { useState, type FC } from 'react'
 
 import { AdminSection } from 'src/components/admin-section/admin-section'
 import { ControlledInput } from 'src/components/controlled-input/controlled-input'
 import styles from './index.module.scss'
 import { ControlledSelect } from 'src/components/controlled-select/controlled-select'
+import { useDebounce } from 'src/hooks/debounce/debounce'
+import { useGetSearchCityQuery } from 'src/store/trading/trading.api'
 
 type MainSectionProps = {
 	deliverOption?: SelOption[]
@@ -21,6 +23,16 @@ export const MainSection: FC<MainSectionProps> = ({
 	cityOption,
 	usersOption,
 }) => {
+	const [citySearch, setCitySearch] = useState('')
+
+	const debouncedCitySearch = useDebounce(citySearch.trim(), 400)
+
+	const { data: citysData, isFetching: isCitysFetching } = useGetSearchCityQuery(
+		{ search: debouncedCitySearch },
+		{
+			skip: debouncedCitySearch.length < 3,
+		},
+	)
 	return (
 		<AdminSection className={styles.mainSection} isBlock={false}>
 			<ControlledSelect
@@ -61,8 +73,11 @@ export const MainSection: FC<MainSectionProps> = ({
 			<ControlledSelect
 				name='citys'
 				label='Город'
-				selectOptions={cityOption ?? [{ label: 'Выберите город', value: '0' }]}
-				margin='0 0 20px 0'
+				isRequired
+				selectOptions={debouncedCitySearch.length >= 3 ? (citysData?.citys ?? []) : []}
+				onSearchChange={setCitySearch}
+				isLoading={isCitysFetching}
+				margin='0 0 24px 0'
 			/>
 			<ControlledInput name='order_street' label='Улица' margin='0 0 20px 0' />
 			<ControlledInput name='order_dom' label='Дом' margin='0 0 20px 0' />

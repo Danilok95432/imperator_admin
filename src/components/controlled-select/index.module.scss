@@ -22,6 +22,16 @@
 		background-blend-mode: luminosity;
 	}
 
+	.selectSearchInput {
+		width: 100%;
+		border: none;
+		outline: none;
+		background: transparent;
+		font: inherit;
+		color: inherit;
+		padding: 0;
+	}
+
 	:global {
 		.react-dropdown-select {
 			outline: 1px solid #afafaf;
