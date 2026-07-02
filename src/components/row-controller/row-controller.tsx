@@ -36,10 +36,15 @@ export const RowController: FC<RowControllerProps> = ({
 	rejectHandler,
 	id,
 }) => {
+	const stopRowClick = (e: React.MouseEvent<HTMLDivElement | HTMLButtonElement, MouseEvent>) => {
+		e.stopPropagation()
+	}
+
 	const handleClickHide = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
 		e.stopPropagation()
 		hideHandler?.(id)
 	}
+
 	const handleClickRemove = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
 		e.stopPropagation()
 		removeHandler?.(id)
@@ -49,6 +54,7 @@ export const RowController: FC<RowControllerProps> = ({
 		e.stopPropagation()
 		resolveHandler?.(id)
 	}
+
 	const handleReject = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, id: string) => {
 		e.stopPropagation()
 		rejectHandler?.(id)
@@ -56,10 +62,11 @@ export const RowController: FC<RowControllerProps> = ({
 
 	if (variant === 'custom') {
 		return (
-			<div className={cn(styles.rowControllerWrapper, className)}>
-				<button className={styles.rowControllerBtn} type='button'>
+			<div className={cn(styles.rowControllerWrapper, className)} onClick={stopRowClick}>
+				<button className={styles.rowControllerBtn} type='button' onClick={stopRowClick}>
 					<RowControllerIconSvg />
 				</button>
+
 				<div className={cn(styles.rowControllers, 'row-controllers')}>
 					{resBtnIcon && (
 						<button className={styles.resBtn} onClick={(e) => handleResolve(e, id)} type='button'>
@@ -67,6 +74,7 @@ export const RowController: FC<RowControllerProps> = ({
 							<p>{resBtnText ?? 'Скрыть'}</p>
 						</button>
 					)}
+
 					{reqBtnIcon && (
 						<button className={styles.rejBtn} onClick={(e) => handleReject(e, id)} type='button'>
 							{reqBtnIcon}
@@ -79,16 +87,18 @@ export const RowController: FC<RowControllerProps> = ({
 	}
 
 	return (
-		<div className={cn(styles.rowControllerWrapper, className)}>
-			<button className={styles.rowControllerBtn} type='button'>
+		<div className={cn(styles.rowControllerWrapper, className)} onClick={stopRowClick}>
+			<button className={styles.rowControllerBtn} type='button' onClick={stopRowClick}>
 				<RowControllerIconSvg />
 			</button>
+
 			<div className={cn(styles.rowControllers, 'row-controllers')}>
 				{!noHide && (
 					<button className={styles.hideBtn} onClick={(e) => handleClickHide(e, id)} type='button'>
 						<p>{textOfHidden ?? 'Скрыть'}</p>
 					</button>
 				)}
+
 				<button
 					className={styles.removeBtn}
 					onClick={(e) => handleClickRemove(e, id)}
