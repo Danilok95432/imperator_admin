@@ -59,17 +59,17 @@ export const OneCustomer = () => {
 					? data.user_types[0].value
 					: '0',
 		)
-		formData.append(
-			'citys',
-			typeof data.citys === 'string' ? data.citys : data.citys ? data.citys[0].value : '0',
-		)
+		// formData.append(
+		// 	'citys',
+		// 	typeof data.citys === 'string' ? data.citys : data.citys ? data.citys[0].value : '0',
+		// )
 		formData.append('user_title', data.user_title ?? '')
 		formData.append('telphone', data.telphone ?? '')
 		formData.append('email', data.email ?? '')
 		formData.append('user_name', data.user_name ?? '')
-		formData.append('street', data.street ?? '')
-		formData.append('dom', data.dom ?? '')
-		formData.append('room', data.room ?? '')
+		// formData.append('street', data.street ?? '')
+		// formData.append('dom', data.dom ?? '')
+		// formData.append('room', data.room ?? '')
 		formData.append('user_comment', data.user_comment ?? '')
 		formData.append('review_text', data.review_text ?? '')
 		formData.append('user_pass', data.user_pass ?? '')
@@ -90,18 +90,18 @@ export const OneCustomer = () => {
 
 	useEffect(() => {
 		if (data) {
-			const cityOptions = data.citys ?? []
+			// const cityOptions = data.citys ?? []
 			const userOptions = data.user_types ?? []
 
 			// Находим нужные объекты для селектов
-			const cityOption = cityOptions.find((el) => Number(el.value) === Number(data.citys_id))
+			// const cityOption = cityOptions.find((el) => Number(el.value) === Number(data.citys_id))
 			const userOption = userOptions.find((el) => Number(el.value) === Number(data.user_types_id))
 			// Исключаем не только brands_id/catalogs_id, но и brands/catalogs/login из restData
 			const { citys_id, user_types_id, citys, user_types, user_name, ...restData } = data
 
 			methods.reset({
 				// Поля для React Select
-				citys: cityOption ? [cityOption] : [],
+				// citys: cityOption ? [cityOption] : [],
 				user_types: userOption ? [userOption] : [],
 				user_name: data.user_name ?? data.email,
 				// Все остальные поля (без brands/catalogs/brands_id/catalogs_id)

@@ -2,8 +2,14 @@ import { AdminSection } from 'src/components/admin-section/admin-section'
 import { ControlledInput } from 'src/components/controlled-input/controlled-input'
 import styles from './index.module.scss'
 import { ReactDropzone } from 'src/components/react-dropzone/react-dropzone'
+import { type ImageItemWithText } from 'src/types/photos'
+import { type FC } from 'react'
 
-export const MainSection = () => {
+type MainSectionProps = {
+	img?: ImageItemWithText[]
+}
+
+export const MainSection: FC<MainSectionProps> = ({ img }) => {
 	return (
 		<AdminSection className={styles.mainSection} isBlock={false}>
 			<ControlledInput
@@ -20,9 +26,11 @@ export const MainSection = () => {
 				accept={{ 'image/png': ['.png'], 'image/jpeg': ['.jpeg'] }}
 				margin='20px 0 20px 0'
 				previewVariant='sm-img'
-				imgtype='goods'
-				fileImages={[]}
+				imgtype='promo'
+				fileImages={img}
 				className={styles.img}
+				isPromoId
+				idItem='1'
 			/>
 		</AdminSection>
 	)

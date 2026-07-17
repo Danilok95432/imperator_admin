@@ -3,9 +3,9 @@ import { type SelOption } from 'src/types/select'
 import * as yup from 'yup'
 
 export type OneCustomerInputs = {
-	citys?: SelOption[] | string
-	citys_id?: string
-	dom?: string
+	// citys?: SelOption[] | string
+	// citys_id?: string
+	// dom?: string
 	email?: string
 	fathname: string
 	firstname: string
@@ -15,8 +15,8 @@ export type OneCustomerInputs = {
 	orders?: UserCartOrders[]
 	review_on_main?: boolean
 	review_text?: string
-	room?: string
-	street?: string
+	// room?: string
+	// street?: string
 	surname: string
 	telphone?: string
 	user_comment?: string

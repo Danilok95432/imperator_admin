@@ -45,6 +45,8 @@ type ReactDropzoneProps = {
 	text?: string
 	isProgram?: boolean
 	isPromoModal?: boolean
+	isPromoId?: boolean
+	idItem?: string
 }
 
 export const ReactDropzone: FC<ReactDropzoneProps> = ({
@@ -72,6 +74,8 @@ export const ReactDropzone: FC<ReactDropzoneProps> = ({
 	syncAdd,
 	syncEdit,
 	text,
+	isPromoId,
+	idItem,
 }) => {
 	const [currentFiles, setCurrentFiles] = useState<ImageItemWithText[]>(fileImages || [])
 	const [imageIds, setImageIds] = useState<string[]>([])
@@ -99,6 +103,10 @@ export const ReactDropzone: FC<ReactDropzoneProps> = ({
 					formData.append('itemimage', file)
 					formData.append('imgtype', imgtype)
 					formData.append('id_item', programId)
+				} else if (isPromoId) {
+					formData.append('itemimage', file)
+					formData.append('imgtype', imgtype)
+					formData.append('id_item', idItem ?? '')
 				} else {
 					formData.append('itemimage', file)
 					formData.append('imgtype', imgtype)

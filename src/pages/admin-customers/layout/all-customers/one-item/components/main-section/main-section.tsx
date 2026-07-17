@@ -41,7 +41,7 @@ export const MainSection: FC<MainSectionProps> = ({ customerOption, cityOption }
 				margin='0 0 20px 0'
 				type='password'
 			/>
-			<ControlledSelect
+			{/* <ControlledSelect
 				name='citys'
 				label='Город'
 				selectOptions={cityOption ?? [{ label: 'Выберите город', value: '0' }]}
@@ -49,7 +49,7 @@ export const MainSection: FC<MainSectionProps> = ({ customerOption, cityOption }
 			/>
 			<ControlledInput name='street' label='Улица' margin='0 0 20px 0' />
 			<ControlledInput name='dom' label='Дом' margin='0 0 20px 0' />
-			<ControlledInput name='room' label='Квартира' margin='0 0 20px 0' />
+			<ControlledInput name='room' label='Квартира' margin='0 0 20px 0' /> */}
 			<ControlledInput
 				name='user_comment'
 				label='Примечание «О покупателе»'

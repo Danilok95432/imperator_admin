@@ -64,7 +64,7 @@ export const PromoItem = () => {
 					<form onSubmit={methods.handleSubmit(onSubmit)} noValidate>
 						<div className={styles.oneNewsContent}>
 							<div className={styles.oneNewsContentLeft}>
-								<MainSection />
+								<MainSection img={data?.img} />
 							</div>
 						</div>
 						<AdminControllers
